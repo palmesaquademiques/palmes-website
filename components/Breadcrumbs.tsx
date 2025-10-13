@@ -1,16 +1,15 @@
-import * as React from 'react'
-
-import * as types from 'notion-types'
+import type * as types from 'notion-types'
 import { getPageBreadcrumbs } from 'notion-utils'
+import * as React from 'react'
 import { PageIcon, useNotionContext } from 'react-notion-x'
 
 import { name, rootNotionPageId } from '@/lib/config'
 
-export const Breadcrumbs: React.FC<{ block: types.Block }> = ({ block }) => {
+export function Breadcrumbs({ block }: { block: types.Block }) {
   const { recordMap, mapPageUrl, components } = useNotionContext()
   const breadcrumb = React.useMemo(() => {
     const breadcrumbs = getPageBreadcrumbs(recordMap, block.id)
-    return breadcrumbs[0]
+    return breadcrumbs![0]
   }, [recordMap, block.id])
 
   const pageLinkProps = {
@@ -27,7 +26,9 @@ export const Breadcrumbs: React.FC<{ block: types.Block }> = ({ block }) => {
         {...pageLinkProps}
       >
         <span className='breadcrumb hover:!bg-transparent'>
-          {breadcrumb?.icon && <PageIcon block={breadcrumb.block} className=''/>}
+          {breadcrumb?.icon && (
+            <PageIcon block={breadcrumb.block} className='' />
+          )}
         </span>
 
         <span className='title'>{name}</span>

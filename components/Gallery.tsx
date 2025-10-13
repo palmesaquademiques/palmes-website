@@ -1,26 +1,25 @@
-import * as React from 'react'
+import type { PageBlock } from 'notion-types'
+import cs from 'classnames'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
-import cs from 'classnames'
-import { PageBlock } from 'notion-types'
 import { formatDate, getPageProperty } from 'notion-utils'
+import * as React from 'react'
 import { NotionRenderer } from 'react-notion-x'
 import { useSearchParam } from 'react-use'
 
+import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
-import * as types from '@/lib/types'
 import { mapImageUrl } from '@/lib/map-image-url'
 import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
 
 import { Footer } from './Footer'
+import styles from './gallery.module.css'
 import { Loading } from './Loading'
 import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
 import { PageHead } from './PageHead'
-import styles from './gallery.module.css'
 
 // -----------------------------------------------------------------------------
 // dynamic imports for optional components
@@ -83,12 +82,7 @@ const propertyTextValue = (
   return defaultFn()
 }
 
-export const Gallery: React.FC<types.PageProps> = ({
-  site,
-  recordMap,
-  error,
-  pageId
-}) => {
+export function Gallery({ site, recordMap, error, pageId }) {
   const router = useRouter()
   const lite = useSearchParam('lite')
 

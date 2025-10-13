@@ -1,8 +1,7 @@
-import * as React from 'react'
-
-import * as types from 'notion-types'
+import type * as types from 'notion-types'
 import { Menu } from 'lucide-react'
 import { parsePageId } from 'notion-utils'
+import * as React from 'react'
 import { Header, useNotionContext } from 'react-notion-x'
 
 import { Breadcrumbs } from '@/components/Breadcrumbs'
@@ -23,9 +22,11 @@ import {
 import { navigationLinks, navigationStyle } from '@/lib/config'
 import { cn } from '@/lib/utils'
 
-export const NotionPageHeader: React.FC<{
+export function NotionPageHeader({
+  block
+}: {
   block: types.CollectionViewPageBlock | types.PageBlock
-}> = ({ block }) => {
+}) {
   const { components, mapPageUrl } = useNotionContext()
 
   if (navigationStyle === 'default') {

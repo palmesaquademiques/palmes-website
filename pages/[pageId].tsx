@@ -1,17 +1,16 @@
-import * as React from 'react'
-import { GetStaticProps } from 'next'
+import { type GetStaticProps } from 'next'
 
-import { NotionPage } from '@/components/NotionPage'
 import { Gallery } from '@/components/Gallery'
+import { NotionPage } from '@/components/NotionPage'
 import { domain, isDev } from '@/lib/config'
 import { getSiteMap } from '@/lib/get-site-map'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
-import { PageProps, Params } from '@/lib/types'
+import { type PageProps, type Params } from '@/lib/types'
 
 export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   context
 ) => {
-  const rawPageId = context.params.pageId as string
+  const rawPageId = context.params?.pageId as string
 
   try {
     const props = await resolveNotionPage(domain, rawPageId)

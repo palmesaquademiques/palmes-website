@@ -1,8 +1,7 @@
-import * as React from 'react'
-
 import { FaEnvelopeOpenText } from '@react-icons/all-files/fa/FaEnvelopeOpenText'
 import { FaFacebook } from '@react-icons/all-files/fa/FaFacebook'
 import { FaInstagram } from '@react-icons/all-files/fa/FaInstagram'
+import * as React from 'react'
 
 import * as config from '@/lib/config'
 
@@ -10,7 +9,7 @@ import styles from './styles.module.css'
 
 // TODO: merge the data and icons from PageSocial with the social links in Footer
 
-export const FooterImpl: React.FC = () => {
+export function FooterImpl() {
   const currentYear = new Date().getFullYear()
 
   return (

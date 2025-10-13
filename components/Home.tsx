@@ -1,19 +1,18 @@
-import * as React from 'react'
+import type { PageBlock } from 'notion-types'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
-import { PageBlock } from 'notion-types'
 import { formatDate, getPageProperty } from 'notion-utils'
+import * as React from 'react'
 import {
   NotionContextProvider,
   NotionRenderer,
-  PartialNotionContext
+  type PartialNotionContext
 } from 'react-notion-x'
 
+import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
-import * as types from '@/lib/types'
 import { mapImageUrl } from '@/lib/map-image-url'
 import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
 
@@ -88,9 +87,13 @@ const propertyTextValue = (
   return defaultFn()
 }
 
-export const Home: React.FC<
-  types.PageProps & { subPageRecordMap: types.ExtendedRecordMap }
-> = ({ site, recordMap, subPageRecordMap, error, pageId }) => {
+export function Home({
+  site,
+  recordMap,
+  subPageRecordMap,
+  error,
+  pageId
+}: types.PageProps & { subPageRecordMap: types.ExtendedRecordMap }) {
   const router = useRouter()
 
   const components = React.useMemo(
