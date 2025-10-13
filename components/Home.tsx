@@ -47,7 +47,7 @@ const Modal = dynamic(
 )
 
 const propertyLastEditedTimeValue = (
-  { block, pageHeader },
+  { block, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && block?.last_edited_time) {
@@ -60,7 +60,7 @@ const propertyLastEditedTimeValue = (
 }
 
 const propertyDateValue = (
-  { data, schema, pageHeader },
+  { data, schema, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && schema?.name?.toLowerCase() === 'published') {
@@ -77,7 +77,7 @@ const propertyDateValue = (
 }
 
 const propertyTextValue = (
-  { schema, pageHeader },
+  { schema, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && schema?.name?.toLowerCase() === 'author') {
@@ -112,16 +112,16 @@ export function Home({
 
   const siteMapPageUrl = React.useMemo(() => {
     const searchParams = new URLSearchParams({})
-    return mapPageUrl(site, recordMap, searchParams)
+    return site ? mapPageUrl(site, recordMap!, searchParams) : undefined
   }, [site, recordMap])
 
   const siteSupPageUrl = React.useMemo(() => {
     const searchParams = new URLSearchParams({})
-    return mapPageUrl(site, subPageRecordMap, searchParams)
+    return site ? mapPageUrl(site, subPageRecordMap!, searchParams) : undefined
   }, [site, subPageRecordMap])
 
   const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]]?.value
+  const block = recordMap?.block?.[keys[0]!]?.value
 
   if (router.isFallback) {
     return <Loading />
@@ -139,8 +139,9 @@ export function Home({
     g.block = block
   }
 
-  const canonicalPageUrl =
-    !config.isDev && getCanonicalPageUrl(site, recordMap)(pageId)
+  const canonicalPageUrl = config.isDev
+    ? undefined
+    : getCanonicalPageUrl(site, recordMap)(pageId)
 
   const socialImage = mapImageUrl(
     getPageProperty<string>('Social Image', block, recordMap) ||

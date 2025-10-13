@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import type { PageProps } from '@/lib/types'
+import type { ExtendedRecordMap,PageProps } from '@/lib/types'
 import { Home } from '@/components/Home'
 import { domain } from '@/lib/config'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
@@ -24,6 +24,8 @@ export const getStaticProps = async () => {
   }
 }
 
-export default function NotionDomainPage(props: PageProps) {
+export default function NotionDomainPage(
+  props: PageProps & { subPageRecordMap: ExtendedRecordMap }
+) {
   return <Home {...props} />
 }

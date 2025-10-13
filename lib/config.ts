@@ -87,7 +87,7 @@ export const navigationStyle: NavigationStyle = getSiteConfig(
   'default'
 )
 
-export const navigationLinks: Array<NavigationLink | undefined> = getSiteConfig(
+export const navigationLinks: Array<NavigationLink> = getSiteConfig(
   'navigationLinks',
   null
 )

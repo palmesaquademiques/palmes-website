@@ -42,7 +42,7 @@ const Modal = dynamic(
 )
 
 const propertyLastEditedTimeValue = (
-  { block, pageHeader },
+  { block, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && block?.last_edited_time) {
@@ -55,7 +55,7 @@ const propertyLastEditedTimeValue = (
 }
 
 const propertyDateValue = (
-  { data, schema, pageHeader },
+  { data, schema, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && schema?.name?.toLowerCase() === 'published') {
@@ -72,7 +72,7 @@ const propertyDateValue = (
 }
 
 const propertyTextValue = (
-  { schema, pageHeader },
+  { schema, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && schema?.name?.toLowerCase() === 'author') {
@@ -82,7 +82,7 @@ const propertyTextValue = (
   return defaultFn()
 }
 
-export function Gallery({ site, recordMap, error, pageId }) {
+export function Gallery({ site, recordMap, error, pageId }: types.PageProps) {
   const router = useRouter()
   const lite = useSearchParam('lite')
 
@@ -105,11 +105,11 @@ export function Gallery({ site, recordMap, error, pageId }) {
     if (lite) params.lite = lite
 
     const searchParams = new URLSearchParams(params)
-    return mapPageUrl(site, recordMap, searchParams)
+    return site ? mapPageUrl(site, recordMap!, searchParams) : undefined
   }, [site, recordMap, lite])
 
   const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]]?.value
+  const block = recordMap?.block?.[keys[0]!]?.value
 
   const footer = React.useMemo(() => <Footer />, [])
 
@@ -129,8 +129,9 @@ export function Gallery({ site, recordMap, error, pageId }) {
     g.block = block
   }
 
-  const canonicalPageUrl =
-    !config.isDev && getCanonicalPageUrl(site, recordMap)(pageId)
+  const canonicalPageUrl = config.isDev
+    ? undefined
+    : getCanonicalPageUrl(site, recordMap)(pageId)
 
   const socialImage = mapImageUrl(
     getPageProperty<string>('Social Image', block, recordMap) ||

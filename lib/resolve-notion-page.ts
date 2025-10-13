@@ -80,7 +80,7 @@ export async function resolveNotionPage(
             message: `Not found "${rawPageId}"`,
             statusCode: 404
           },
-          recordMap: null,
+          recordMap: undefined
         }
       }
     }

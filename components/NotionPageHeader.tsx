@@ -10,7 +10,7 @@ import {
   NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuList,
-  NavigationMenuViewport,
+  NavigationMenuViewport
 } from '@/components/ui/navigation-menu'
 import {
   Sheet,
@@ -56,7 +56,7 @@ export function NotionPageHeader({
                       className={cn(
                         'text-palmes-dark rounded-lg font-medium px-3 py-2.5  bg-opacity-50 text-lg',
                         link.pageId ===
-                          parsePageId(block?.id).replaceAll('-', '')
+                          parsePageId(block?.id)?.replaceAll('-', '')
                           ? 'text-palmes-light'
                           : ''
                       )}
@@ -82,7 +82,7 @@ export function NotionPageHeader({
                       className={cn(
                         'text-palmes-dark rounded-lg font-medium px-3 py-2.5 text-center bg-opacity-50 text-lg hidden md:inline-block',
                         link.pageId ===
-                          parsePageId(block?.id).replaceAll('-', '')
+                          parsePageId(block?.id)?.replaceAll('-', '')
                           ? 'text-white'
                           : ''
                       )}

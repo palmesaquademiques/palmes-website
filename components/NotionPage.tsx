@@ -6,12 +6,7 @@ import { useRouter } from 'next/router'
 import { type PageBlock } from 'notion-types'
 import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
 import * as React from 'react'
-import BodyClassName from 'react-body-classname'
-import {
-  type NotionComponents,
-  NotionRenderer,
-  useNotionContext
-} from 'react-notion-x'
+import { type NotionComponents, NotionRenderer } from 'react-notion-x'
 import { useSearchParam } from 'react-use'
 
 import type * as types from '@/lib/types'

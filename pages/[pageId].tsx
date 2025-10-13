@@ -5,7 +5,11 @@ import { NotionPage } from '@/components/NotionPage'
 import { domain, isDev } from '@/lib/config'
 import { getSiteMap } from '@/lib/get-site-map'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
-import { type PageProps, type Params } from '@/lib/types'
+import {
+  type ExtendedRecordMap,
+  type PageProps,
+  type Params
+} from '@/lib/types'
 
 export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   context
@@ -49,7 +53,9 @@ export async function getStaticPaths() {
   return staticPaths
 }
 
-export default function NotionDomainDynamicPage(props) {
+export default function NotionDomainDynamicPage(
+  props: PageProps & { subPageRecordMap: ExtendedRecordMap }
+) {
   if (props.pageId === '73e5da04-ef28-45ff-beb7-db3d4bb41fa2')
     return <Gallery {...props} />
   return <NotionPage {...props} />
