@@ -2,7 +2,7 @@ import { type GetStaticProps } from 'next'
 
 import { Gallery } from '@/components/Gallery'
 import { NotionPage } from '@/components/NotionPage'
-import { domain, isDev } from '@/lib/config'
+import { domain, isDev, pageUrlOverrides } from '@/lib/config'
 import { getSiteMap } from '@/lib/get-site-map'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 import {
@@ -39,13 +39,17 @@ export async function getStaticPaths() {
 
   const siteMap = await getSiteMap()
 
+  // Combine sitemap paths with URL overrides (e.g., /articles, /notes)
+  // URL overrides might not be in the sitemap if not directly linked from root
+  const allPageIds = [
+    ...new Set([
+      ...Object.keys(siteMap.canonicalPageMap),
+      ...Object.keys(pageUrlOverrides)
+    ])
+  ]
+
   const staticPaths = {
-    paths: Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
-      params: {
-        pageId
-      }
-    })),
-    // paths: [],
+    paths: allPageIds.map((pageId) => ({ params: { pageId } })),
     fallback: true
   }
 

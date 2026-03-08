@@ -4,7 +4,12 @@ import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { type PageBlock } from 'notion-types'
-import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
+import {
+  formatDate,
+  getBlockTitle,
+  getBlockValue,
+  getPageProperty
+} from 'notion-utils'
 import * as React from 'react'
 import { type NotionComponents, NotionRenderer } from 'react-notion-x'
 import { useSearchParam } from 'react-use'
@@ -123,7 +128,7 @@ export function NotionPage({
   }, [site, recordMap, lite])
 
   const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]!]?.value
+  const block = getBlockValue(recordMap?.block?.[keys[0]!])
 
   const isBlogPost =
     block?.type === 'page' && block?.parent_table === 'collection'
@@ -148,7 +153,7 @@ export function NotionPage({
     return <Loading />
   }
 
-  if (error || !site || !block) {
+  if (error || !site || !block || !recordMap) {
     return <Page404 site={site} pageId={pageId} error={error} />
   }
 
