@@ -21,7 +21,7 @@ export default siteConfig({
   // social usernames (optional)
   facebook: 'palmes.aquademiques',
   instagram: 'palmes.aquademiques',
-  email: 'palmes.aquademiques@gmail.com',
+  email: 'contact@lespalmesaquademiques.fr',
 
   // default notion icon and cover images for site-wide consistency (optional)
   // page-specific values will override these site-wide defaults
