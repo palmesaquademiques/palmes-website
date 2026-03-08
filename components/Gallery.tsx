@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { formatDate, getPageProperty } from 'notion-utils'
+import { formatDate, getBlockValue, getPageProperty } from 'notion-utils'
 import * as React from 'react'
 import { NotionRenderer } from 'react-notion-x'
 import { useSearchParam } from 'react-use'
@@ -109,7 +109,7 @@ export function Gallery({ site, recordMap, error, pageId }: types.PageProps) {
   }, [site, recordMap, lite])
 
   const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]!]?.value
+  const block = getBlockValue(recordMap?.block?.[keys[0]!])
 
   const footer = React.useMemo(() => <Footer />, [])
 
@@ -117,7 +117,7 @@ export function Gallery({ site, recordMap, error, pageId }: types.PageProps) {
     return <Loading />
   }
 
-  if (error || !site || !block) {
+  if (error || !site || !block || !recordMap) {
     return <Page404 site={site} pageId={pageId} error={error} />
   }
 
