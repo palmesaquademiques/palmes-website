@@ -25,10 +25,12 @@ import { PageHead } from './PageHead'
 // dynamic imports for optional components
 // -----------------------------------------------------------------------------
 
-const Collection = dynamic(() =>
-  import('react-notion-x/build/third-party/collection').then(
-    (m) => m.Collection
-  )
+const Collection = dynamic(
+  () =>
+    import('react-notion-x/build/third-party/collection').then(
+      (m) => m.Collection
+    ),
+  { ssr: false }
 )
 const Modal = dynamic(
   () =>
