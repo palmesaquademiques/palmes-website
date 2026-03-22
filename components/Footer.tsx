@@ -46,7 +46,7 @@ export function FooterImpl() {
           <a
             className={styles.email}
             href={`mailto:${config.email}`}
-            title={`E-Mail ${config.author}`}
+            title={`Courriel ${config.author}`}
             target='_blank'
             rel='noopener noreferrer'
           >

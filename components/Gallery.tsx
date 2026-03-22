@@ -48,7 +48,7 @@ const propertyLastEditedTimeValue = (
   defaultFn: () => React.ReactNode
 ) => {
   if (pageHeader && block?.last_edited_time) {
-    return `Last updated ${formatDate(block?.last_edited_time, {
+    return `Dernière mise à jour ${formatDate(block?.last_edited_time, {
       month: 'long'
     })}`
   }

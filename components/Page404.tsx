@@ -4,7 +4,7 @@ import { PageHead } from './PageHead'
 import styles from './styles.module.css'
 
 export function Page404({ site, pageId, error }: types.PageProps) {
-  const title = site?.name || 'Notion Page Not Found'
+  const title = site?.name || 'Page introuvable'
 
   return (
     <>
@@ -12,22 +12,22 @@ export function Page404({ site, pageId, error }: types.PageProps) {
 
       <div className={styles.container}>
         <main className={styles.main}>
-          <h1>Notion Page Not Found</h1>
+          <h1>Page introuvable</h1>
 
           {error ? (
             <p>{error.message}</p>
           ) : (
             pageId && (
               <p>
-                Make sure that Notion page &quot;{pageId}&quot; is publicly
-                accessible.
+                Vérifiez que la page Notion &quot;{pageId}&quot; est bien
+                accessible publiquement.
               </p>
             )
           )}
 
           <img
             src='/404.png'
-            alt='404 Not Found'
+            alt='404 introuvable'
             className={styles.errorImage}
           />
         </main>

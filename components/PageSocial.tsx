@@ -33,7 +33,7 @@ const socialLinks: SocialLink[] = [
   config.email && {
     name: 'email',
     href: `mailto:${config.email}`,
-    title: `E-Mail ${config.author}`,
+    title: `Courriel ${config.author}`,
     icon: <EmailIcon />
   }
 ].filter(Boolean)
