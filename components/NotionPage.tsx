@@ -33,19 +33,17 @@ import styles from './styles.module.css'
 // -----------------------------------------------------------------------------
 
 const Collection = dynamic(() =>
-  import('react-notion-x/build/third-party/collection').then(
-    (m) => m.Collection
-  )
+  import('react-notion-x/third-party/collection').then((m) => m.Collection)
 )
 const Pdf = dynamic(
-  () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
+  () => import('react-notion-x/third-party/pdf').then((m) => m.Pdf),
   {
     ssr: false
   }
 )
 const Modal = dynamic(
   () =>
-    import('react-notion-x/build/third-party/modal').then((m) => {
+    import('react-notion-x/third-party/modal').then((m) => {
       m.Modal.setAppElement('.notion-viewport')
       return m.Modal
     }),
@@ -95,6 +93,18 @@ const propertyTextValue = (
   return defaultFn()
 }
 
+const notionRendererComponents: Partial<NotionComponents> = {
+  nextLegacyImage: Image,
+  nextLink: Link,
+  Collection,
+  Pdf,
+  Modal,
+  Header: NotionPageHeader,
+  propertyLastEditedTimeValue,
+  propertyTextValue,
+  propertyDateValue
+}
+
 export function NotionPage({
   site,
   recordMap,
@@ -103,21 +113,6 @@ export function NotionPage({
 }: types.PageProps) {
   const router = useRouter()
   const lite = useSearchParam('lite')
-
-  const components = React.useMemo<Partial<NotionComponents>>(
-    () => ({
-      nextLegacyImage: Image,
-      nextLink: Link,
-      Collection,
-      Pdf,
-      Modal,
-      Header: NotionPageHeader,
-      propertyLastEditedTimeValue,
-      propertyTextValue,
-      propertyDateValue
-    }),
-    []
-  )
 
   const siteMapPageUrl = React.useMemo(() => {
     const params: any = {}
@@ -146,8 +141,6 @@ export function NotionPage({
     ),
     [block, recordMap, isBlogPost]
   )
-
-  const footer = React.useMemo(() => <Footer />, [])
 
   if (router.isFallback) {
     return <Loading />
@@ -205,7 +198,7 @@ export function NotionPage({
       <NotionRenderer
         className={'content-page'}
         bodyClassName={cs(styles.notion, 'content-page')}
-        components={components}
+        components={notionRendererComponents}
         recordMap={recordMap}
         rootPageId={site.rootNotionPageId}
         rootDomain={site.domain}
@@ -221,7 +214,7 @@ export function NotionPage({
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : undefined}
         pageAside={pageAside}
-        footer={footer}
+        footer={<Footer />}
       />
     </>
   )
