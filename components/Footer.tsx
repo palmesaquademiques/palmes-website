@@ -1,13 +1,11 @@
-import { FaEnvelopeOpenText } from '@react-icons/all-files/fa/FaEnvelopeOpenText'
-import { FaFacebook } from '@react-icons/all-files/fa/FaFacebook'
-import { FaInstagram } from '@react-icons/all-files/fa/FaInstagram'
 import * as React from 'react'
 
 import * as config from '@/lib/config'
+import { EmailIcon } from '@/lib/icons/email'
+import { FacebookIcon } from '@/lib/icons/facebook'
+import { InstagramIcon } from '@/lib/icons/instagram'
 
 import styles from './styles.module.css'
-
-// TODO: merge the data and icons from PageSocial with the social links in Footer
 
 export function FooterImpl() {
   const currentYear = new Date().getFullYear()
@@ -28,7 +26,7 @@ export function FooterImpl() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaFacebook />
+            <FacebookIcon />
           </a>
         )}
 
@@ -40,7 +38,7 @@ export function FooterImpl() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaInstagram />
+            <InstagramIcon />
           </a>
         )}
 
@@ -52,7 +50,7 @@ export function FooterImpl() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaEnvelopeOpenText />
+            <EmailIcon />
           </a>
         )}
       </div>
