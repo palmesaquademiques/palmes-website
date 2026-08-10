@@ -13,3 +13,9 @@ minimumReleaseAgeExclude:
   - notion-utils
 
 packageManagerStrict: false
+
+allowBuilds:
+  canvas: true
+  core-js: true
+  protobufjs: true
+  sharp: true
