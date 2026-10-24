@@ -1,4 +1,4 @@
-import { ActivityIcon } from '@sanity/icons'
+import { ActivityIcon } from '@sanity/icons/Activity'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export const activitiesPage = defineType({

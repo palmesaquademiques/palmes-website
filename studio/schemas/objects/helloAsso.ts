@@ -1,4 +1,4 @@
-import { HeartIcon } from '@sanity/icons'
+import { HeartIcon } from '@sanity/icons/Heart'
 import { defineField, defineType } from 'sanity'
 
 export const helloAsso = defineType({
