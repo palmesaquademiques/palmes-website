@@ -151,5 +151,5 @@ const faqStructuredData = {
     </section>
   )}
 
-  <TeamSection members={members} />
+  {members.length > 0 && <TeamSection members={members} />}
 </BaseLayout>
