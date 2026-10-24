@@ -164,9 +164,9 @@ const instructorGroups = [
   members.forEach((member) => {
     const toggle = member.querySelector<HTMLButtonElement>('[data-member-toggle]')!
     toggle.addEventListener('click', (event) => {
+      if ((event as PointerEvent).pointerType === 'mouse') return
       const isDiving = member.toggleAttribute('data-diving')
       toggle.setAttribute('aria-pressed', String(isDiving))
-      if ((event as PointerEvent).pointerType === 'mouse') return
       if (isDiving) playEmblem(member)
       else stopEmblem(member)
     })
