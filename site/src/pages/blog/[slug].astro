@@ -1,0 +1,116 @@
+---
+import type { GetStaticPaths } from 'astro'
+import PostCard from '../../components/cards/PostCard.astro'
+import RichText from '../../components/rich-text/RichText.astro'
+import JsonLd from '../../components/seo/JsonLd.astro'
+import Bubbles from '../../components/ui/Bubbles.astro'
+import Icon from '../../components/ui/Icon.astro'
+import SanityImage from '../../components/ui/SanityImage.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { formatDate } from '../../lib/dates'
+import { type Post, postsWithBodyQuery } from '../../lib/queries'
+import { plainTextOf, truncate } from '../../lib/richText'
+import { imageUrl, sanityQuery } from '../../lib/sanity'
+import { blogPosting } from '../../lib/structuredData'
+
+type Props = { post: Post; morePosts: Post[] }
+
+export const getStaticPaths = (async () => {
+  const posts = await sanityQuery<Post[]>(postsWithBodyQuery)
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: {
+      post,
+      morePosts: posts.filter((otherPost) => otherPost._id !== post._id).slice(0, 2)
+    }
+  }))
+}) satisfies GetStaticPaths
+
+const { post, morePosts } = Astro.props
+const description = truncate(post.excerpt || plainTextOf(post.body) || post.title, 160)
+---
+
+<BaseLayout
+  title={post.title}
+  description={description}
+  image={`/og/blog/${post.slug}.png`}
+  type="article"
+  publishedTime={post.publishedAt}
+>
+  <JsonLd
+    slot="head"
+    data={blogPosting({
+      title: post.title,
+      description,
+      author: post.author,
+      publishedAt: post.publishedAt,
+      url: new URL(`/blog/${post.slug}`, Astro.site).href,
+      imageUrl: post.coverImage ? imageUrl(post.coverImage).width(1200).url() : undefined
+    })}
+  />
+
+  <section
+    class:list={[
+      'relative isolate overflow-hidden bg-abyss pt-[calc(var(--spacing-header)+4rem)] text-white',
+      post.coverImage ? 'pb-48 sm:pb-64' : 'pb-24'
+    ]}
+  >
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_0%,rgb(43_167_222/0.3),transparent_55%)]"
+    ></div>
+    <Bubbles count={8} />
+    <div class="container-page max-w-4xl">
+      <a
+        href="/blog"
+        class="inline-flex animate-fade-up items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white"
+      >
+        <Icon name="arrowLeft" class="size-4" /> Le blog
+      </a>
+      <p class="kicker mt-8 animate-fade-up text-lagoon [animation-delay:80ms]">
+        <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+        {post.author && <span class="text-white/60"> · {post.author}</span>}
+      </p>
+      <h1 class="mt-4 animate-fade-up text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-bold tracking-[-0.03em] [animation-delay:160ms]">
+        {post.title}
+      </h1>
+      {post.excerpt && (
+        <p class="mt-6 animate-fade-up text-xl text-white/75 [animation-delay:240ms]">
+          {post.excerpt}
+        </p>
+      )}
+    </div>
+  </section>
+
+  {post.coverImage && (
+    <div class="container-page relative z-10 -mt-36 max-w-5xl sm:-mt-52">
+      <SanityImage
+        image={post.coverImage}
+        aspectRatio={16 / 9}
+        sizes="(min-width: 64rem) 62rem, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="w-full animate-fade-up rounded-[2rem] shadow-[0_40px_80px_-40px] shadow-abyss/60 [animation-delay:300ms]"
+      />
+    </div>
+  )}
+
+  <article class="container-page max-w-3xl py-16 sm:py-20">
+    <RichText value={post.body} />
+  </article>
+
+  {morePosts.length > 0 && (
+    <section class="border-t border-ink/10 bg-white/50 py-20">
+      <div class="container-page">
+        <h2 class="text-4xl font-semibold tracking-tight">À lire aussi</h2>
+        <ul class="mt-10 grid gap-10 md:grid-cols-2">
+          {morePosts.map((morePost) => (
+            <li>
+              <PostCard post={morePost} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</BaseLayout>

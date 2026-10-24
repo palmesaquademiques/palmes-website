@@ -1,0 +1,60 @@
+---
+import { formatDate } from '../../lib/dates'
+import type { PostSummary } from '../../lib/queries'
+import SanityImage from '../ui/SanityImage.astro'
+
+type Props = {
+  post: PostSummary
+  featured?: boolean
+  tone?: 'dark' | 'light'
+  headingLevel?: 'h2' | 'h3'
+}
+
+const { post, featured = false, tone = 'light', headingLevel: Heading = 'h3' } = Astro.props
+---
+
+<a
+  href={`/blog/${post.slug}`}
+  class:list={[
+    'group flex gap-5',
+    featured ? 'flex-col' : 'flex-col sm:flex-row sm:items-center',
+    tone === 'dark' ? 'text-white' : 'text-ink'
+  ]}
+>
+  <div
+    class:list={[
+      'relative shrink-0 overflow-hidden rounded-3xl',
+      tone === 'dark' ? 'bg-deep' : 'bg-foam',
+      featured ? 'aspect-[16/10] w-full' : 'aspect-[4/3] w-full sm:w-56'
+    ]}
+  >
+    {post.coverImage && (
+      <SanityImage
+        image={post.coverImage}
+        aspectRatio={featured ? 16 / 10 : 4 / 3}
+        widths={featured ? [480, 800, 1200, 1600] : [320, 480, 640]}
+        sizes={featured ? '(min-width: 1024px) 50vw, 100vw' : '(min-width: 640px) 14rem, 100vw'}
+        class="size-full object-cover transition duration-[1.2s] ease-swim group-hover:scale-105"
+      />
+    )}
+  </div>
+  <div>
+    <p class:list={['kicker', tone === 'dark' ? 'text-lagoon' : 'text-ocean']}>
+      <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+      {post.author && <span class="opacity-70"> · {post.author}</span>}
+    </p>
+    <Heading
+      class:list={[
+        'mt-2 font-semibold tracking-tight transition-colors group-hover:text-lagoon',
+        featured ? 'text-3xl sm:text-4xl' : 'text-xl sm:text-2xl'
+      ]}
+    >
+      {post.title}
+    </Heading>
+    {post.excerpt && (
+      <p class:list={['mt-3 line-clamp-3', tone === 'dark' ? 'text-white/65' : 'text-slate-600']}>
+        {post.excerpt}
+      </p>
+    )}
+  </div>
+</a>

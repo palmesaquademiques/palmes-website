@@ -1,0 +1,30 @@
+---
+import PostCard from '../../components/cards/PostCard.astro'
+import PageHero from '../../components/layout/PageHero.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { type PostSummary, postsQuery } from '../../lib/queries'
+import { sanityQuery } from '../../lib/sanity'
+
+const [featuredPost, ...otherPosts] = await sanityQuery<PostSummary[]>(postsQuery)
+const intro = 'Récits de sorties, vie du club et conseils pratiques pour bien plonger.'
+---
+
+<BaseLayout title="Le blog" description={intro} image="/og/blog.png">
+  <PageHero kicker="Carnet de plongée" title="Le blog" intro={intro} />
+
+  <section class="container-page py-20">
+    {featuredPost && (
+      <div class="border-b border-ink/10 pb-16">
+        <PostCard post={featuredPost} featured headingLevel="h2" />
+      </div>
+    )}
+
+    <ul class="mt-16 grid gap-x-10 gap-y-14 md:grid-cols-2">
+      {otherPosts.map((post) => (
+        <li>
+          <PostCard post={post} headingLevel="h2" />
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
