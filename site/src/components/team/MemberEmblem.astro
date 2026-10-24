@@ -30,6 +30,11 @@ const TENTACLE_SUCKERS = [
   [37, 36, 1.2]
 ]
 
+const SEAHORSE_OUTLINE =
+  'M10 17.5C14 16.5 20 15.5 26 14.5 27 10 30 6.5 35 6L36 2.5 38.5 5.5 41 3 42 7.5C45 9 46.5 13 45.5 17 45 20 43.5 22 43 24 47 28 50 35 49.5 43 49 51 46 58 41 63L33 64C27 59 21 52 21 44 21 36 25 30 30 27.5 27 26 25 24.5 24 22.5 19 22.5 14 22.5 10 22 8.5 21.5 8 18.5 10 17.5Z'
+
+const SEAHORSE_TAIL = 'M37 60c1 10-1 19-7 25-5 5-12 3-12-3 0-5 5-7 8-4 2 2 0 5-2 4'
+
 const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>> = {
   tentacleCoin: 'coin',
   tentacleQuill: 'quill',
@@ -37,13 +42,6 @@ const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>>
 }
 
 const tentacleAccessory = tentacleAccessories[emblem]
-
-const crabLegs = [-1, 1].flatMap((side) =>
-  [0, 1, 2, 3].map(
-    (legIndex) =>
-      `M${30 + side * 7} ${24 + legIndex * 2} q${side * 10} ${-6 + legIndex * 4} ${side * 20} ${4 + legIndex * 5}`
-  )
-)
 ---
 
 <span
@@ -349,39 +347,114 @@ const crabLegs = [-1, 1].flatMap((side) =>
     </span>
   )}
 
-  {emblem === 'spiderCrab' && (
-    <span class="emblem-crab absolute -bottom-[12%] left-[16%] w-[32%]">
-      <svg viewBox="0 0 60 44" class="w-full overflow-visible">
-        <g
-          class="emblem-crab-legs"
-          stroke="#d9572f"
-          stroke-width="2"
-          stroke-linecap="round"
-          fill="none"
-        >
-          {crabLegs.map((leg) => (
-            <path d={leg} />
-          ))}
+  {emblem === 'seahorse' && (
+    <span class="emblem-seahorse absolute top-[0%] -right-[28%] w-[38%]">
+      <svg
+        viewBox="0 0 60 100"
+        class="w-full overflow-visible drop-shadow-[0_3px_6px_rgb(0_0_0/0.45)]"
+      >
+        <defs>
+          <linearGradient id={`seahorse-body-${uid}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffd76e" />
+            <stop offset="0.5" stop-color="#ffa64d" />
+            <stop offset="1" stop-color="#f0703f" />
+          </linearGradient>
+          <radialGradient id={`seahorse-belly-${uid}`} cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#fff3c4" stop-opacity="0.75" />
+            <stop offset="1" stop-color="#fff3c4" stop-opacity="0" />
+          </radialGradient>
+          <clipPath id={`seahorse-clip-${uid}`}>
+            <path d={SEAHORSE_OUTLINE} />
+          </clipPath>
+        </defs>
+
+        {[0, 1, 2].map((bubbleIndex) => (
+          <circle
+            class="seahorse-bubble"
+            cx={7 - bubbleIndex}
+            cy="17"
+            r={1.2 + bubbleIndex * 0.4}
+            fill="none"
+            stroke="white"
+            stroke-width="0.6"
+            style={`animation-delay:${bubbleIndex * 0.7}s`}
+          />
+        ))}
+
+        <g class="seahorse-fin">
+          <path
+            d="M48 35c7 1 10 7 8 15-3-1-6-2-9-2Z"
+            fill="rgb(255 226 150 / 0.75)"
+            stroke="#e8a23f"
+            stroke-width="0.6"
+          />
+          <path
+            d="M48 37.5 55 40M48 40.5 56.5 44M48 43.5 56.5 47.5M48 46.5 54.5 49.5"
+            stroke="#e8a23f"
+            stroke-width="0.5"
+          />
+        </g>
+
+        <g class="seahorse-tail" fill="none" stroke-linecap="round">
+          <path
+            d={SEAHORSE_TAIL}
+            pathLength="1"
+            stroke="#f58a45"
+            stroke-width="9"
+            stroke-dasharray="0.35 1"
+          />
+          <path
+            d={SEAHORSE_TAIL}
+            pathLength="1"
+            stroke="#f58a45"
+            stroke-width="6.5"
+            stroke-dasharray="0.62 1"
+          />
+          <path d={SEAHORSE_TAIL} pathLength="1" stroke="#f58a45" stroke-width="4" />
+          <path
+            d={SEAHORSE_TAIL}
+            pathLength="1"
+            stroke="#c4471f"
+            stroke-width="3.6"
+            stroke-dasharray="0.012 0.045"
+            opacity="0.55"
+          />
+        </g>
+
+        <path
+          d={SEAHORSE_OUTLINE}
+          fill={`url(#seahorse-body-${uid})`}
+          stroke="#c4471f"
+          stroke-width="0.9"
+          stroke-linejoin="round"
+        />
+        <g clip-path={`url(#seahorse-clip-${uid})`}>
+          <ellipse cx="26.5" cy="44" rx="7" ry="15" fill={`url(#seahorse-belly-${uid})`} />
+          <path
+            d="M45 30c-6 1-13 1-20 3M48 37c-7 1-16 1-26 2M49 44c-8 1-18 2-28 2M47 51c-6 1-14 2-24 1M43 57c-5 1-11 1-16 0"
+            stroke="#c4471f"
+            stroke-width="0.9"
+            fill="none"
+            opacity="0.55"
+          />
         </g>
         <path
-          d="M22 18c-4-6-10-8-14-6M38 18c4-6 10-8 14-6"
-          stroke="#d9572f"
-          stroke-width="2.4"
-          stroke-linecap="round"
-          fill="none"
+          d="M43 21.5c3-1 4.5 1 3.2 3.4-1.4 0-2.5-.8-3.2-1.8Z"
+          fill="rgb(255 226 150 / 0.55)"
+          stroke="#e8a23f"
+          stroke-width="0.4"
         />
-        <ellipse
-          cx="30"
-          cy="25"
-          rx="10"
-          ry="8"
-          fill="#ff7a4a"
-          stroke="#c4471f"
-          stroke-width="1.2"
-        />
-        <path d="M26 17v-5M34 17v-5" stroke="#c4471f" stroke-width="1.6" stroke-linecap="round" />
-        <circle cx="26" cy="11" r="2" fill="#0a1826" />
-        <circle cx="34" cy="11" r="2" fill="#0a1826" />
+        {[
+          [38, 12],
+          [44, 29],
+          [41, 50]
+        ].map(([x, y]) => (
+          <circle cx={x} cy={y} r="0.9" fill="#d9572f" opacity="0.7" />
+        ))}
+        <circle cx="33" cy="13" r="2.7" fill="#fff" stroke="#c4471f" stroke-width="0.6" />
+        <circle cx="32.4" cy="13.2" r="1.5" fill="#0a1826" />
+        <circle cx="32" cy="12.6" r="0.5" fill="#fff" />
+        <circle cx="9.6" cy="19.8" r="0.7" fill="#7a2a12" />
       </svg>
     </span>
   )}
@@ -393,13 +466,20 @@ const crabLegs = [-1, 1].flatMap((side) =>
   .emblem-tentacle,
   .emblem-tag,
   .emblem-compass,
-  .emblem-crab {
+  .emblem-seahorse {
     opacity: 0;
     transition: opacity 0.3s ease;
   }
 
   :global([data-emblem-play])
-    :is(.emblem-crown, .emblem-seal, .emblem-tentacle, .emblem-tag, .emblem-compass, .emblem-crab) {
+    :is(
+      .emblem-crown,
+      .emblem-seal,
+      .emblem-tentacle,
+      .emblem-tag,
+      .emblem-compass,
+      .emblem-seahorse
+    ) {
     opacity: 1;
   }
 
@@ -679,31 +759,76 @@ const crabLegs = [-1, 1].flatMap((side) =>
     }
   }
 
-  :global([data-emblem-play]) .emblem-crab {
-    animation: crab-scuttle 2.4s ease-in-out;
+  :global([data-emblem-play]) .emblem-seahorse {
+    animation:
+      seahorse-arrive 1s var(--ease-swim),
+      seahorse-bob 2.8s ease-in-out 1s infinite;
   }
 
-  :global([data-emblem-play]) .emblem-crab-legs {
-    animation: crab-legs 0.25s linear 9;
-  }
-
-  .emblem-crab-legs {
+  .seahorse-fin,
+  .seahorse-tail {
     transform-box: fill-box;
-    transform-origin: center;
   }
 
-  @keyframes crab-scuttle {
-    30% {
-      translate: 110% 0;
-    }
-    60% {
-      translate: -40% 0;
+  .seahorse-fin {
+    transform-origin: 0% 50%;
+  }
+
+  .seahorse-tail {
+    transform-origin: 50% 0%;
+  }
+
+  .seahorse-bubble {
+    opacity: 0;
+  }
+
+  :global([data-emblem-play]) .seahorse-fin {
+    animation: seahorse-flutter 0.16s ease-in-out infinite alternate;
+  }
+
+  :global([data-emblem-play]) .seahorse-tail {
+    animation: seahorse-tail-sway 2.2s ease-in-out infinite;
+  }
+
+  :global([data-emblem-play]) .seahorse-bubble {
+    animation: seahorse-bubble 2.1s ease-out 0.8s infinite;
+  }
+
+  @keyframes seahorse-arrive {
+    from {
+      transform: translate(30%, 60%) rotate(18deg);
     }
   }
 
-  @keyframes crab-legs {
+  @keyframes seahorse-bob {
     50% {
-      transform: scaleY(0.8) translateY(1px);
+      transform: translateY(-8%) rotate(-5deg);
+    }
+  }
+
+  @keyframes seahorse-flutter {
+    to {
+      transform: scaleX(0.55);
+    }
+  }
+
+  @keyframes seahorse-tail-sway {
+    50% {
+      transform: rotate(6deg);
+    }
+  }
+
+  @keyframes seahorse-bubble {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    20% {
+      opacity: 0.9;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-4px, -22px);
     }
   }
 </style>

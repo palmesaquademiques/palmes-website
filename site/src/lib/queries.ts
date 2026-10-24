@@ -88,7 +88,7 @@ export type Emblem =
   | 'loanTag'
   | 'champagne'
   | 'compass'
-  | 'spiderCrab'
+  | 'seahorse'
 
 export type Member = {
   _id: string
