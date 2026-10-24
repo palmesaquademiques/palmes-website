@@ -70,6 +70,14 @@ export const getStaticPaths = (async () => {
       { title: 'Galerie', subtitle: 'Nos images sous la surface', image: galleryImage ?? heroImage }
     ],
     [
+      'jeu',
+      {
+        title: 'Poulpalmes',
+        subtitle: 'Le jeu du poulpe · Saurez-vous atteindre le niveau Moniteur ?',
+        image: null
+      }
+    ],
+    [
       'contact',
       {
         title: 'Nous rejoindre',

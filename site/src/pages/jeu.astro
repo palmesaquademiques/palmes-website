@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Poulpalmes, le jeu du poulpe"
+  description="Propulsez le poulpe des Palmes Aquadémiques entre les rochers. Saurez-vous atteindre le niveau Moniteur ?"
+  image="/og/jeu.png"
+  bodyClass="bg-abyss"
+>
+  <section class="px-3 pt-[calc(var(--spacing-header)+0.75rem)] pb-6 sm:px-6">
+    <div
+      data-game
+      class="relative mx-auto h-[calc(100svh-var(--spacing-header)-2rem)] max-h-[860px] max-w-6xl touch-none overflow-hidden rounded-[1.75rem] ring-1 ring-white/10 select-none"
+    >
+      <canvas
+        data-game-canvas
+        role="img"
+        aria-label="Un poulpe nage dans l’océan entre des rochers couverts de corail"
+        class="block size-full"
+      ></canvas>
+
+      <p
+        data-game-score
+        aria-hidden="true"
+        hidden
+        class="pointer-events-none absolute inset-x-0 top-6 text-center font-display text-7xl font-bold text-white [text-shadow:0_4px_24px_rgb(0_0_0/0.45)]"
+      >
+        0
+      </p>
+
+      <div
+        data-game-start
+        class="absolute inset-0 flex flex-col items-center gap-4 bg-[radial-gradient(ellipse_at_50%_25%,rgb(2_12_22/0.6),transparent_60%)] px-6 pt-12 text-center text-white sm:pt-16"
+      >
+        <p class="kicker text-lagoon">Le jeu du club</p>
+        <h1 class="text-6xl font-bold tracking-tight sm:text-8xl">Poulpalmes</h1>
+        <p class="max-w-sm text-lg text-white/80">
+          Propulsez le poulpe entre les rochers, sans toucher le fond.
+        </p>
+        <button type="button" data-game-play class="button-primary mt-2">
+          Plonger
+        </button>
+        <p class="text-sm text-white/60">Espace, clic ou toucher pour donner un coup de jet</p>
+        <p data-game-record-start class="text-sm text-white/60"></p>
+      </div>
+
+      <div
+        data-game-over
+        hidden
+        aria-live="polite"
+        class="absolute inset-0 flex flex-col items-center justify-center gap-5 bg-abyss/55 px-6 text-center text-white backdrop-blur-sm"
+      >
+        <p class="kicker text-coral">Fin de plongée</p>
+        <p data-game-message class="font-display text-4xl font-bold tracking-tight sm:text-5xl"></p>
+        <dl class="flex gap-12">
+          <div class="flex flex-col-reverse items-center gap-1">
+            <dt class="kicker text-white/60">Score</dt>
+            <dd data-game-final-score class="font-display text-6xl font-bold"></dd>
+          </div>
+          <div class="flex flex-col-reverse items-center gap-1">
+            <dt class="kicker text-white/60">Record</dt>
+            <dd data-game-record class="font-display text-6xl font-bold text-lagoon"></dd>
+          </div>
+        </dl>
+        <p class="text-lg">
+          Votre niveau : <strong data-game-level class="text-coral"></strong>
+        </p>
+        <p
+          data-game-new-record
+          hidden
+          class="rounded-full bg-coral px-4 py-1 text-sm font-semibold text-ink"
+        >
+          Nouveau record !
+        </p>
+        <div class="mt-2 flex flex-wrap justify-center gap-3">
+          <button type="button" data-game-replay class="button-primary">
+            Replonger
+          </button>
+          <a href="/" class="button-ghost">
+            Retour au site
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="mx-auto mt-4 max-w-6xl text-center text-sm text-white/50">
+      Votre record est gardé sur cet appareil.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../scripts/octopus-game/game'
+</script>
