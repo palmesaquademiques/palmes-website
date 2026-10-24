@@ -7,7 +7,7 @@ import { TEAM_2025_2026 } from './team.ts'
 
 const contentDirectory = path.resolve(process.argv[2] ?? '../../palmes_test/src/content')
 const outputFile = path.resolve('../migration-output/palmes.ndjson')
-const teamPhotosDirectory = path.resolve('migrations/team-photos')
+const localPhotosDirectory = path.resolve('migrations')
 
 const TRIP_STATUSES: Record<string, string> = {
   'a-confirmer': 'to-confirm',
@@ -55,6 +55,12 @@ const imageResolverFor =
     ...(alt ? { alt } : {}),
     _sanityAsset: `image@file://${path.join(contentDirectory, collection, source)}`
   })
+
+const localPhoto = (fileName: string, alt: string): SanityImage => ({
+  _type: 'imageWithAlt',
+  alt,
+  _sanityAsset: `image@file://${path.join(localPhotosDirectory, fileName)}`
+})
 
 const optionalImage = (collection: string, source: unknown, alt = '') =>
   typeof source === 'string' ? imageResolverFor(collection)(source, alt) : undefined
@@ -113,7 +119,7 @@ const buildHomePage = async () => {
     _type: 'homePage',
     heroTitle: frontmatter.titre,
     heroTagline: frontmatter.accroche,
-    heroImage: pageImage('./contact/couverture.webp', 'Plongeur dans une grotte sous-marine'),
+    heroImage: localPhoto('home-hero.jpg', 'Plongeur dans une grotte sous-marine'),
     introTitle: 'Le club en bref',
     intro: markdocToPortableText(CLUB_SUMMARY, pageImage),
     keyFigures: keyed(
@@ -250,19 +256,13 @@ const buildContactPage = async () => {
   }
 }
 
-const teamPhoto = (fileName: string, alt: string): SanityImage => ({
-  _type: 'imageWithAlt',
-  alt,
-  _sanityAsset: `image@file://${path.join(teamPhotosDirectory, fileName)}`
-})
-
 const buildMembers = () =>
   TEAM_2025_2026.map(({ slug, ...member }) => ({
     _id: `member-${slug}`,
     _type: 'member',
     ...member,
-    landPhoto: teamPhoto(`${slug}-terre.jpg`, member.name),
-    diverPhoto: teamPhoto(`${slug}-plongee.jpg`, `${member.name} en plongée`)
+    landPhoto: localPhoto(`team-photos/${slug}-terre.jpg`, member.name),
+    diverPhoto: localPhoto(`team-photos/${slug}-plongee.jpg`, `${member.name} en plongée`)
   }))
 
 const buildTripsPage = () => ({ _id: 'tripsPage', _type: 'tripsPage', intro: TRIPS_INTRO })
