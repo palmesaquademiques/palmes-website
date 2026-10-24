@@ -2,6 +2,7 @@
 import type { Member } from '../../lib/queries'
 import { displayName } from '../../lib/team'
 import SanityImage from '../ui/SanityImage.astro'
+import MemberEmblem from './MemberEmblem.astro'
 
 type Props = {
   member: Member
@@ -17,74 +18,81 @@ const bubbles = [18, 34, 52, 68, 80]
 ---
 
 <figure data-member data-surfaced class="flex w-40 flex-col items-center text-center sm:w-48">
-  <button
-    type="button"
-    data-member-toggle
-    aria-pressed="false"
-    aria-label={`Voir ${name} en plongée`}
-    disabled={!member.diverPhoto}
-    class:list={[
-      'relative rounded-full bg-[conic-gradient(from_210deg,#f7dc8a,#b9862c,#f7dc8a,#8f6419,#f7dc8a)] p-[3px] shadow-[0_20px_50px_-20px] shadow-gold/40 transition duration-500 ease-swim enabled:cursor-pointer enabled:hover:-translate-y-1',
-      size === 'large' ? 'size-36 sm:size-48' : 'size-32 sm:size-40'
-    ]}
-  >
-    <span class="medallion relative block size-full overflow-hidden rounded-full ring-4 ring-abyss">
-      {member.diverPhoto && (
-        <>
-          <SanityImage
-            image={member.diverPhoto}
-            aspectRatio={1}
-            widths={[200, 320, 400]}
-            sizes="12rem"
-            class="absolute inset-0 size-full object-cover"
-          />
-          <span class="absolute inset-0 bg-ocean/30 mix-blend-multiply" />
-          <span class="caustics absolute inset-0 opacity-60" />
-          <span class="diving-bubbles absolute inset-0">
-            {bubbles.map((left, bubbleIndex) => (
-              <span
-                class="absolute -bottom-3 size-2 animate-rise rounded-full border border-white/70"
-                style={`left:${left}%; animation-delay:-${bubbleIndex * 0.6}s; --rise-duration:${2.4 + bubbleIndex * 0.3}s; --bubble-drift:${(bubbleIndex % 2 ? 1 : -1) * 6}px`}
-              />
-            ))}
-          </span>
-        </>
-      )}
-      <SanityImage
-        image={member.landPhoto}
-        aspectRatio={1}
-        widths={[200, 320, 400]}
-        sizes="12rem"
-        class="land-photo absolute inset-0 size-full object-cover"
-      />
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 400 24"
-        preserveAspectRatio="none"
-        class="waterline absolute -inset-x-1/2 h-6 w-[200%]"
-      >
-        <path
-          d="M0 12c25-9 50-9 75 0s50 9 75 0 50-9 75 0 50 9 75 0 50-9 75 0 50 9 75 0V24H0Z"
-          fill="rgb(43 167 222 / 0.55)"
-        ></path>
-        <path
-          d="M0 12c25-9 50-9 75 0s50 9 75 0 50-9 75 0 50 9 75 0 50-9 75 0 50 9 75 0"
-          fill="none"
-          stroke="white"
-          stroke-opacity="0.85"
-          stroke-width="2"
-        ></path>
-      </svg>
-    </span>
-    {badge && (
-      <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-abyss px-3 py-1 font-display text-sm font-bold text-gold ring-2 ring-gold/70">
-        {badge}
+  <div class="relative">
+    <button
+      type="button"
+      data-member-toggle
+      aria-pressed="false"
+      aria-label={`Voir ${name} en plongée`}
+      disabled={!member.diverPhoto}
+      class:list={[
+        'relative rounded-full bg-[conic-gradient(from_210deg,#f7dc8a,#b9862c,#f7dc8a,#8f6419,#f7dc8a)] p-[3px] shadow-[0_20px_50px_-20px] shadow-gold/40 transition duration-500 ease-swim enabled:cursor-pointer enabled:hover:-translate-y-1',
+        size === 'large' ? 'size-36 sm:size-48' : 'size-32 sm:size-40'
+      ]}
+    >
+      <span class="medallion relative block size-full overflow-hidden rounded-full ring-4 ring-abyss">
+        {member.diverPhoto && (
+          <>
+            <SanityImage
+              image={member.diverPhoto}
+              aspectRatio={1}
+              widths={[200, 320, 400]}
+              sizes="12rem"
+              class="absolute inset-0 size-full object-cover"
+            />
+            <span class="absolute inset-0 bg-ocean/30 mix-blend-multiply" />
+            <span class="caustics absolute inset-0 opacity-60" />
+            <span class="diving-bubbles absolute inset-0">
+              {bubbles.map((left, bubbleIndex) => (
+                <span
+                  class="absolute -bottom-3 size-2 animate-rise rounded-full border border-white/70"
+                  style={`left:${left}%; animation-delay:-${bubbleIndex * 0.6}s; --rise-duration:${2.4 + bubbleIndex * 0.3}s; --bubble-drift:${(bubbleIndex % 2 ? 1 : -1) * 6}px`}
+                />
+              ))}
+            </span>
+          </>
+        )}
+        <SanityImage
+          image={member.landPhoto}
+          aspectRatio={1}
+          widths={[200, 320, 400]}
+          sizes="12rem"
+          class="land-photo absolute inset-0 size-full object-cover"
+        />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 400 24"
+          preserveAspectRatio="none"
+          class="waterline absolute -inset-x-1/2 h-6 w-[200%]"
+        >
+          <path
+            d="M0 12c25-9 50-9 75 0s50 9 75 0 50-9 75 0 50 9 75 0 50-9 75 0 50 9 75 0V24H0Z"
+            fill="rgb(43 167 222 / 0.55)"
+          ></path>
+          <path
+            d="M0 12c25-9 50-9 75 0s50 9 75 0 50-9 75 0 50 9 75 0 50-9 75 0 50 9 75 0"
+            fill="none"
+            stroke="white"
+            stroke-opacity="0.85"
+            stroke-width="2"
+          ></path>
+        </svg>
       </span>
-    )}
-  </button>
+      {badge && (
+        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 overflow-hidden rounded-full bg-abyss px-3 py-1 font-display text-sm font-bold text-gold ring-2 ring-gold/70">
+          {badge}
+          <span class="badge-glint absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+        </span>
+      )}
+    </button>
+    {member.emblem && <MemberEmblem emblem={member.emblem} uid={member._id} />}
+  </div>
   <figcaption class="mt-6">
     {title && (
-      <p class="font-display text-lg leading-tight font-semibold text-balance text-gold">{title}</p>
+      <p class="title-stack grid font-display text-lg leading-tight font-semibold text-balance">
+        <span class="public-title text-gold">{title}</span>
+        {member.secretTitle && <span class="secret-title text-lagoon">{member.secretTitle}</span>}
+      </p>
     )}
     <p class="mt-1.5 font-medium text-white">{name}</p>
     {detail?.split(' · ').map((line) => (
@@ -130,5 +138,46 @@ const bubbles = [18, 34, 52, 68, 80]
 
   .diving-bubbles {
     opacity: calc(1 - var(--surface) / 100%);
+  }
+
+  .title-stack > * {
+    grid-area: 1 / 1;
+    transition: opacity 0.5s var(--ease-swim);
+  }
+
+  .secret-title {
+    opacity: 0;
+  }
+
+  [data-member][data-diving] .secret-title {
+    opacity: 1;
+  }
+
+  [data-member][data-diving] .title-stack:has(.secret-title) .public-title {
+    opacity: 0;
+  }
+
+  @media (hover: hover) {
+    [data-member]:hover .secret-title {
+      opacity: 1;
+    }
+
+    [data-member]:hover .title-stack:has(.secret-title) .public-title {
+      opacity: 0;
+    }
+  }
+
+  .badge-glint {
+    translate: -110% 0;
+  }
+
+  [data-emblem-play] .badge-glint {
+    animation: badge-glint 1.1s ease-in-out 0.3s;
+  }
+
+  @keyframes badge-glint {
+    to {
+      translate: 110% 0;
+    }
   }
 </style>

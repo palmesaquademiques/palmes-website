@@ -1,39 +1,48 @@
 import type { InstructorLevel, Member } from './queries'
 
-type LevelDetails = { label: string; title: string; isAtSea: boolean; rank: number }
+type LevelDetails = { label: string; title: string; isAtSea: boolean; displayOrder: number }
 
 export const instructorLevels: Record<InstructorLevel, LevelDetails> = {
-  E1: { label: 'Initiateur', title: 'Sentinelle des Bassins', isAtSea: false, rank: 1 },
+  E1: { label: 'Initiateur', title: 'Précepteur des bassins', isAtSea: false, displayOrder: 1 },
+  N4: {
+    label: 'Guide de palanquée',
+    title: 'Éclaireur des profondeurs',
+    isAtSea: true,
+    displayOrder: 2
+  },
   E2: {
     label: 'Initiateur et guide de palanquée',
-    title: 'Sentinelle des Mers',
+    title: 'Précepteur des mers',
     isAtSea: true,
-    rank: 2
+    displayOrder: 3
   },
-  N4: { label: 'Guide de palanquée', title: 'Guide des Profondeurs', isAtSea: true, rank: 3 },
   MF1: {
     label: 'Moniteur fédéral 1er degré',
-    title: 'Capitaine des Profondeurs',
+    title: 'Maître précepteur',
     isAtSea: true,
-    rank: 4
+    displayOrder: 4
   },
   MF2: {
     label: 'Moniteur fédéral 2e degré',
-    title: 'Capitaine des Abysses',
+    title: 'Grand précepteur',
     isAtSea: true,
-    rank: 5
+    displayOrder: 5
   }
 }
+
+export const instructorTitleOf = (member: Instructor) =>
+  member.instructorTitle ?? instructorLevels[member.instructorLevel].title
 
 export type Instructor = Member & { instructorLevel: InstructorLevel }
 
 const isInstructor = (member: Member): member is Instructor => member.instructorLevel !== null
 
-const byLevelDescending = (first: Instructor, second: Instructor) =>
-  instructorLevels[second.instructorLevel].rank - instructorLevels[first.instructorLevel].rank
+const byDisplayOrder = (first: Instructor, second: Instructor) =>
+  instructorLevels[second.instructorLevel].displayOrder -
+  instructorLevels[first.instructorLevel].displayOrder
 
 export const groupTeam = (members: Member[]) => {
-  const instructors = members.filter(isInstructor).toSorted(byLevelDescending)
+  const instructors = members.filter(isInstructor).toSorted(byDisplayOrder)
   return {
     board: members.filter((member) => member.team === 'board'),
     committee: members.filter((member) => member.team === 'committee'),

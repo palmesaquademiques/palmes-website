@@ -76,6 +76,20 @@ export type GalleryPage = { intro: string | null; photos: SanityImage[] | null }
 
 export type InstructorLevel = 'E1' | 'E2' | 'N4' | 'MF1' | 'MF2'
 
+export type Emblem =
+  | 'crown'
+  | 'coins'
+  | 'seal'
+  | 'dolphin'
+  | 'tentacleCoin'
+  | 'tentacleQuill'
+  | 'tentacleInkwell'
+  | 'certificates'
+  | 'loanTag'
+  | 'champagne'
+  | 'compass'
+  | 'spiderCrab'
+
 export type Member = {
   _id: string
   name: string
@@ -83,7 +97,10 @@ export type Member = {
   team: 'board' | 'committee' | 'none'
   role: string | null
   title: string | null
+  emblem: Emblem | null
+  secretTitle: string | null
   instructorLevel: InstructorLevel | null
+  instructorTitle: string | null
   landPhoto: SanityImage
   diverPhoto: SanityImage | null
 }
@@ -163,7 +180,7 @@ export const contactPageQuery = `{
     "membershipText": membershipText${richText}, faq
   },
   "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
-    _id, name, nickname, team, role, title, instructorLevel,
+    _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
     "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
   }
 }`
