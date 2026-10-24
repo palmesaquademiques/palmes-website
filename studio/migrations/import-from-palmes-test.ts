@@ -3,9 +3,11 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { markdocToPortableText, type SanityImage } from './markdocToPortableText.ts'
+import { TEAM_2025_2026 } from './team.ts'
 
 const contentDirectory = path.resolve(process.argv[2] ?? '../../palmes_test/src/content')
 const outputFile = path.resolve('../migration-output/palmes.ndjson')
+const teamPhotosDirectory = path.resolve('migrations/team-photos')
 
 const TRIP_STATUSES: Record<string, string> = {
   'a-confirmer': 'to-confirm',
@@ -235,12 +237,6 @@ const buildContactPage = async () => {
     await Promise.all((await entryFiles('faq', '.yaml')).map(({ filePath }) => readYaml(filePath)))
   ).sort(byOrder)
 
-  const team = (
-    await Promise.all(
-      (await entryFiles('equipe', '.yaml')).map(({ filePath }) => readYaml(filePath))
-    )
-  ).sort(byOrder)
-
   return {
     _id: 'contactPage',
     _type: 'contactPage',
@@ -252,18 +248,24 @@ const buildContactPage = async () => {
     faq: keyed(
       faq.map((entry) => ({ _type: 'question', question: entry.question, answer: entry.reponse })),
       'question'
-    ),
-    team: keyed(
-      team.map((member) => ({
-        _type: 'member',
-        name: member.nom,
-        role: member.role,
-        photo: optionalImage('equipe', member.photo, String(member.nom))
-      })),
-      'member'
     )
   }
 }
+
+const teamPhoto = (fileName: string, alt: string): SanityImage => ({
+  _type: 'imageWithAlt',
+  alt,
+  asset: { _sanityAsset: `image@file://${path.join(teamPhotosDirectory, fileName)}` }
+})
+
+const buildMembers = () =>
+  TEAM_2025_2026.map(({ slug, ...member }) => ({
+    _id: `member-${slug}`,
+    _type: 'member',
+    ...member,
+    landPhoto: teamPhoto(`${slug}-terre.jpg`, member.name),
+    diverPhoto: teamPhoto(`${slug}-plongee.jpg`, `${member.name} en plongée`)
+  }))
 
 const buildTripsPage = () => ({ _id: 'tripsPage', _type: 'tripsPage', intro: TRIPS_INTRO })
 
@@ -278,7 +280,8 @@ const migrate = async () => {
     buildTripsPage(),
     await buildActivitiesPage(),
     await buildGalleryPage(),
-    await buildContactPage()
+    await buildContactPage(),
+    ...buildMembers()
   ].map(withoutUndefined)
 
   await mkdir(path.dirname(outputFile), { recursive: true })

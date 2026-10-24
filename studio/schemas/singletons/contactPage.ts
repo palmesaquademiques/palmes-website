@@ -9,8 +9,7 @@ export const contactPage = defineType({
   groups: [
     { name: 'infos', title: 'Informations', default: true },
     { name: 'membership', title: 'Adhésion' },
-    { name: 'faq', title: 'Questions fréquentes' },
-    { name: 'team', title: 'Le bureau' }
+    { name: 'faq', title: 'Questions fréquentes' }
   ],
   fields: [
     defineField({ name: 'intro', title: 'Texte d’accueil', type: 'richText', group: 'infos' }),
@@ -70,34 +69,6 @@ export const contactPage = defineType({
             defineField({ name: 'answer', title: 'Réponse', type: 'text', rows: 4 })
           ],
           preview: { select: { title: 'question', subtitle: 'answer' } }
-        })
-      ]
-    }),
-    defineField({
-      name: 'team',
-      title: 'Membres du bureau',
-      type: 'array',
-      group: 'team',
-      of: [
-        defineArrayMember({
-          name: 'member',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'name',
-              title: 'Prénom',
-              type: 'string',
-              validation: (rule) => rule.required()
-            }),
-            defineField({ name: 'role', title: 'Rôle dans le club', type: 'string' }),
-            defineField({
-              name: 'photo',
-              title: 'Photo',
-              description: 'Cadrage carré de préférence, elle est affichée en rond',
-              type: 'imageWithAlt'
-            })
-          ],
-          preview: { select: { title: 'name', subtitle: 'role', media: 'photo' } }
         })
       ]
     })

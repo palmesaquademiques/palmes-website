@@ -1,3 +1,4 @@
+import { member } from './documents/member'
 import { post } from './documents/post'
 import { trip } from './documents/trip'
 import { embed } from './objects/embed'
@@ -16,6 +17,7 @@ export const singletonTypes = [homePage, tripsPage, activitiesPage, galleryPage,
 export const schemaTypes = [
   trip,
   post,
+  member,
   ...singletonTypes,
   richText,
   imageWithAlt,

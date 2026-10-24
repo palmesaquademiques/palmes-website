@@ -21,6 +21,14 @@ export const structure: StructureResolver = (S) =>
             .title('Articles')
             .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])
         ),
+      S.listItem()
+        .title('L’équipe')
+        .schemaType('member')
+        .child(
+          S.documentTypeList('member')
+            .title('L’équipe')
+            .defaultOrdering([{ field: 'order', direction: 'asc' }])
+        ),
       S.divider().title('Pages'),
       ...singletonTypes.map((singletonType) =>
         S.listItem()
