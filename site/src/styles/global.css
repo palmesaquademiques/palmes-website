@@ -27,6 +27,17 @@
   --animate-ken-burns: ken-burns 2.6s var(--ease-swim) both;
   --animate-current: current 6s linear infinite;
   --animate-scroll-cue: scroll-cue 2.2s var(--ease-swim) infinite;
+  --animate-bob: bob 3.2s ease-in-out infinite;
+
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-6px) rotate(2deg);
+    }
+  }
 
   @keyframes surface-in {
     from {

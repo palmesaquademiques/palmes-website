@@ -1,0 +1,73 @@
+<div data-buoy-scene aria-hidden="true" class="relative h-[180svh]">
+  <div data-buoy-stage class="sticky top-0 h-svh overflow-hidden">
+    <p class="kicker absolute inset-x-0 top-28 text-[0.65rem] text-white/50">
+      Remontée · 10 m/min maximum
+    </p>
+
+    <div data-buoy class="absolute top-[18%] left-1/2 h-52 w-14 -translate-x-1/2 origin-bottom">
+      <svg
+        viewBox="0 0 48 176"
+        class="size-full animate-bob drop-shadow-[0_0_24px_rgb(255_106_44/0.45)]"
+      >
+        <defs>
+          <linearGradient id="buoy-shade" x1="0" x2="1">
+            <stop offset="0" stop-color="#ff9a4d"></stop>
+            <stop offset="0.45" stop-color="#ff5f1f"></stop>
+            <stop offset="1" stop-color="#c2380c"></stop>
+          </linearGradient>
+          <clipPath id="buoy-body">
+            <path d="M24 2c14 0 20 12 20 28l-2 120c-1 12-8 19-18 20-10-1-17-8-18-20L4 30C4 14 10 2 24 2Z"></path>
+          </clipPath>
+        </defs>
+        <path
+          d="M24 2c14 0 20 12 20 28l-2 120c-1 12-8 19-18 20-10-1-17-8-18-20L4 30C4 14 10 2 24 2Z"
+          fill="url(#buoy-shade)"
+        ></path>
+        <g clip-path="url(#buoy-body)">
+          <rect x="0" y="34" width="48" height="11" fill="#eef6f9" opacity="0.92"></rect>
+          <rect x="0" y="49" width="48" height="3" fill="#eef6f9" opacity="0.6"></rect>
+        </g>
+        <path
+          d="M11 18c-2 40-2 92 0 132"
+          stroke="#fff"
+          stroke-opacity="0.35"
+          stroke-width="3"
+          stroke-linecap="round"
+          fill="none"
+        ></path>
+        <text
+          transform="translate(28.5 110) rotate(-90)"
+          text-anchor="middle"
+          font-family="Inter Variable, ui-sans-serif, sans-serif"
+          font-size="10.5"
+          font-weight="800"
+          letter-spacing="1.2"
+          fill="#fff"
+        >
+          DIVER BELOW
+        </text>
+        <path d="M19 169l5 7 5-7Z" fill="#a52f0a"></path>
+      </svg>
+    </div>
+
+    <span
+      data-buoy-line
+      class="absolute bottom-[4.25rem] left-1/2 w-px origin-bottom bg-gradient-to-t from-white/70 to-white/40"
+      style="top: calc(18% + 13rem)"
+    ></span>
+
+    <div class="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-3">
+      <svg viewBox="0 0 28 28" class="size-7 text-white/80">
+        <circle cx="14" cy="14" r="11" fill="none" stroke="currentColor" stroke-width="2"></circle>
+        <circle cx="14" cy="14" r="4" fill="currentColor"></circle>
+        <path d="M14 3v7M14 18v7M3 14h7M18 14h7" stroke="currentColor" stroke-width="1.5"></path>
+      </svg>
+    </div>
+    <p
+      data-buoy-caption
+      class="absolute bottom-10 left-[calc(50%+2.25rem)] max-w-40 text-left text-xs leading-snug text-white/60"
+    >
+      Lancement du parachute de palier
+    </p>
+  </div>
+</div>

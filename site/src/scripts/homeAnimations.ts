@@ -140,6 +140,33 @@ const zoomChapterImages = () =>
     )
   )
 
+const launchSafetyBuoy = () => {
+  const scene = document.querySelector<HTMLElement>('[data-buoy-scene]')
+  if (!scene) return
+
+  const buoy = scene.querySelector<HTMLElement>('[data-buoy]')!
+  const line = scene.querySelector<HTMLElement>('[data-buoy-line]')!
+  const climb = () => line.offsetHeight
+
+  gsap
+    .timeline({
+      scrollTrigger: {
+        trigger: scene,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.6,
+        invalidateOnRefresh: true
+      }
+    })
+    .fromTo(
+      buoy,
+      { y: climb, scaleX: 0.45, scaleY: 0.12, opacity: 0 },
+      { scaleX: 1, scaleY: 1, opacity: 1, duration: 0.25, ease: 'back.out(1.6)' }
+    )
+    .fromTo(line, { scaleY: 0 }, { scaleY: 1, duration: 0.75, ease: 'power2.in' })
+    .to(buoy, { y: 0, duration: 0.75, ease: 'power2.in' }, '<')
+}
+
 const pinTrips = () => {
   const section = document.querySelector<HTMLElement>('[data-trips]')
   const track = section?.querySelector<HTMLElement>('[data-trips-track]')
@@ -164,17 +191,19 @@ const pinTrips = () => {
 
 const motionQueries = gsap.matchMedia()
 
+// The trips pin adds scroll space, so it must exist before the triggers placed below it.
+motionQueries.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+  stackChapters()
+  pinTrips()
+})
+
 motionQueries.add('(prefers-reduced-motion: no-preference)', () => {
   parallaxHero()
   revealOnScroll()
   revealWords()
   countKeyFigures()
   zoomChapterImages()
-})
-
-motionQueries.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-  stackChapters()
-  pinTrips()
+  launchSafetyBuoy()
 })
 
 trackDepth()

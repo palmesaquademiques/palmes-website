@@ -2,6 +2,7 @@
 import type { HomePage } from '../../lib/queries'
 import Bubbles from '../ui/Bubbles.astro'
 import Icon from '../ui/Icon.astro'
+import SafetyBuoyLaunch from './SafetyBuoyLaunch.astro'
 
 type Props = { page: HomePage }
 
@@ -10,7 +11,7 @@ const { closingTitle, closingText } = Astro.props.page
 
 <section
   data-closing
-  class="relative isolate overflow-hidden bg-gradient-to-b from-transparent via-deep to-ocean pt-[45svh] pb-44 text-center lg:pt-[85svh] text-white"
+  class="relative isolate overflow-clip bg-gradient-to-b from-transparent via-deep to-ocean pb-44 text-center text-white"
 >
   <div
     aria-hidden="true"
@@ -19,10 +20,7 @@ const { closingTitle, closingText } = Astro.props.page
   <div aria-hidden="true" class="caustics absolute inset-x-0 bottom-0 -z-10 h-1/2 opacity-40"></div>
   <Bubbles count={24} />
 
-  <div aria-hidden="true" class="absolute inset-x-0 top-24 flex flex-col items-center gap-5">
-    <p class="kicker text-[0.65rem] text-white/50">Remontée · 10 m/min maximum</p>
-    <span class="h-[25svh] w-px lg:h-[58svh] bg-gradient-to-b from-white/0 via-white/30 to-lagoon"></span>
-  </div>
+  <SafetyBuoyLaunch />
 
   <div class="container-page relative" data-depth="5" data-phase="Palier">
     <p class="kicker text-lagoon" data-reveal>
