@@ -96,18 +96,19 @@ export const member = defineType({
       options: { list: emblems }
     }),
     defineField({
-      name: 'secretTitle',
-      title: 'Titre secret',
-      description:
-        'Remplace le titre quand on voit la personne en plongée, par exemple « Expert ès vidage de masque »',
-      type: 'string'
-    }),
-    defineField({
       name: 'instructorLevel',
       title: 'Niveau d’encadrement',
       description: 'À remplir pour les encadrants : ils apparaissent alors dans « Les encadrants »',
       type: 'string',
       options: { list: instructorLevels, layout: 'radio' }
+    }),
+    defineField({
+      name: 'secretTitle',
+      title: 'Titre secret d’encadrant',
+      description:
+        'Remplace le titre quand on voit l’encadrant en plongée, par exemple « Champion du vidage de masque »',
+      type: 'string',
+      hidden: ({ document }) => !document?.instructorLevel
     }),
     defineField({
       name: 'instructorTitle',

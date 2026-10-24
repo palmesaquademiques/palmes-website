@@ -28,7 +28,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     role: 'Trésorier',
     title: 'Grand Argentier',
     emblem: 'coins',
-    secretTitle: 'Expert ès vidage de masque',
+    secretTitle: 'Champion du vidage de masque',
     instructorLevel: 'E1',
     order: 2
   },
@@ -68,7 +68,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Sophie Danguy',
     team: 'committee',
     role: 'Secrétaire adjoint',
-    title: 'Octopus de la Plume',
+    title: 'Octopus de la Garde des Sceaux',
     emblem: 'tentacleQuill',
     order: 12
   },
@@ -77,7 +77,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Pascal Khair',
     team: 'committee',
     role: 'Secrétaire adjoint',
-    title: 'Octopus de l’Encrier',
+    title: 'Octopus de la Garde des Sceaux',
     emblem: 'tentacleInkwell',
     order: 13
   },
@@ -116,7 +116,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Léna Maury',
     team: 'committee',
     role: 'Responsable événementiel',
-    title: 'Bulle de Champagne de la Cour',
+    title: 'Intendante des Banquets Royaux',
     emblem: 'champagne',
     order: 17
   },
