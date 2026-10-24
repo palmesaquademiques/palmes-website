@@ -6,10 +6,11 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '')
 const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`)
 ---
 
-<header
-  data-header
-  class="group fixed inset-x-0 top-0 z-50 text-white transition-[background-color,box-shadow,backdrop-filter] duration-500 data-scrolled:bg-abyss/90 data-scrolled:shadow-[0_1px_0_rgb(255_255_255/0.08)] data-scrolled:backdrop-blur-xl"
->
+<header data-header class="group fixed inset-x-0 top-0 z-50 text-white">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 transition-[background-color,box-shadow,backdrop-filter] duration-500 group-data-scrolled:bg-abyss/90 group-data-scrolled:shadow-[0_1px_0_rgb(255_255_255/0.08)] group-data-scrolled:backdrop-blur-xl"
+  ></div>
   <div class="container-page flex h-header items-center justify-between gap-6">
     <a
       href="/"
