@@ -1,0 +1,36 @@
+---
+import { formatShortDateRange, yearOf } from '../../lib/dates'
+import type { TripSummary } from '../../lib/queries'
+import SanityImage from '../ui/SanityImage.astro'
+
+type Props = { trip: TripSummary }
+
+const { trip } = Astro.props
+---
+
+<a
+  href={`/les-sorties/${trip.slug}`}
+  class="group flex items-center gap-4 rounded-2xl p-2 transition hover:bg-white"
+>
+  <div class="size-20 shrink-0 overflow-hidden rounded-xl bg-foam">
+    {trip.coverImage && (
+      <SanityImage
+        image={trip.coverImage}
+        aspectRatio={1}
+        widths={[160, 240]}
+        sizes="5rem"
+        class="size-full object-cover transition duration-700 ease-swim group-hover:scale-110"
+        style={`view-transition-name: trip-${trip.slug};`}
+      />
+    )}
+  </div>
+  <div>
+    <p class="font-display text-xl font-semibold tracking-tight group-hover:text-ocean">
+      {trip.title}
+    </p>
+    <p class="text-sm text-slate-500">
+      {formatShortDateRange(trip.startDate, trip.endDate)}
+      {yearOf(trip.startDate)}
+    </p>
+  </div>
+</a>

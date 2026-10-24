@@ -1,0 +1,80 @@
+---
+import CompactTripCard from '../../components/cards/CompactTripCard.astro'
+import TripCard from '../../components/cards/TripCard.astro'
+import PageHero from '../../components/layout/PageHero.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { todayInParis, yearOf } from '../../lib/dates'
+import { type TripSummary, tripsPageQuery } from '../../lib/queries'
+import { truncate } from '../../lib/richText'
+import { sanityQuery } from '../../lib/sanity'
+import { splitTrips } from '../../lib/trips'
+
+const today = todayInParis()
+const { intro, trips } = await sanityQuery<{ intro: string | null; trips: TripSummary[] }>(
+  tripsPageQuery
+)
+const { upcoming, past } = splitTrips(trips, today)
+
+const pastTripsByYear = Object.entries(
+  Object.groupBy(past, (trip) => yearOf(trip.startDate)) as Record<string, TripSummary[]>
+).sort(([firstYear], [secondYear]) => secondYear.localeCompare(firstYear))
+
+const heroImage = upcoming[0]?.coverImage ?? past[0]?.coverImage
+---
+
+<BaseLayout
+  title="Les sorties plongée"
+  description={intro ? truncate(intro, 160) : 'Le calendrier des sorties plongée du club.'}
+  image="/og/les-sorties.png"
+>
+  <PageHero kicker="Calendrier de la saison" title="Les sorties" intro={intro} image={heroImage} />
+
+  <section class="container-page py-20">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 class="text-4xl font-semibold tracking-tight sm:text-5xl">À venir</h2>
+      <p class="text-slate-500">
+        {upcoming.length === 0
+          ? 'Le programme de la prochaine saison arrive bientôt.'
+          : `${upcoming.length} sortie${upcoming.length > 1 ? 's' : ''} au programme`}
+      </p>
+    </div>
+
+    {upcoming.length > 0 && (
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {upcoming.map((trip) => (
+          <li>
+            <TripCard
+              trip={trip}
+              today={today}
+              sizes="(min-width: 1024px) 26rem, (min-width: 640px) 50vw, 100vw"
+            />
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  {pastTripsByYear.length > 0 && (
+    <section class="border-t border-ink/10 bg-white/50 py-20">
+      <div class="container-page">
+        <h2 class="text-4xl font-semibold tracking-tight sm:text-5xl">Nos sorties passées</h2>
+        <div class="mt-12 space-y-14">
+          {pastTripsByYear.map(([year, yearTrips]) => (
+            <div class="grid gap-6 lg:grid-cols-[10rem_1fr]">
+              <p class="font-display text-6xl font-bold tracking-tight text-lagoon/40 lg:sticky lg:top-28 lg:self-start">
+                {year}
+              </p>
+              <ul class="grid gap-x-6 gap-y-2 sm:grid-cols-2 xl:grid-cols-3">
+                {yearTrips.map((trip) => (
+                  <li>
+                    <CompactTripCard trip={trip} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

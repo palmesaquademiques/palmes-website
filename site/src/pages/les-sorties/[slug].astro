@@ -1,0 +1,213 @@
+---
+import type { GetStaticPaths } from 'astro'
+import TripCard from '../../components/cards/TripCard.astro'
+import HelloAssoWidget from '../../components/rich-text/HelloAssoWidget.astro'
+import RichText from '../../components/rich-text/RichText.astro'
+import JsonLd from '../../components/seo/JsonLd.astro'
+import Icon from '../../components/ui/Icon.astro'
+import SanityImage from '../../components/ui/SanityImage.astro'
+import StatusBadge from '../../components/ui/StatusBadge.astro'
+import Wave from '../../components/ui/Wave.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { dayCount, formatDateRange, todayInParis } from '../../lib/dates'
+import { type Trip, tripsWithBodyQuery } from '../../lib/queries'
+import { plainTextOf, truncate } from '../../lib/richText'
+import { imageUrl, sanityQuery } from '../../lib/sanity'
+import { event } from '../../lib/structuredData'
+import { displayStatus, isUpcoming, showsRegistrationForm } from '../../lib/trips'
+import { siteConfig } from '../../site.config'
+
+type Props = { trip: Trip; otherTrips: Trip[] }
+
+export const getStaticPaths = (async () => {
+  const today = todayInParis()
+  const trips = await sanityQuery<Trip[]>(tripsWithBodyQuery)
+  const upcomingTrips = trips.filter((trip) => isUpcoming(trip, today))
+
+  return trips.map((trip) => ({
+    params: { slug: trip.slug },
+    props: {
+      trip,
+      otherTrips: upcomingTrips.filter((otherTrip) => otherTrip._id !== trip._id).slice(0, 3)
+    }
+  }))
+}) satisfies GetStaticPaths
+
+const { trip, otherTrips } = Astro.props
+const today = todayInParis()
+const status = displayStatus(trip, today)
+const hasRegistrationForm = showsRegistrationForm(trip, today)
+const dateRange = formatDateRange(trip.startDate, trip.endDate)
+const days = dayCount(trip.startDate, trip.endDate)
+
+const description = truncate(
+  trip.summary ?? `Sortie plongée à ${trip.title}, ${dateRange}. ${plainTextOf(trip.body)}`,
+  160
+)
+
+const statusMessages: Record<typeof status, string> = {
+  'to-confirm': 'Les dates restent à confirmer. Les inscriptions ouvriront sur cette page.',
+  confirmed: 'La sortie est confirmée. Les inscriptions ouvriront bientôt sur cette page.',
+  'registration-open': 'Les inscriptions sont ouvertes, réservez votre place en ligne.',
+  full: 'La sortie est complète. Écrivez-nous pour être sur la liste d’attente.',
+  cancelled: 'Cette sortie est annulée.',
+  past: 'Cette sortie a eu lieu. Retrouvez nos récits de plongée sur le blog.'
+}
+---
+
+<BaseLayout
+  title={`${trip.title}, sortie plongée`}
+  description={description}
+  image={`/og/les-sorties/${trip.slug}.png`}
+  imageAlt={`Sortie plongée à ${trip.title}`}
+>
+  <JsonLd
+    slot="head"
+    data={event({
+      title: `Sortie plongée à ${trip.title}`,
+      description,
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+      url: new URL(`/les-sorties/${trip.slug}`, Astro.site).href,
+      imageUrl: trip.coverImage ? imageUrl(trip.coverImage).width(1200).url() : undefined,
+      registrationUrl: trip.helloAssoUrl,
+      isFull: trip.status === 'full',
+      isCancelled: trip.status === 'cancelled'
+    })}
+  />
+
+  <section class="relative isolate flex min-h-[78svh] items-end overflow-hidden bg-abyss pt-32 pb-28 text-white sm:pb-36">
+    {trip.coverImage ? (
+      <SanityImage
+        image={trip.coverImage}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-0 -z-10 size-full object-cover"
+        style={`view-transition-name: trip-${trip.slug};`}
+      />
+    ) : (
+      <div
+        class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,var(--color-ocean),var(--color-abyss)_70%)]"
+        style={`view-transition-name: trip-${trip.slug};`}
+      />
+    )}
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10 bg-gradient-to-t from-abyss via-abyss/40 to-abyss/30"
+    ></div>
+
+    <div class="container-page">
+      <a
+        href="/les-sorties"
+        class="inline-flex animate-fade-up items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white"
+      >
+        <Icon name="arrowLeft" class="size-4" /> Toutes les sorties
+      </a>
+      <div class="mt-8 flex animate-fade-up flex-wrap items-center gap-3 [animation-delay:100ms]">
+        <StatusBadge status={status} />
+        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur-md">
+          {days} jour{days > 1 ? 's' : ''}
+        </span>
+      </div>
+      <h1 class="mt-5 animate-fade-up text-[clamp(3.5rem,11vw,9rem)] leading-[0.85] font-bold tracking-[-0.04em] [animation-delay:180ms]">
+        {trip.title}
+      </h1>
+      <p class="mt-6 animate-fade-up text-xl text-white/80 first-letter:uppercase [animation-delay:260ms]">
+        {dateRange}
+      </p>
+    </div>
+
+    <Wave class="absolute inset-x-0 -bottom-px text-sand" />
+  </section>
+
+  <div class="container-page grid gap-12 py-16 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-20">
+    <article>
+      {trip.summary && (
+        <p class="mb-10 font-display text-2xl leading-snug font-medium tracking-tight text-ink sm:text-3xl">
+          {trip.summary}
+        </p>
+      )}
+      <RichText value={trip.body} />
+    </article>
+
+    <aside class="lg:sticky lg:top-28 lg:self-start">
+      <div class="rounded-[1.75rem] bg-white p-7 shadow-[0_30px_60px_-40px] shadow-deep/40 ring-1 ring-ink/5">
+        <p class="kicker text-ocean">En bref</p>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div class="flex gap-3">
+            <Icon name="calendar" class="mt-0.5 size-5 shrink-0 text-lagoon" />
+            <div>
+              <dt class="sr-only">Dates</dt>
+              <dd class="font-medium first-letter:uppercase">{dateRange}</dd>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-lagoon" />
+            <div>
+              <dt class="sr-only">Durée</dt>
+              <dd class="font-medium">
+                {days} jour{days > 1 ? 's' : ''}
+              </dd>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <Icon name="ticket" class="mt-0.5 size-5 shrink-0 text-lagoon" />
+            <div>
+              <dt class="sr-only">Inscriptions</dt>
+              <dd class="text-slate-600">{statusMessages[status]}</dd>
+            </div>
+          </div>
+        </dl>
+
+        {hasRegistrationForm && (
+          <a href="#inscription" class="button-primary mt-7 w-full justify-center">
+            Je m’inscris <Icon name="arrowDown" class="size-4" />
+          </a>
+        )}
+        <a
+          href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(`Sortie ${trip.title}`)}`}
+          class:list={[
+            'mt-3 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition',
+            hasRegistrationForm ? 'text-ocean hover:bg-foam' : 'button-dark mt-7'
+          ]}
+        >
+          <Icon name="mail" class="size-4" /> Poser une question
+        </a>
+      </div>
+    </aside>
+  </div>
+
+  {hasRegistrationForm && trip.helloAssoUrl && (
+    <section id="inscription" class="scroll-mt-20 bg-foam py-20 sm:py-28">
+      <div class="container-page max-w-4xl">
+        <p class="kicker text-ocean">Inscription</p>
+        <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+          Je réserve ma place pour {trip.title}
+        </h2>
+        <p class="mt-4 max-w-2xl text-lg text-slate-600">
+          Le paiement de l’acompte se fait en ligne, de façon sécurisée, sur HelloAsso, la
+          plateforme de paiement des associations.
+        </p>
+        <HelloAssoWidget url={trip.helloAssoUrl} />
+      </div>
+    </section>
+  )}
+
+  {otherTrips.length > 0 && (
+    <section class="container-page py-20">
+      <h2 class="text-4xl font-semibold tracking-tight">Les autres sorties à venir</h2>
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {otherTrips.map((otherTrip) => (
+          <li>
+            <TripCard
+              trip={otherTrip}
+              today={today}
+              sizes="(min-width: 1024px) 26rem, (min-width: 640px) 50vw, 100vw"
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>
