@@ -37,7 +37,7 @@ export const getStaticPaths = (async () => {
       'accueil',
       {
         title: 'Reprenez ou découvrez la plongée',
-        subtitle: 'Club de plongée et de nage en eau vive · Toulouse',
+        subtitle: 'Club de plongée sous-marine · Toulouse · depuis 1986',
         image: heroImage
       }
     ],
@@ -53,7 +53,7 @@ export const getStaticPaths = (async () => {
       'les-activites',
       {
         title: 'Les activités',
-        subtitle: 'Plongée, piscine, baptêmes et nage en eau vive',
+        subtitle: 'Plongée, entraînements en piscine et baptêmes',
         image: activityImage ?? heroImage
       }
     ],

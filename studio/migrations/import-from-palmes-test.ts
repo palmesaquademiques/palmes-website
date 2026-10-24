@@ -19,6 +19,12 @@ const TRIP_STATUSES: Record<string, string> = {
 const TRIPS_INTRO =
   'Plusieurs sorties sont organisées durant l’année. Ce sont généralement des week-ends du vendredi soir au dimanche après-midi, ou de 3 à 4 jours pour les ponts comme la Pentecôte. Des sorties plongée à la journée, avec pique-nique, sont aussi proposées, par exemple au lac de Sède près de Saint-Gaudens. Les inscriptions se font via HelloAsso avec un acompte, le solde étant réglé après la sortie. Le club organise toujours l’hébergement, et les clubs de plongée locaux nous emmènent en bateau. Le covoiturage permet de partager les frais de route.'
 
+const CLUB_SUMMARY =
+  'Le club **Les Palmes Aquadémiques** est un club **associatif** de **plongée sous-marine**, affilié à la **FFESSM**. Son fonctionnement repose sur un engagement entièrement bénévole. Le club existe depuis 1986.'
+
+const SWIMMING_TRIAL_SENTENCE =
+  ' Il est également possible de découvrir la NEV en essayant les flotteurs spéciaux.'
+
 type Frontmatter = Record<string, unknown>
 
 const readEntry = async (filePath: string) => {
@@ -100,8 +106,7 @@ const galleryImage = (photoName: string) =>
   imageResolverFor('galerie')(`./${photoName}/${photoName}.webp`)
 
 const buildHomePage = async () => {
-  const { frontmatter, body } = await readEntry(path.join(contentDirectory, 'pages/accueil.mdoc'))
-  const [, clubSummary] = markdocToPortableText(body, pageImage)
+  const { frontmatter } = await readEntry(path.join(contentDirectory, 'pages/accueil.mdoc'))
 
   return {
     _id: 'homePage',
@@ -110,13 +115,13 @@ const buildHomePage = async () => {
     heroTagline: frontmatter.accroche,
     heroImage: pageImage('./contact/couverture.webp', 'Plongeur dans une grotte sous-marine'),
     introTitle: 'Le club en bref',
-    intro: [clubSummary],
+    intro: markdocToPortableText(CLUB_SUMMARY, pageImage),
     keyFigures: keyed(
       [
         { value: '1986', label: 'année de création du club' },
         { value: '100 %', label: 'bénévole, de l’encadrement au bureau' },
         { value: 'N1 → N3', label: 'formations plongée au club' },
-        { value: '2', label: 'disciplines : plongée et nage en eau vive' }
+        { value: '11', label: 'sorties plongée en 2026' }
       ],
       'figure'
     ),
@@ -131,13 +136,6 @@ const buildHomePage = async () => {
             'Plongeur faisant le signe OK'
           ),
           linkLabel: 'Découvrir les formations',
-          linkUrl: '/les-activites'
-        },
-        {
-          kicker: 'Nage en eau vive',
-          title: 'La rivière, à plat ventre sur un flotteur',
-          text: 'Torrents, rivières ou bassins de slalom : la NEV se pratique en loisir comme en compétition, dès 8 ans. Une combinaison, des palmes, un casque, un gilet… et c’est parti.',
-          linkLabel: 'En savoir plus sur la NEV',
           linkUrl: '/les-activites'
         },
         {
@@ -187,13 +185,15 @@ const splitByHeading = (blocks: PortableTextBlocks) =>
 
 const buildActivitiesPage = async () => {
   const { body } = await readEntry(path.join(contentDirectory, 'pages/activites.mdoc'))
-  const sections = splitByHeading(markdocToPortableText(body, pageImage))
+  const sections = splitByHeading(
+    markdocToPortableText(body.replace(SWIMMING_TRIAL_SENTENCE, ''), pageImage)
+  ).filter((section) => !/nage en eau vive/i.test(section.title))
 
   return {
     _id: 'activitiesPage',
     _type: 'activitiesPage',
     intro:
-      'Plongée sous-marine, entraînements en piscine, baptêmes et nage en eau vive : voici tout ce que propose le club, de septembre à juin.',
+      'Plongée sous-marine, entraînements en piscine et baptêmes : voici tout ce que propose le club, de septembre à juin.',
     sections: keyed(
       sections.map((section) => {
         const image = section.body.find((block) => block._type === 'image')

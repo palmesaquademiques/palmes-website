@@ -6,7 +6,7 @@ export const sportsClub = (imageUrl?: string) => ({
   ...club,
   description: siteConfig.description,
   email: siteConfig.email,
-  sport: ['Plongée sous-marine', 'Nage en eau vive'],
+  sport: 'Plongée sous-marine',
   foundingDate: '1986',
   logo: `${siteConfig.url}/logo.png`,
   ...(imageUrl ? { image: imageUrl } : {}),

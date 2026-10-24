@@ -11,7 +11,7 @@ export const activitiesPage = defineType({
     defineField({
       name: 'sections',
       title: 'Sections',
-      description: 'Une section par activité : la plongée, la piscine, les baptêmes, la NEV…',
+      description: 'Une section par activité : la plongée, la piscine, les baptêmes…',
       type: 'array',
       of: [
         defineArrayMember({

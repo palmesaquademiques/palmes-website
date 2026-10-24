@@ -1,6 +1,6 @@
 # Les Palmes Aquadémiques
 
-Site du club de plongée sous-marine et de nage en eau vive **Les Palmes Aquadémiques** (Toulouse).
+Site du club de plongée sous-marine **Les Palmes Aquadémiques** (Toulouse).
 
 - `site/` : le site public, en [Astro](https://astro.build), généré en pages statiques et hébergé sur Vercel
 - `studio/` : l’interface d’édition [Sanity](https://www.sanity.io), hébergée gratuitement par Sanity
