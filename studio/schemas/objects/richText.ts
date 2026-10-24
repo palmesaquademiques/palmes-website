@@ -33,7 +33,9 @@ export const richText = defineType({
                 title: 'Adresse',
                 type: 'url',
                 validation: (rule) =>
-                  rule.required().uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] })
+                  rule
+                    .required()
+                    .uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] })
               })
             ]
           })

@@ -11,7 +11,8 @@ export const embed = defineType({
     defineField({
       name: 'url',
       title: 'Adresse à intégrer',
-      description: 'L’adresse fournie par le bouton « Intégrer » du service (YouTube, OpenStreetMap…)',
+      description:
+        'L’adresse fournie par le bouton « Intégrer » du service (YouTube, OpenStreetMap…)',
       type: 'url',
       validation: (rule) => rule.required()
     }),

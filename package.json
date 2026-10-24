@@ -11,5 +11,10 @@
     "studio": "pnpm --filter studio dev",
     "build": "pnpm --filter site build",
     "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.2",
+    "prettier-plugin-tailwindcss": "^0.8.1"
   }
 }

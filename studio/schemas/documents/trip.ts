@@ -54,7 +54,8 @@ export const trip = defineType({
     defineField({
       name: 'status',
       title: 'Statut',
-      description: 'Une fois la date passée, la sortie bascule toute seule dans les sorties passées',
+      description:
+        'Une fois la date passée, la sortie bascule toute seule dans les sorties passées',
       type: 'string',
       options: { list: tripStatuses, layout: 'radio' },
       initialValue: 'to-confirm',
