@@ -1,6 +1,5 @@
 ---
 import PageHero from '../components/layout/PageHero.astro'
-import HelloAssoWidget from '../components/rich-text/HelloAssoWidget.astro'
 import RichText from '../components/rich-text/RichText.astro'
 import JsonLd from '../components/seo/JsonLd.astro'
 import Icon from '../components/ui/Icon.astro'
@@ -111,8 +110,17 @@ const faqStructuredData = {
       <p class="kicker text-ocean">Adhésion</p>
       <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Rejoindre le club</h2>
       <RichText value={page.membershipText} class="prose-palmes mt-8" />
-      {page.membershipUrl ? (
-        <HelloAssoWidget url={page.membershipUrl} title="Adhésion en ligne" />
+      {page.membershipPost ? (
+        <div class="mt-8">
+          <p class="max-w-2xl text-lg text-slate-600">
+            Tarifs, licence, assurance, certificat médical, dates de reprise : tout ce qu’il faut
+            savoir avant de s’inscrire est réuni dans un article, avec le lien d’inscription en
+            ligne.
+          </p>
+          <a href={`/blog/${page.membershipPost.slug}`} class="button-primary mt-8">
+            Toutes les infos pour s’inscrire <Icon name="arrowRight" class="size-4" />
+          </a>
+        </div>
       ) : (
         <p class="mt-8 max-w-2xl text-lg text-slate-600">
           Les adhésions pour la saison ouvrent à la rentrée de septembre. Les nouveaux peuvent faire

@@ -22,8 +22,7 @@ const TRIP_STATUSES: Record<string, string> = {
 const TRIPS_INTRO =
   'Plusieurs sorties sont organisées durant l’année. Ce sont généralement des week-ends du vendredi soir au dimanche après-midi, ou de 3 à 4 jours pour les ponts comme la Pentecôte. Des sorties plongée à la journée, avec pique-nique, sont aussi proposées, par exemple au lac de Sède près de Saint-Gaudens. Les inscriptions se font via HelloAsso avec un acompte, le solde étant réglé après la sortie. Le club organise toujours l’hébergement, et les clubs de plongée locaux nous emmènent en bateau. Le covoiturage permet de partager les frais de route.'
 
-const MEMBERSHIP_URL =
-  'https://www.helloasso.com/associations/les-palmes-aquademiques/adhesions/adhesion-inscription-au-club-des-palmes-aquademiques-2026-2027'
+const MEMBERSHIP_POST_ID = 'post-cest-la-rentree-les-inscriptions-cest-par-ici'
 
 const CLUB_SUMMARY =
   'Le club **Les Palmes Aquadémiques** est un club **associatif** de **plongée sous-marine**, affilié à la **FFESSM**. Son fonctionnement repose sur un engagement entièrement bénévole. Le club existe depuis 1986.'
@@ -310,7 +309,7 @@ const buildContactPage = async () => {
     schedule:
       'Le mardi de 21h à 22h15, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
     mapUrl: frontmatter.urlCarte,
-    membershipUrl: MEMBERSHIP_URL,
+    membershipPost: { _type: 'reference', _ref: MEMBERSHIP_POST_ID },
     faq: keyed(buildFaq(faqMarkdown), 'question'),
     documents: keyed(await buildDocuments(documentsMarkdown), 'document')
   }

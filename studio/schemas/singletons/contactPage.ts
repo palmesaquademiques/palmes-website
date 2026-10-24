@@ -37,11 +37,12 @@ export const contactPage = defineType({
       group: 'infos'
     }),
     defineField({
-      name: 'membershipUrl',
-      title: 'Lien d’adhésion HelloAsso de la saison',
+      name: 'membershipPost',
+      title: 'Article sur les inscriptions',
       description:
-        'À mettre à jour à chaque rentrée. Le formulaire d’adhésion s’affiche alors sur la page Contact',
-      type: 'url',
+        'L’article du blog qui détaille les inscriptions de la saison (tarifs, licence, certificat médical, lien HelloAsso). À changer à chaque rentrée',
+      type: 'reference',
+      to: [{ type: 'post' }],
       group: 'membership'
     }),
     defineField({
