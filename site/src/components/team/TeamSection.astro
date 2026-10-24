@@ -53,16 +53,12 @@ const instructorGroups = [
       <h2 class="mt-4 text-5xl leading-none font-semibold tracking-tight sm:text-6xl">
         La Cour des Palmes
       </h2>
-      <p class="mt-6 text-lg text-white/70">
-        Ils font vivre le club toute l’année, bénévolement. Survolez ou touchez un médaillon pour
-        les voir sous l’eau… et ouvrez l’œil, la Cour cache quelques secrets.
-      </p>
+      <p class="mt-6 text-lg text-white/70">Ils font vivre le club toute l’année, bénévolement.</p>
     </div>
 
     {board.length > 0 && (
       <div class="mt-20">
-        <p class="kicker text-center text-white/50">Le bureau</p>
-        <h3 class="mt-2 text-center text-3xl font-semibold tracking-tight">Le Trône</h3>
+        <h3 class="text-center text-3xl font-semibold tracking-tight">Le bureau</h3>
         <ul
           data-board
           class="mt-12 flex flex-wrap justify-center gap-x-4 gap-y-12 sm:gap-x-12 sm:gap-y-14"
@@ -83,8 +79,8 @@ const instructorGroups = [
 
     {committee.length > 0 && (
       <div class="mt-24">
-        <p class="kicker text-center text-white/50">Le comité directeur</p>
-        <h3 class="mt-2 text-center text-3xl font-semibold tracking-tight">La Table Ronde</h3>
+        <p class="kicker text-center text-white/50">La Table Ronde</p>
+        <h3 class="mt-2 text-center text-3xl font-semibold tracking-tight">Le comité directeur</h3>
         <ul class="mt-12 flex flex-wrap justify-center gap-x-4 gap-y-12 sm:gap-x-8 sm:gap-y-14">
           {committee.map((member) => (
             <li>
@@ -97,8 +93,8 @@ const instructorGroups = [
 
     {instructorGroups.length > 0 && (
       <div class="mt-24">
-        <p class="kicker text-center text-white/50">Les encadrants</p>
-        <h3 class="mt-2 text-center text-3xl font-semibold tracking-tight">L’École des Palmes</h3>
+        <p class="kicker text-center text-white/50">L’École des Palmes</p>
+        <h3 class="mt-2 text-center text-3xl font-semibold tracking-tight">Les encadrants</h3>
         <div class="mt-12 grid gap-16 lg:grid-cols-2 lg:gap-8">
           {instructorGroups.map((group) => (
             <div class="rounded-[2rem] bg-white/[0.03] px-3 py-10 ring-1 ring-white/10 sm:px-6">
@@ -112,6 +108,7 @@ const instructorGroups = [
                     <MemberMedallion
                       member={member}
                       title={instructorTitleOf(member)}
+                      secretTitle={member.secretTitle}
                       detail={instructorLevels[member.instructorLevel].label}
                       badge={member.instructorLevel}
                     />
@@ -133,17 +130,12 @@ const instructorGroups = [
   const boardMembers = [...document.querySelectorAll<HTMLElement>('[data-board] [data-member]')]
   const bubbleRain = document.querySelector<HTMLElement>('[data-bubble-rain]')!
 
-  const playEmblem = (member: HTMLElement) => {
-    member.removeAttribute('data-emblem-play')
-    void member.offsetWidth
-    member.setAttribute('data-emblem-play', '')
-  }
+  const playEmblem = (member: HTMLElement) => member.setAttribute('data-emblem-play', '')
+
+  const stopEmblem = (member: HTMLElement) => member.removeAttribute('data-emblem-play')
 
   const surface = (member: HTMLElement, delay: number) =>
-    setTimeout(() => {
-      member.setAttribute('data-surfaced', '')
-      setTimeout(() => playEmblem(member), 900)
-    }, delay)
+    setTimeout(() => member.setAttribute('data-surfaced', ''), delay)
 
   const rainBubbles = () => {
     const bubbles = Array.from({ length: 45 }, () => {
@@ -173,11 +165,21 @@ const instructorGroups = [
 
   members.forEach((member) => {
     const toggle = member.querySelector<HTMLButtonElement>('[data-member-toggle]')!
-    toggle.addEventListener('click', () => {
+    toggle.addEventListener('click', (event) => {
       const isDiving = member.toggleAttribute('data-diving')
       toggle.setAttribute('aria-pressed', String(isDiving))
+      if ((event as PointerEvent).pointerType === 'mouse') return
+      if (isDiving) playEmblem(member)
+      else stopEmblem(member)
     })
-    toggle.addEventListener('pointerenter', () => playEmblem(member))
+    toggle.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse') playEmblem(member)
+    })
+    member
+      .querySelector<HTMLElement>('[data-medallion-area]')!
+      .addEventListener('pointerleave', (event) => {
+        if (event.pointerType === 'mouse' && !member.hasAttribute('data-diving')) stopEmblem(member)
+      })
   })
 
   boardMembers.forEach((member) =>

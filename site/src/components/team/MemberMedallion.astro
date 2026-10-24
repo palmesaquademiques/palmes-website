@@ -8,17 +8,18 @@ type Props = {
   member: Member
   title: string | null
   detail: string | null
+  secretTitle?: string | null
   badge?: string
   size?: 'large' | 'regular'
 }
 
-const { member, title, detail, badge, size = 'regular' } = Astro.props
+const { member, title, detail, secretTitle, badge, size = 'regular' } = Astro.props
 const name = displayName(member)
 const bubbles = [18, 34, 52, 68, 80]
 ---
 
 <figure data-member data-surfaced class="flex w-40 flex-col items-center text-center sm:w-48">
-  <div class="relative">
+  <div data-medallion-area class="relative">
     <button
       type="button"
       data-member-toggle
@@ -91,7 +92,7 @@ const bubbles = [18, 34, 52, 68, 80]
     {title && (
       <p class="title-stack grid font-display text-lg leading-tight font-semibold text-balance">
         <span class="public-title text-gold">{title}</span>
-        {member.secretTitle && <span class="secret-title text-lagoon">{member.secretTitle}</span>}
+        {secretTitle && <span class="secret-title text-lagoon">{secretTitle}</span>}
       </p>
     )}
     <p class="mt-1.5 font-medium text-white">{name}</p>

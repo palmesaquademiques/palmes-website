@@ -56,7 +56,7 @@ const crabLegs = [-1, 1].flatMap((side) =>
         type="button"
         popovertarget={`decree-${uid}`}
         aria-label="Lire le décret royal"
-        class="emblem-crown pointer-events-auto absolute -top-[24%] left-1/2 w-[44%] -translate-x-1/2 cursor-pointer"
+        class="emblem-crown absolute -top-[24%] left-1/2 w-[44%] -translate-x-1/2 cursor-pointer"
       >
         <svg viewBox="0 0 64 46" class="w-full drop-shadow-[0_4px_10px_rgb(232_196_106/0.5)]">
           <defs>
@@ -150,19 +150,30 @@ const crabLegs = [-1, 1].flatMap((side) =>
   )}
 
   {emblem === 'dolphin' && (
-    <span class="emblem-dolphin absolute top-1/2 left-1/2 w-[38%] -translate-1/2">
-      <svg viewBox="0 0 64 40" class="w-full">
+    <span class="emblem-dolphin absolute top-1/2 left-1/2 w-[46%] -translate-1/2">
+      <svg viewBox="0 0 100 48" class="w-full drop-shadow-[0_3px_6px_rgb(0_0_0/0.4)]">
         <defs>
           <linearGradient id={`dolphin-${uid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#8fc7e2" />
-            <stop offset="1" stop-color="#3d7ea6" />
+            <stop offset="0" stop-color="#3f7ea8" />
+            <stop offset="0.5" stop-color="#6fa8c9" />
+            <stop offset="0.75" stop-color="#cfe6f2" />
+            <stop offset="1" stop-color="#eef7fb" />
           </linearGradient>
         </defs>
+        <path d="M60 13C58 7 54 3 48 1c3 5 4 9 2 13Z" fill="#3a76a0" />
+        <path d="M75 31c-1 6-5 10-11 12 3-4 5-8 5-12Z" fill="#3a76a0" />
         <path
-          d="M4 26c6-12 20-18 34-16 6-6 12-6 14-4-2 2-4 4-4 6 6 2 10 6 14 12-4 0-8-1-12 0-6 4-16 6-26 4-6 4-12 8-18 8 2-4 4-6 4-8-2 0-4-1-6-2Z"
+          d="M98 33c-3-2-6-3-8-4 0-5-3-9-8-10-8-4-18-7-28-6-12 1-24 5-32 12-4 3-7 5-10 5-3-4-6-6-10-7 3 5 5 8 7 10-3 3-5 6-7 10 5-2 9-5 12-8 8-2 16-4 26-5 14-1 30 1 42 3 6 1 11 2 15 1Z"
           fill={`url(#dolphin-${uid})`}
         />
-        <circle cx="52" cy="19" r="1.4" fill="#0a1826" />
+        <path
+          d="M97.5 33.4c-3 .3-6 0-9-1"
+          stroke="#2c5f80"
+          stroke-width="0.8"
+          fill="none"
+          stroke-linecap="round"
+        />
+        <circle cx="84.5" cy="25" r="1.3" fill="#0a1826" />
       </svg>
     </span>
   )}
@@ -377,11 +388,28 @@ const crabLegs = [-1, 1].flatMap((side) =>
 </span>
 
 <style>
+  .emblem-crown,
+  .emblem-seal,
+  .emblem-tentacle,
+  .emblem-tag,
+  .emblem-compass,
+  .emblem-crab {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  :global([data-emblem-play])
+    :is(.emblem-crown, .emblem-seal, .emblem-tentacle, .emblem-tag, .emblem-compass, .emblem-crab) {
+    opacity: 1;
+  }
+
   .emblem-crown {
     transform: rotate(-8deg);
+    pointer-events: none;
   }
 
   :global([data-emblem-play]) .emblem-crown {
+    pointer-events: auto;
     animation: crown-drop 1.2s var(--ease-swim);
   }
 
