@@ -1,0 +1,134 @@
+---
+import type { Member } from '../../lib/queries'
+import { displayName } from '../../lib/team'
+import SanityImage from '../ui/SanityImage.astro'
+
+type Props = {
+  member: Member
+  title: string | null
+  detail: string | null
+  badge?: string
+  size?: 'large' | 'regular'
+}
+
+const { member, title, detail, badge, size = 'regular' } = Astro.props
+const name = displayName(member)
+const bubbles = [18, 34, 52, 68, 80]
+---
+
+<figure data-member data-surfaced class="flex w-40 flex-col items-center text-center sm:w-48">
+  <button
+    type="button"
+    data-member-toggle
+    aria-pressed="false"
+    aria-label={`Voir ${name} en plongée`}
+    disabled={!member.diverPhoto}
+    class:list={[
+      'relative rounded-full bg-[conic-gradient(from_210deg,#f7dc8a,#b9862c,#f7dc8a,#8f6419,#f7dc8a)] p-[3px] shadow-[0_20px_50px_-20px] shadow-gold/40 transition duration-500 ease-swim enabled:cursor-pointer enabled:hover:-translate-y-1',
+      size === 'large' ? 'size-36 sm:size-48' : 'size-32 sm:size-40'
+    ]}
+  >
+    <span class="medallion relative block size-full overflow-hidden rounded-full ring-4 ring-abyss">
+      {member.diverPhoto && (
+        <>
+          <SanityImage
+            image={member.diverPhoto}
+            aspectRatio={1}
+            widths={[200, 320, 400]}
+            sizes="12rem"
+            class="absolute inset-0 size-full object-cover"
+          />
+          <span class="absolute inset-0 bg-ocean/30 mix-blend-multiply" />
+          <span class="caustics absolute inset-0 opacity-60" />
+          <span class="diving-bubbles absolute inset-0">
+            {bubbles.map((left, bubbleIndex) => (
+              <span
+                class="absolute -bottom-3 size-2 animate-rise rounded-full border border-white/70"
+                style={`left:${left}%; animation-delay:-${bubbleIndex * 0.6}s; --rise-duration:${2.4 + bubbleIndex * 0.3}s; --bubble-drift:${(bubbleIndex % 2 ? 1 : -1) * 6}px`}
+              />
+            ))}
+          </span>
+        </>
+      )}
+      <SanityImage
+        image={member.landPhoto}
+        aspectRatio={1}
+        widths={[200, 320, 400]}
+        sizes="12rem"
+        class="land-photo absolute inset-0 size-full object-cover"
+      />
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 400 24"
+        preserveAspectRatio="none"
+        class="waterline absolute -inset-x-1/2 h-6 w-[200%]"
+      >
+        <path
+          d="M0 12c25-9 50-9 75 0s50 9 75 0 50-9 75 0 50 9 75 0 50-9 75 0 50 9 75 0V24H0Z"
+          fill="rgb(43 167 222 / 0.55)"
+        ></path>
+        <path
+          d="M0 12c25-9 50-9 75 0s50 9 75 0 50-9 75 0 50 9 75 0 50-9 75 0 50 9 75 0"
+          fill="none"
+          stroke="white"
+          stroke-opacity="0.85"
+          stroke-width="2"
+        ></path>
+      </svg>
+    </span>
+    {badge && (
+      <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-abyss px-3 py-1 font-display text-sm font-bold text-gold ring-2 ring-gold/70">
+        {badge}
+      </span>
+    )}
+  </button>
+  <figcaption class="mt-6">
+    {title && (
+      <p class="font-display text-lg leading-tight font-semibold text-balance text-gold">{title}</p>
+    )}
+    <p class="mt-1.5 font-medium text-white">{name}</p>
+    {detail?.split(' · ').map((line) => (
+      <p class="mt-0.5 text-sm leading-snug text-balance text-white/60">{line}</p>
+    ))}
+  </figcaption>
+</figure>
+
+<style>
+  .medallion {
+    --surface: 0%;
+    transition: --surface 1.3s var(--ease-swim);
+  }
+
+  [data-surfaced] .medallion {
+    --surface: 100%;
+  }
+
+  [data-member][data-diving] .medallion {
+    --surface: 0%;
+  }
+
+  @media (hover: hover) {
+    [data-member]:hover .medallion {
+      --surface: 0%;
+    }
+  }
+
+  .land-photo {
+    clip-path: inset(0 0 calc(100% - var(--surface)) 0);
+  }
+
+  .waterline {
+    top: calc(var(--surface) * 1.15 - 14px);
+    animation: waterline-drift 3s linear infinite;
+  }
+
+  @keyframes waterline-drift {
+    to {
+      translate: 25% 0;
+    }
+  }
+
+  .diving-bubbles {
+    opacity: calc(1 - var(--surface) / 100%);
+  }
+</style>

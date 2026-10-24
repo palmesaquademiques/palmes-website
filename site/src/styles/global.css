@@ -11,6 +11,7 @@
   --color-ink: #0a1826;
   --color-coral: #ff7a59;
   --color-coral-light: #ff9b80;
+  --color-gold: #e8c46a;
 
   --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -124,6 +125,12 @@
 
 @view-transition {
   navigation: auto;
+}
+
+@property --surface {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
 }
 
 @layer base {

@@ -74,6 +74,20 @@ export type ActivitiesPage = {
 
 export type GalleryPage = { intro: string | null; photos: SanityImage[] | null }
 
+export type InstructorLevel = 'E1' | 'E2' | 'N4' | 'MF1' | 'MF2'
+
+export type Member = {
+  _id: string
+  name: string
+  nickname: string | null
+  team: 'board' | 'committee' | 'none'
+  role: string | null
+  title: string | null
+  instructorLevel: InstructorLevel | null
+  landPhoto: SanityImage
+  diverPhoto: SanityImage | null
+}
+
 export type ContactPage = {
   intro: RichText | null
   address: string | null
@@ -82,7 +96,6 @@ export type ContactPage = {
   membershipUrl: string | null
   membershipText: RichText | null
   faq: { _key: string; question: string; answer: string | null }[] | null
-  team: { _key: string; name: string; role: string | null; photo: SanityImage | null }[] | null
 }
 
 const asset = '"asset": asset->{ _id, metadata { lqip, dimensions } }'
@@ -144,10 +157,15 @@ export const activitiesPageQuery = `*[_id == "activitiesPage"][0]{
 
 export const galleryPageQuery = `*[_id == "galleryPage"][0]{ intro, "photos": photos[]${image} }`
 
-export const contactPageQuery = `*[_id == "contactPage"][0]{
-  "intro": intro${richText}, address, schedule, mapUrl, membershipUrl,
-  "membershipText": membershipText${richText}, faq,
-  "team": team[]{ _key, name, role, "photo": photo${image} }
+export const contactPageQuery = `{
+  "page": *[_id == "contactPage"][0]{
+    "intro": intro${richText}, address, schedule, mapUrl, membershipUrl,
+    "membershipText": membershipText${richText}, faq
+  },
+  "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
+    _id, name, nickname, team, role, title, instructorLevel,
+    "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
+  }
 }`
 
 export const shareImagesQuery = `{
