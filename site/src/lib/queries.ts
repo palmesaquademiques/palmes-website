@@ -112,7 +112,8 @@ export type ContactPage = {
   mapUrl: string | null
   membershipUrl: string | null
   membershipText: RichText | null
-  faq: { _key: string; question: string; answer: string | null }[] | null
+  faq: { _key: string; category: string | null; question: string; answer: RichText | null }[] | null
+  documents: { _key: string; title: string; url: string; size: number }[] | null
 }
 
 const asset = '"asset": asset->{ _id, metadata { lqip, dimensions } }'
@@ -177,7 +178,9 @@ export const galleryPageQuery = `*[_id == "galleryPage"][0]{ intro, "photos": ph
 export const contactPageQuery = `{
   "page": *[_id == "contactPage"][0]{
     "intro": intro${richText}, address, schedule, mapUrl, membershipUrl,
-    "membershipText": membershipText${richText}, faq
+    "membershipText": membershipText${richText},
+    "faq": faq[]{ _key, category, question, "answer": answer${richText} },
+    "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
   },
   "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
     _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,

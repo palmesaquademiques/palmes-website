@@ -7,6 +7,7 @@ import Icon from '../components/ui/Icon.astro'
 import TeamSection from '../components/team/TeamSection.astro'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { type ContactPage, contactPageQuery, type Member } from '../lib/queries'
+import { plainTextOf } from '../lib/richText'
 import { sanityQuery } from '../lib/sanity'
 import { sportsClub } from '../lib/structuredData'
 import { siteConfig } from '../site.config'
@@ -15,13 +16,16 @@ const { page, members } = await sanityQuery<{ page: ContactPage; members: Member
   contactPageQuery
 )
 const faq = page.faq ?? []
+const documents = page.documents ?? []
+
+const faqCategories = Object.entries(Object.groupBy(faq, (entry) => entry.category ?? ''))
 
 const faqStructuredData = {
   '@type': 'FAQPage',
   mainEntity: faq.map((entry) => ({
     '@type': 'Question',
     name: entry.question,
-    acceptedAnswer: { '@type': 'Answer', text: entry.answer ?? '' }
+    acceptedAnswer: { '@type': 'Answer', text: plainTextOf(entry.answer) }
   }))
 }
 ---
@@ -124,21 +128,60 @@ const faqStructuredData = {
         <p class="kicker text-ocean">Vos questions</p>
         <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Questions fréquentes</h2>
       </div>
-      <div class="divide-y divide-ink/10 border-y border-ink/10">
-        {faq.map((entry) => (
-          <details class="group py-2" name="faq">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 font-display text-xl font-semibold tracking-tight [&::-webkit-details-marker]:hidden">
-              {entry.question}
-              <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-foam text-ocean transition duration-500 ease-swim group-open:rotate-45 group-open:bg-coral group-open:text-ink">
-                <Icon name="plus" class="size-4" />
-              </span>
-            </summary>
-            <p class="pr-14 pb-5 leading-relaxed whitespace-pre-line text-slate-600">
-              {entry.answer}
-            </p>
-          </details>
+      <div class="space-y-12">
+        {faqCategories.map(([category, entries]) => (
+          <div>
+            {category && (
+              <h3 class="font-display text-2xl font-semibold tracking-tight">{category}</h3>
+            )}
+            <div class="mt-4 divide-y divide-ink/10 border-y border-ink/10">
+              {(entries ?? []).map((entry) => (
+                <details class="group py-2" name="faq">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 font-display text-xl font-semibold tracking-tight [&::-webkit-details-marker]:hidden">
+                    {entry.question}
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-foam text-ocean transition duration-500 ease-swim group-open:rotate-45 group-open:bg-coral group-open:text-ink">
+                      <Icon name="plus" class="size-4" />
+                    </span>
+                  </summary>
+                  <RichText
+                    value={entry.answer}
+                    class="prose max-w-none pr-14 pb-5 prose-slate prose-p:my-2 prose-a:text-ocean prose-ul:my-2 prose-li:my-0.5"
+                  />
+                </details>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
+    </section>
+  )}
+
+  {documents.length > 0 && (
+    <section class="container-page pb-20">
+      <p class="kicker text-ocean">Vie associative</p>
+      <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Documents du club</h2>
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {documents.map((document) => (
+          <li>
+            <a
+              href={document.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center gap-4 rounded-2xl bg-white p-5 ring-1 ring-ink/5 transition hover:ring-lagoon/50"
+            >
+              <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-foam text-ocean transition group-hover:bg-lagoon group-hover:text-white">
+                <Icon name="document" class="size-6" />
+              </span>
+              <span>
+                <span class="block font-medium text-ink">{document.title}</span>
+                <span class="text-sm text-slate-500">
+                  PDF · {Math.round(document.size / 1024)} Ko
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   )}
 
