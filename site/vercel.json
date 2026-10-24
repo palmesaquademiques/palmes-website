@@ -1,0 +1,223 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "https://palmes-aquademiques.sanity.studio",
+      "permanent": false
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    },
+    {
+      "source": "/feed",
+      "destination": "/feed.xml",
+      "permanent": true
+    },
+    {
+      "source": "/cala-montjoi-2025",
+      "destination": "/blog/cala-montjoi-2025",
+      "permanent": true
+    },
+    {
+      "source": "/cadaques-2025",
+      "destination": "/blog/cadaques-2025",
+      "permanent": true
+    },
+    {
+      "source": "/assurance",
+      "destination": "/blog/comment-choisir-mon-assurance-plongee",
+      "permanent": true
+    },
+    {
+      "source": "/inscriptions",
+      "destination": "/blog/cest-la-rentree-les-inscriptions-cest-par-ici",
+      "permanent": true
+    },
+    {
+      "source": "/marseille_2025",
+      "destination": "/blog/marseille-2025",
+      "permanent": true
+    },
+    {
+      "source": "/paques_2025",
+      "destination": "/blog/soiree-de-paques-2025",
+      "permanent": true
+    },
+    {
+      "source": "/soire-de-nol-2024",
+      "destination": "/blog/soiree-de-noel-2024",
+      "permanent": true
+    },
+    {
+      "source": "/galette_roi_2025",
+      "destination": "/blog/galette-des-rois-2025",
+      "permanent": true
+    },
+    {
+      "source": "/Hendaye24",
+      "destination": "/blog/hendaye-2024",
+      "permanent": true
+    },
+    {
+      "source": "/colera_2024",
+      "destination": "/blog/colera-2024",
+      "permanent": true
+    },
+    {
+      "source": "/salon-plongee",
+      "destination": "/blog/salon-de-la-plongee-2025",
+      "permanent": true
+    },
+    {
+      "source": "/certificat-medical",
+      "destination": "/blog/certificat-medical",
+      "permanent": true
+    },
+    {
+      "source": "/estartit-2024",
+      "destination": "/blog/estartit-2024",
+      "permanent": true
+    },
+    {
+      "source": "/le-site-des-palmes-fait-peau-neuve",
+      "destination": "/blog/le-site-des-palmes-fait-peau-neuve",
+      "permanent": true
+    },
+    {
+      "source": "/salon-plongee-2026",
+      "destination": "/blog/salon-de-la-plongee-2026",
+      "permanent": true
+    },
+    {
+      "source": "/soire-de-rentre-2025",
+      "destination": "/blog/soiree-de-rentree-2025",
+      "permanent": true
+    },
+    {
+      "source": "/banyuls",
+      "destination": "/les-sorties/banyuls",
+      "permanent": true
+    },
+    {
+      "source": "/lescala",
+      "destination": "/les-sorties/lescala",
+      "permanent": true
+    },
+    {
+      "source": "/lavandou",
+      "destination": "/les-sorties/lavandou",
+      "permanent": true
+    },
+    {
+      "source": "/cala-montjoi",
+      "destination": "/les-sorties/cala-montjoi",
+      "permanent": true
+    },
+    {
+      "source": "/port-vendres",
+      "destination": "/les-sorties/port-vendres",
+      "permanent": true
+    },
+    {
+      "source": "/cadaques",
+      "destination": "/les-sorties/cadaques",
+      "permanent": true
+    },
+    {
+      "source": "/estartit",
+      "destination": "/les-sorties/estartit",
+      "permanent": true
+    },
+    {
+      "source": "/hendaye",
+      "destination": "/les-sorties/hendaye",
+      "permanent": true
+    },
+    {
+      "source": "/colra",
+      "destination": "/les-sorties/colera",
+      "permanent": true
+    },
+    {
+      "source": "/croisire-40-ans",
+      "destination": "/les-sorties/croisiere-40-ans",
+      "permanent": true
+    },
+    {
+      "source": "/lac-de-sde",
+      "destination": "/les-sorties/lac-de-sede",
+      "permanent": true
+    },
+    {
+      "source": "/accueil",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/part-1-photo",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/part-2",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/site-web",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/database",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/les-activites/:chemin*",
+      "destination": "/les-activites",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/la-plongee/:chemin*",
+      "destination": "/les-activites",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/mnuclubenpratique/:chemin*",
+      "destination": "/les-activites",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/component/ohanah/:chemin*",
+      "destination": "/les-sorties",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/contact",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/:chemin*",
+      "destination": "/",
+      "permanent": true
+    }
+  ]
+}
