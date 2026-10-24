@@ -48,7 +48,7 @@ const lastWordIndex = words.length - 1
       {words.map((word, wordIndex) => (
         <span
           class:list={[
-            '-mb-[0.12em] inline-block overflow-hidden pb-[0.12em] align-bottom',
+            '-mb-[0.28em] inline-block overflow-hidden pb-[0.28em] align-bottom',
             wordIndex !== lastWordIndex && 'mr-[0.22em]'
           ]}
           aria-hidden="true"
@@ -57,7 +57,7 @@ const lastWordIndex = words.length - 1
             class:list={[
               'inline-block animate-surface-in',
               wordIndex === lastWordIndex &&
-                'bg-gradient-to-r from-lagoon via-foam to-lagoon bg-clip-text pr-[0.05em] text-transparent'
+                '-mb-[0.2em] bg-gradient-to-r from-lagoon via-foam to-lagoon bg-clip-text pr-[0.05em] pb-[0.2em] text-transparent'
             ]}
             style={`animation-delay: ${250 + wordIndex * 90}ms`}
           >
