@@ -8,6 +8,7 @@ import { TEAM_2025_2026 } from './team.ts'
 const contentDirectory = path.resolve(process.argv[2] ?? '../../palmes_test/src/content')
 const outputFile = path.resolve('../migration-output/palmes.ndjson')
 const localPhotosDirectory = path.resolve('migrations')
+const documentsDirectory = path.resolve('../migration-output/documents')
 
 const TRIP_STATUSES: Record<string, string> = {
   'a-confirmer': 'to-confirm',
@@ -20,6 +21,9 @@ const TRIP_STATUSES: Record<string, string> = {
 
 const TRIPS_INTRO =
   'Plusieurs sorties sont organisées durant l’année. Ce sont généralement des week-ends du vendredi soir au dimanche après-midi, ou de 3 à 4 jours pour les ponts comme la Pentecôte. Des sorties plongée à la journée, avec pique-nique, sont aussi proposées, par exemple au lac de Sède près de Saint-Gaudens. Les inscriptions se font via HelloAsso avec un acompte, le solde étant réglé après la sortie. Le club organise toujours l’hébergement, et les clubs de plongée locaux nous emmènent en bateau. Le covoiturage permet de partager les frais de route.'
+
+const MEMBERSHIP_URL =
+  'https://www.helloasso.com/associations/les-palmes-aquademiques/adhesions/adhesion-inscription-au-club-des-palmes-aquademiques-2026-2027'
 
 const CLUB_SUMMARY =
   'Le club **Les Palmes Aquadémiques** est un club **associatif** de **plongée sous-marine**, affilié à la **FFESSM**. Son fonctionnement repose sur un engagement entièrement bénévole. Le club existe depuis 1986.'
@@ -89,23 +93,27 @@ const buildTrips = async () =>
     })
   )
 
+const buildPublishedPost = async ({ slug, filePath }: { slug: string; filePath: string }) => {
+  const { frontmatter, body } = await readEntry(filePath)
+  if (!frontmatter.publie) return []
+
+  return [
+    {
+      _id: `post-${slug}`,
+      _type: 'post',
+      title: frontmatter.titre,
+      slug: slugField(slug),
+      publishedAt: frontmatter.datePublication,
+      author: frontmatter.auteur || undefined,
+      excerpt: frontmatter.description || undefined,
+      coverImage: optionalImage('blog', frontmatter.couverture),
+      body: markdocToPortableText(body, imageResolverFor('blog'))
+    }
+  ]
+}
+
 const buildPosts = async () =>
-  Promise.all(
-    (await entryFiles('blog', '.mdoc')).map(async ({ slug, filePath }) => {
-      const { frontmatter, body } = await readEntry(filePath)
-      return {
-        _id: frontmatter.publie ? `post-${slug}` : `drafts.post-${slug}`,
-        _type: 'post',
-        title: frontmatter.titre,
-        slug: slugField(slug),
-        publishedAt: frontmatter.datePublication,
-        author: frontmatter.auteur || undefined,
-        excerpt: frontmatter.description || undefined,
-        coverImage: optionalImage('blog', frontmatter.couverture),
-        body: markdocToPortableText(body, imageResolverFor('blog'))
-      }
-    })
-  )
+  (await Promise.all((await entryFiles('blog', '.mdoc')).map(buildPublishedPost))).flat()
 
 const pageImage = imageResolverFor('pages')
 const galleryImage = (photoName: string) =>
@@ -147,7 +155,7 @@ const buildHomePage = async () => {
         {
           kicker: 'Le mardi soir',
           title: 'Rendez-vous à la piscine Léo Lagrange',
-          text: 'De septembre à juin, de 21h à 22h30, avec un rendez-vous à 20h45 sur le parvis. Des baptêmes gratuits sont proposés en septembre et en juin pour découvrir la plongée.',
+          text: 'De septembre à juin, de 21h à 22h15, avec un rendez-vous à 20h45 sur le parvis. Chaque année, un mardi de juin est consacré aux baptêmes pour découvrir la plongée.',
           image: pageImage('./activites/image-01.webp', 'Nageur sous l’eau à la piscine'),
           linkLabel: 'Venir essayer',
           linkUrl: '/contact'
@@ -232,27 +240,79 @@ const buildGalleryPage = async () => {
   }
 }
 
+const markdownSections = (markdown: string, headingMarker: string) =>
+  markdown
+    .split(new RegExp(`^${headingMarker} `, 'm'))
+    .slice(1)
+    .map((section) => {
+      const [heading, ...content] = section.split('\n')
+      return { heading: heading.replaceAll('**', '').trim(), content: content.join('\n').trim() }
+    })
+
+const buildFaq = (faqMarkdown: string) =>
+  markdownSections(faqMarkdown, '###').flatMap(({ heading: category, content }) =>
+    markdownSections(content, '####').map(({ heading: question, content: answer }) => ({
+      _type: 'question',
+      category,
+      question,
+      answer: markdocToPortableText(answer, pageImage)
+    }))
+  )
+
+const downloadDriveFile = async (fileId: string, fileName: string) => {
+  const response = await fetch(`https://drive.google.com/uc?export=download&id=${fileId}`)
+  const content = Buffer.from(await response.arrayBuffer())
+  if (!content.subarray(0, 4).equals(Buffer.from('%PDF'))) {
+    throw new Error(`Le document Drive ${fileId} n’est pas un PDF téléchargeable`)
+  }
+  const filePath = path.join(documentsDirectory, fileName)
+  await mkdir(documentsDirectory, { recursive: true })
+  await writeFile(filePath, content)
+  return filePath
+}
+
+const buildDocuments = (documentsMarkdown: string) =>
+  Promise.all(
+    [
+      ...documentsMarkdown.matchAll(
+        /\[([^\]]+)\]\(https:\/\/drive\.google\.com\/file\/d\/([^/]+)\/[^)]*\)/g
+      )
+    ].map(async ([, title, fileId]) => ({
+      _type: 'clubDocument',
+      title,
+      file: {
+        _type: 'file',
+        _sanityAsset: `file@file://${await downloadDriveFile(fileId, `${slugOf(title)}.pdf`)}`
+      }
+    }))
+  )
+
+const slugOf = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
 const buildContactPage = async () => {
   const { frontmatter, body } = await readEntry(path.join(contentDirectory, 'pages/contact.mdoc'))
-  const byOrder = (first: Frontmatter, second: Frontmatter) =>
-    Number(first.ordre) - Number(second.ordre)
-
-  const faq = (
-    await Promise.all((await entryFiles('faq', '.yaml')).map(({ filePath }) => readYaml(filePath)))
-  ).sort(byOrder)
+  const [introMarkdown, faqAndDocuments = ''] = body.split(/^## FAQ\s*$/m)
+  const [faqMarkdown, documentsMarkdown = ''] = faqAndDocuments.split(
+    /^## Documents importants\s*$/m
+  )
 
   return {
     _id: 'contactPage',
     _type: 'contactPage',
-    intro: markdocToPortableText(body, pageImage),
+    intro: markdocToPortableText(introMarkdown, pageImage),
     address: frontmatter.adresse,
     schedule:
-      'Le mardi de 21h à 22h30, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
+      'Le mardi de 21h à 22h15, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
     mapUrl: frontmatter.urlCarte,
-    faq: keyed(
-      faq.map((entry) => ({ _type: 'question', question: entry.question, answer: entry.reponse })),
-      'question'
-    )
+    membershipUrl: MEMBERSHIP_URL,
+    faq: keyed(buildFaq(faqMarkdown), 'question'),
+    documents: keyed(await buildDocuments(documentsMarkdown), 'document')
   }
 }
 
