@@ -101,7 +101,7 @@ const galleryImage = (photoName: string) =>
 
 const buildHomePage = async () => {
   const { frontmatter, body } = await readEntry(path.join(contentDirectory, 'pages/accueil.mdoc'))
-  const [, ...introWithoutHeading] = markdocToPortableText(body, pageImage)
+  const [, clubSummary] = markdocToPortableText(body, pageImage)
 
   return {
     _id: 'homePage',
@@ -110,7 +110,7 @@ const buildHomePage = async () => {
     heroTagline: frontmatter.accroche,
     heroImage: pageImage('./contact/couverture.webp', 'Plongeur dans une grotte sous-marine'),
     introTitle: 'Le club en bref',
-    intro: introWithoutHeading,
+    intro: [clubSummary],
     keyFigures: keyed(
       [
         { value: '1986', label: 'année de création du club' },
