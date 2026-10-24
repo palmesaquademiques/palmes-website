@@ -1,0 +1,76 @@
+---
+import type { HomePage } from '../../lib/queries'
+import { splitLeadBlock, wordTokensOf } from '../../lib/richText'
+import RichText from '../rich-text/RichText.astro'
+
+type Props = { page: HomePage }
+
+const { introTitle, intro, keyFigures } = Astro.props.page
+const { lead, rest } = splitLeadBlock(intro)
+---
+
+<section id="le-club" class="relative overflow-hidden pt-28 pb-24 text-white sm:pt-40">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 -top-20 h-[42rem] opacity-60"
+  >
+    {[12, 34, 58, 76].map((left, rayIndex) => (
+      <span
+        class="absolute top-0 h-full w-24 origin-top animate-sway bg-gradient-to-b from-lagoon/25 via-lagoon/5 to-transparent blur-2xl"
+        style={`left:${left}%; animation-delay:-${rayIndex * 2.3}s; width:${5 + rayIndex * 2}rem`}
+      />
+    ))}
+  </div>
+
+  <div class="container-page relative grid gap-12 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <p class="kicker text-lagoon" data-reveal>
+        −5 m · Le club
+      </p>
+      <h2 class="mt-4 text-5xl leading-none font-semibold tracking-tight sm:text-6xl" data-reveal>
+        {introTitle ?? 'Le club en bref'}
+      </h2>
+    </div>
+
+    <div class="lg:col-span-8">
+      {lead && (
+        <p
+          data-reveal-words
+          class="font-display text-[clamp(1.6rem,3.2vw,2.7rem)] leading-[1.18] font-medium tracking-tight"
+        >
+          {wordTokensOf(lead).map((token) =>
+            token.isSpace ? (
+              ' '
+            ) : (
+              <span data-word class:list={[token.isEmphasized && 'text-lagoon']}>
+                {token.text}
+              </span>
+            )
+          )}
+        </p>
+      )}
+      <div data-reveal>
+        <RichText
+          value={rest}
+          class="prose prose-lg mt-10 max-w-2xl prose-invert prose-p:text-white/70 prose-strong:text-white prose-a:text-lagoon"
+        />
+      </div>
+    </div>
+  </div>
+
+  {keyFigures && keyFigures.length > 0 && (
+    <dl class="container-page relative mt-20 grid grid-cols-2 lg:grid-cols-4">
+      {keyFigures.map((keyFigure) => (
+        <div class="flex flex-col-reverse gap-2 border-t border-white/15 py-8 pr-6" data-reveal>
+          <dt class="text-sm text-white/60">{keyFigure.label}</dt>
+          <dd
+            data-count
+            class="font-display text-[clamp(2.4rem,5vw,4rem)] leading-none font-semibold tracking-tight"
+          >
+            {keyFigure.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</section>

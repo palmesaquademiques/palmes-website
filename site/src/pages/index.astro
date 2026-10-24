@@ -1,0 +1,57 @@
+---
+import ClubIntro from '../components/home/ClubIntro.astro'
+import Chapters from '../components/home/Chapters.astro'
+import Closing from '../components/home/Closing.astro'
+import DepthGauge from '../components/home/DepthGauge.astro'
+import Hero from '../components/home/Hero.astro'
+import LatestPosts from '../components/home/LatestPosts.astro'
+import TripsCarousel from '../components/home/TripsCarousel.astro'
+import JsonLd from '../components/seo/JsonLd.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { todayInParis } from '../lib/dates'
+import { type HomePage, homeQuery, type PostSummary, type TripSummary } from '../lib/queries'
+import { imageUrl, sanityQuery } from '../lib/sanity'
+import { sportsClub } from '../lib/structuredData'
+
+const today = todayInParis()
+
+const { page, upcomingTrips, recentTrips, latestPosts } = await sanityQuery<{
+  page: HomePage
+  upcomingTrips: TripSummary[]
+  recentTrips: TripSummary[]
+  latestPosts: PostSummary[]
+}>(homeQuery, { today })
+---
+
+<BaseLayout description={page.heroTagline ?? undefined} bodyClass="bg-abyss">
+  <JsonLd slot="head" data={sportsClub(imageUrl(page.heroImage).width(1200).url())} />
+
+  <DepthGauge />
+
+  <div class="bg-[linear-gradient(180deg,var(--color-abyss)_0%,#04223b_14%,#031a2f_40%,#021322_62%,var(--color-abyss)_80%)]">
+    <div data-depth="0" data-phase="Surface">
+      <Hero page={page} />
+    </div>
+    <div data-depth="6" data-phase="Descente">
+      <ClubIntro page={page} />
+    </div>
+    {page.chapters && page.chapters.length > 0 && (
+      <div data-depth="14" data-phase="Descente">
+        <Chapters chapters={page.chapters} />
+      </div>
+    )}
+    <div data-depth="30" data-phase="Exploration">
+      <TripsCarousel upcomingTrips={upcomingTrips} recentTrips={recentTrips} today={today} />
+    </div>
+    <div data-depth="40" data-phase="Au fond">
+      <LatestPosts posts={latestPosts} />
+    </div>
+    <div data-depth="40" data-phase="Remontée">
+      <Closing page={page} />
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../scripts/homeAnimations'
+</script>

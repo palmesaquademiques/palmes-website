@@ -1,0 +1,86 @@
+---
+import type { TripSummary } from '../../lib/queries'
+import TripCard from '../cards/TripCard.astro'
+import Icon from '../ui/Icon.astro'
+
+type Props = { upcomingTrips: TripSummary[]; recentTrips: TripSummary[]; today: string }
+
+const { upcomingTrips, recentTrips, today } = Astro.props
+const hasUpcomingTrips = upcomingTrips.length > 0
+---
+
+<section
+  id="les-sorties"
+  data-trips
+  class="relative overflow-hidden py-24 text-white lg:flex lg:h-svh lg:flex-col lg:justify-center lg:py-0"
+>
+  <div class="container-page flex flex-wrap items-end justify-between gap-6">
+    <div>
+      <p class="kicker text-lagoon">−30 m · Au programme</p>
+      <h2 class="mt-4 text-5xl leading-none font-semibold tracking-tight sm:text-7xl">
+        {hasUpcomingTrips ? 'Les prochaines sorties' : 'Les dernières sorties'}
+      </h2>
+      {!hasUpcomingTrips && (
+        <p class="mt-4 max-w-lg text-white/70">
+          Le programme de la prochaine saison arrive bientôt. En attendant, voici où nous avons
+          plongé.
+        </p>
+      )}
+    </div>
+    <a href="/les-sorties" class="button-ghost">
+      Toutes les sorties <Icon name="arrowRight" class="size-4" />
+    </a>
+  </div>
+
+  <div
+    data-trips-viewport
+    class="mt-12 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] lg:mt-14 lg:snap-none lg:overflow-visible"
+  >
+    <ol
+      data-trips-track
+      class="flex w-max gap-5 px-5 sm:px-8 lg:pr-16 lg:pl-[max(2rem,calc((100vw-80rem)/2+2rem))]"
+    >
+      {upcomingTrips.map((trip) => (
+        <li class="w-[78vw] max-w-[380px] snap-center lg:w-[380px]">
+          <TripCard trip={trip} today={today} />
+        </li>
+      ))}
+      {hasUpcomingTrips && recentTrips.length > 0 && (
+        <li class="flex w-48 shrink-0 snap-center flex-col justify-center gap-3 px-4 text-white/50">
+          <span class="h-px w-16 bg-white/25" />
+          <p class="font-display text-2xl leading-tight font-semibold text-white/80">
+            La saison passée
+          </p>
+          <p class="text-sm">Quelques souvenirs de nos dernières plongées.</p>
+        </li>
+      )}
+      {recentTrips.map((trip) => (
+        <li
+          class:list={[
+            'w-[78vw] max-w-[380px] snap-center lg:w-[380px]',
+            hasUpcomingTrips &&
+              'opacity-80 saturate-[0.65] transition hover:opacity-100 hover:saturate-100'
+          ]}
+        >
+          <TripCard trip={trip} today={today} />
+        </li>
+      ))}
+      <li class="w-[78vw] max-w-[380px] snap-center lg:w-[380px]">
+        <a
+          href="/les-sorties"
+          class="group flex aspect-[3/4] flex-col justify-between rounded-[1.75rem] border border-dashed border-white/25 p-8 transition hover:border-lagoon hover:bg-lagoon/5"
+        >
+          <p class="kicker text-lagoon">Le calendrier complet</p>
+          <div>
+            <p class="font-display text-4xl leading-none font-semibold tracking-tight">
+              Toutes les sorties du club
+            </p>
+            <span class="mt-6 flex size-14 items-center justify-center rounded-full bg-coral text-ink transition duration-500 ease-swim group-hover:-rotate-45">
+              <Icon name="arrowRight" class="size-6" />
+            </span>
+          </div>
+        </a>
+      </li>
+    </ol>
+  </div>
+</section>

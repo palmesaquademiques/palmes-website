@@ -1,0 +1,46 @@
+---
+import type { HomePage } from '../../lib/queries'
+import Bubbles from '../ui/Bubbles.astro'
+import Icon from '../ui/Icon.astro'
+
+type Props = { page: HomePage }
+
+const { closingTitle, closingText } = Astro.props.page
+---
+
+<section
+  data-closing
+  class="relative isolate overflow-hidden bg-gradient-to-b from-transparent via-deep to-ocean pt-32 pb-44 text-center text-white sm:pt-44"
+>
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 bottom-0 -z-10 h-2/3 bg-[radial-gradient(ellipse_at_50%_100%,rgb(43_167_222/0.55),transparent_65%)]"
+  ></div>
+  <div aria-hidden="true" class="caustics absolute inset-0 -z-10 opacity-40"></div>
+  <Bubbles count={24} />
+
+  <div class="container-page relative" data-depth="5" data-phase="Palier">
+    <p class="kicker text-lagoon" data-reveal>
+      −5 m · Palier de sécurité
+    </p>
+    <h2
+      class="mx-auto mt-6 max-w-4xl text-[clamp(2.8rem,7vw,6.5rem)] leading-[0.92] font-bold tracking-[-0.03em]"
+      data-reveal
+    >
+      {closingTitle ?? 'Prêt à vous jeter à l’eau ?'}
+    </h2>
+    {closingText && (
+      <p class="mx-auto mt-8 max-w-xl text-lg text-white/80" data-reveal>
+        {closingText}
+      </p>
+    )}
+    <div class="mt-12 flex flex-wrap justify-center gap-3" data-reveal>
+      <a href="/contact#adhesion" class="button-primary">
+        Nous rejoindre <Icon name="arrowRight" class="size-4" />
+      </a>
+      <a href="/contact" class="button-ghost">
+        Nous écrire
+      </a>
+    </div>
+  </div>
+</section>

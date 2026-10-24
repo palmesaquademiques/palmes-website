@@ -1,0 +1,33 @@
+---
+const ticks = [0, 10, 20, 30, 40]
+---
+
+<aside
+  data-depth-gauge
+  aria-hidden="true"
+  class="pointer-events-none fixed top-1/2 right-4 z-40 hidden -translate-y-1/2 flex-col items-center gap-4 rounded-full bg-abyss/50 px-3 py-6 text-white ring-1 ring-white/10 backdrop-blur-md min-[1440px]:flex"
+>
+  <span class="kicker text-[0.6rem] text-white/50">Profondeur</span>
+  <div class="relative h-60 w-px bg-gradient-to-b from-lagoon/60 via-white/20 to-white/5">
+    {ticks.map((tick) => (
+      <span
+        class="absolute right-2 flex -translate-y-1/2 items-center gap-1.5 text-[0.6rem] text-white/40 tabular-nums"
+        style={`top: ${(tick / 40) * 100}%`}
+      >
+        {tick}
+        <span class="h-px w-2 bg-white/30" />
+      </span>
+    ))}
+    <span
+      data-depth-marker
+      class="absolute top-0 left-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lagoon shadow-[0_0_18px_4px] shadow-lagoon/60"
+    ></span>
+  </div>
+  <p class="font-display text-3xl leading-none font-semibold tabular-nums">
+    <span data-depth-value>0</span>
+    <span class="text-base text-white/60"> m</span>
+  </p>
+  <p data-depth-phase class="kicker w-20 text-center text-[0.6rem] text-lagoon">
+    Surface
+  </p>
+</aside>

@@ -1,0 +1,65 @@
+---
+import type { Chapter } from '../../lib/queries'
+import Icon from '../ui/Icon.astro'
+import SanityImage from '../ui/SanityImage.astro'
+import CurrentLines from './CurrentLines.astro'
+
+type Props = { chapters: Chapter[] }
+
+const { chapters } = Astro.props
+---
+
+<section aria-label="Découvrir le club" class="relative pb-24 text-white">
+  <div class="container-page">
+    {chapters.map((chapter, chapterIndex) => (
+      <article
+        data-chapter
+        class="mb-6 last:mb-0 lg:sticky lg:mb-[12vh]"
+        style={`top: calc(var(--spacing-header) + 1.5rem + ${chapterIndex * 1.25}rem)`}
+      >
+        <div
+          data-chapter-card
+          class="relative grid min-h-[min(72svh,46rem)] origin-top overflow-hidden rounded-[2rem] bg-gradient-to-br from-deep to-abyss shadow-[0_-30px_60px_-30px_rgb(0_0_0/0.8)] ring-1 ring-white/10 lg:grid-cols-2"
+        >
+          <div
+            class:list={[
+              'relative min-h-72 overflow-hidden bg-deep',
+              chapterIndex % 2 === 1 && 'lg:order-2'
+            ]}
+          >
+            {chapter.image ? (
+              <SanityImage
+                image={chapter.image}
+                sizes="(min-width: 1024px) 40rem, 100vw"
+                class="absolute inset-0 size-full object-cover"
+                data-chapter-image
+              />
+            ) : (
+              <CurrentLines />
+            )}
+            <div class="absolute inset-0 bg-gradient-to-t from-abyss/60 to-transparent lg:hidden" />
+          </div>
+
+          <div class="flex flex-col justify-center gap-6 p-8 sm:p-14">
+            <p class="kicker text-lagoon">
+              <span class="tabular-nums">{String(chapterIndex + 1).padStart(2, '0')}</span>
+              {chapter.kicker && <span class="text-white/50"> · {chapter.kicker}</span>}
+            </p>
+            <h3 class="text-4xl leading-[0.95] font-semibold tracking-tight sm:text-5xl">
+              {chapter.title}
+            </h3>
+            {chapter.text && (
+              <p class="max-w-lg text-lg leading-relaxed text-white/70">{chapter.text}</p>
+            )}
+            {chapter.linkLabel && chapter.linkUrl && (
+              <a href={chapter.linkUrl} class="button-ghost mt-2 w-fit">
+                {chapter.linkLabel}
+                <Icon name="arrowRight" class="size-4" />
+              </a>
+            )}
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

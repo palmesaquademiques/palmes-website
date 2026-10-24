@@ -1,0 +1,35 @@
+---
+const lines = Array.from({ length: 9 }, (_, lineIndex) => ({
+  y: 40 + lineIndex * 40,
+  amplitude: 10 + (lineIndex % 3) * 8,
+  delay: lineIndex * -0.7,
+  opacity: 0.25 + (lineIndex % 4) * 0.15
+}))
+---
+
+<svg
+  aria-hidden="true"
+  viewBox="0 0 400 400"
+  preserveAspectRatio="xMidYMid slice"
+  class="absolute inset-0 size-full"
+>
+  <defs>
+    <linearGradient id="current-gradient" x1="0" x2="1">
+      <stop offset="0" stop-color="var(--color-lagoon)" stop-opacity="0"></stop>
+      <stop offset="0.5" stop-color="var(--color-lagoon)"></stop>
+      <stop offset="1" stop-color="var(--color-foam)" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs>
+  {lines.map((line) => (
+    <path
+      d={`M-20 ${line.y} C 80 ${line.y - line.amplitude}, 160 ${line.y + line.amplitude}, 240 ${line.y} S 380 ${line.y - line.amplitude}, 440 ${line.y}`}
+      fill="none"
+      stroke="url(#current-gradient)"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-dasharray="60 180"
+      class="animate-current"
+      style={`animation-delay:${line.delay}s; opacity:${line.opacity}`}
+    />
+  ))}
+</svg>

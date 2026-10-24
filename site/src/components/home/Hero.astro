@@ -1,0 +1,95 @@
+---
+import type { HomePage } from '../../lib/queries'
+import Bubbles from '../ui/Bubbles.astro'
+import Icon from '../ui/Icon.astro'
+import SanityImage from '../ui/SanityImage.astro'
+
+type Props = { page: HomePage }
+
+const { heroTitle, heroTagline, heroImage } = Astro.props.page
+
+const words = heroTitle.split(/\s+/)
+const lastWordIndex = words.length - 1
+---
+
+<section
+  data-hero
+  class="relative isolate flex h-svh min-h-[620px] items-end overflow-hidden bg-abyss text-white"
+>
+  <div data-hero-media class="absolute inset-0 -z-10">
+    <SanityImage
+      image={heroImage}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      blur={false}
+      class="size-full animate-ken-burns object-cover"
+    />
+    <div class="caustics absolute inset-0 opacity-50" aria-hidden="true"></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-abyss/60 via-abyss/10 to-abyss"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-abyss/80 via-abyss/20 to-transparent"
+      aria-hidden="true"
+    ></div>
+  </div>
+
+  <Bubbles count={12} />
+
+  <div data-hero-content class="container-page pb-24 sm:pb-28">
+    <p class="kicker animate-fade-up text-lagoon [animation-delay:150ms]">
+      Plongée & nage en eau vive · Toulouse · depuis 1986
+    </p>
+
+    <h1 class="mt-6 max-w-5xl text-[clamp(3.2rem,9.5vw,9rem)] leading-[0.88] font-bold tracking-[-0.035em]">
+      <span class="sr-only">{heroTitle}</span>
+      {words.map((word, wordIndex) => (
+        <span
+          class:list={[
+            '-mb-[0.12em] inline-block overflow-hidden pb-[0.12em] align-bottom',
+            wordIndex !== lastWordIndex && 'mr-[0.22em]'
+          ]}
+          aria-hidden="true"
+        >
+          <span
+            class:list={[
+              'inline-block animate-surface-in',
+              wordIndex === lastWordIndex &&
+                'bg-gradient-to-r from-lagoon via-foam to-lagoon bg-clip-text pr-[0.05em] text-transparent'
+            ]}
+            style={`animation-delay: ${250 + wordIndex * 90}ms`}
+          >
+            {word}
+          </span>
+        </span>
+      ))}
+    </h1>
+
+    {heroTagline && (
+      <p class="mt-7 max-w-xl animate-fade-up text-lg text-white/80 [animation-delay:700ms] sm:text-xl">
+        {heroTagline}
+      </p>
+    )}
+
+    <div class="mt-10 flex animate-fade-up flex-wrap gap-3 [animation-delay:850ms]">
+      <a href="#le-club" class="button-primary">
+        Plonger avec nous <Icon name="arrowDown" class="size-4" />
+      </a>
+      <a href="/les-sorties" class="button-ghost">
+        Voir les sorties
+      </a>
+    </div>
+  </div>
+
+  <a
+    href="#le-club"
+    class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 animate-fade-up flex-col items-center gap-3 text-[0.65rem] font-semibold tracking-[0.35em] text-white/60 uppercase [animation-delay:1.2s] sm:flex"
+  >
+    Plongez
+    <span class="relative h-14 w-px overflow-hidden bg-white/20">
+      <span class="absolute inset-x-0 top-0 h-1/2 animate-scroll-cue bg-lagoon"></span>
+    </span>
+  </a>
+</section>
