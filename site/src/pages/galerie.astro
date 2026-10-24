@@ -1,0 +1,44 @@
+---
+import PageHero from '../components/layout/PageHero.astro'
+import SanityImage from '../components/ui/SanityImage.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { type GalleryPage, galleryPageQuery } from '../lib/queries'
+import { imageUrl, sanityQuery } from '../lib/sanity'
+
+const { intro, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
+---
+
+<BaseLayout
+  title="Galerie photo"
+  description={intro ?? 'Les photos de nos plongées et de la vie du club.'}
+  image="/og/galerie.png"
+>
+  <PageHero kicker="Sous la surface" title="Galerie" intro={intro} />
+
+  <section class="container-page py-16">
+    <ul class="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">
+      {(photos ?? []).map((photo) => (
+        <li class="break-inside-avoid">
+          <a
+            href={imageUrl(photo).width(2200).url()}
+            data-lightbox="galerie"
+            data-caption={photo.alt ?? ''}
+            class="group relative block overflow-hidden rounded-2xl bg-deep"
+          >
+            <SanityImage
+              image={photo}
+              widths={[400, 640, 960, 1280]}
+              sizes="(min-width: 1024px) 26rem, (min-width: 640px) 50vw, 100vw"
+              class="w-full transition duration-[1.2s] ease-swim group-hover:scale-105"
+            />
+            {photo.alt && (
+              <span class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-abyss/90 to-transparent px-4 pt-10 pb-4 text-sm text-white transition duration-500 ease-swim group-hover:translate-y-0">
+                {photo.alt}
+              </span>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
