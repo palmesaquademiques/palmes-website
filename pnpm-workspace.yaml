@@ -1,3 +1,6 @@
 packages:
   - site
   - studio
+
+allowBuilds:
+  esbuild: true

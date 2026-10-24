@@ -1,0 +1,114 @@
+---
+import { navigationLinks, siteConfig } from '../../site.config'
+import Icon from '../ui/Icon.astro'
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '')
+const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`)
+---
+
+<header
+  data-header
+  class="group fixed inset-x-0 top-0 z-50 text-white transition-[background-color,box-shadow,backdrop-filter] duration-500 data-scrolled:bg-abyss/90 data-scrolled:shadow-[0_1px_0_rgb(255_255_255/0.08)] data-scrolled:backdrop-blur-xl"
+>
+  <div class="container-page flex h-header items-center justify-between gap-6">
+    <a
+      href="/"
+      class="group/logo flex shrink-0 items-center gap-3"
+      aria-label={`${siteConfig.name}, accueil`}
+    >
+      <img
+        src="/logo.png"
+        alt=""
+        width="44"
+        height="44"
+        class="size-11 transition-transform duration-700 ease-swim group-hover/logo:rotate-[18deg]"
+      />
+      <span class="font-display text-[1.05rem] leading-[1.05] font-semibold tracking-tight">
+        Les Palmes
+        <br />
+        <span class="text-lagoon">Aquadémiques</span>
+      </span>
+    </a>
+
+    <nav aria-label="Navigation principale" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {navigationLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              aria-current={isActive(link.href) ? 'page' : undefined}
+              class="relative rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:text-white aria-[current=page]:text-white after:absolute after:inset-x-4 after:bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-lagoon after:transition-transform after:duration-500 after:ease-swim hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href="/contact#adhesion"
+        class="button-primary hidden px-5! py-2.5! text-sm sm:inline-flex"
+      >
+        Nous rejoindre
+      </a>
+      <button
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="menu-mobile"
+        class="relative z-10 flex size-11 items-center justify-center rounded-full transition-colors hover:bg-white/10 lg:hidden"
+      >
+        <span class="sr-only">Ouvrir le menu</span>
+        <Icon name="menu" class="size-6 group-data-menu-open:hidden" />
+        <Icon name="close" class="hidden size-6 group-data-menu-open:block" />
+      </button>
+    </div>
+  </div>
+
+  <nav
+    id="menu-mobile"
+    aria-label="Navigation mobile"
+    class="pointer-events-none fixed inset-0 -z-10 flex flex-col justify-between bg-abyss/95 px-6 pt-28 pb-10 opacity-0 backdrop-blur-xl transition-opacity duration-500 group-data-menu-open:pointer-events-auto group-data-menu-open:opacity-100 lg:hidden"
+  >
+    <ul class="flex flex-col gap-2">
+      {navigationLinks.map((link, linkIndex) => (
+        <li
+          class="translate-y-6 opacity-0 transition duration-700 ease-swim group-data-menu-open:translate-y-0 group-data-menu-open:opacity-100"
+          style={`transition-delay: ${80 + linkIndex * 60}ms`}
+        >
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+            class="font-display text-4xl font-semibold tracking-tight text-white/90 aria-[current=page]:text-lagoon"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a href="/contact#adhesion" class="button-primary w-fit">
+      Nous rejoindre
+    </a>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!
+  const menuToggle = header.querySelector<HTMLButtonElement>('[data-menu-toggle]')!
+
+  const updateScrolledState = () => header.toggleAttribute('data-scrolled', window.scrollY > 24)
+
+  const setMenuOpen = (open: boolean) => {
+    header.toggleAttribute('data-menu-open', open)
+    menuToggle.setAttribute('aria-expanded', String(open))
+    menuToggle.querySelector('.sr-only')!.textContent = open ? 'Fermer le menu' : 'Ouvrir le menu'
+    document.documentElement.classList.toggle('overflow-hidden', open)
+  }
+
+  updateScrolledState()
+  window.addEventListener('scroll', updateScrolledState, { passive: true })
+  menuToggle.addEventListener('click', () => setMenuOpen(!header.hasAttribute('data-menu-open')))
+  document.addEventListener('keydown', (event) => event.key === 'Escape' && setMenuOpen(false))
+</script>

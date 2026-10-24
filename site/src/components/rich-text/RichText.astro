@@ -1,0 +1,30 @@
+---
+import { PortableText } from 'astro-portabletext'
+import type { RichText } from '../../lib/queries'
+import Embed from './Embed.astro'
+import HelloAssoBlock from './HelloAssoBlock.astro'
+import Link from './Link.astro'
+import PhotoGrid from './PhotoGrid.astro'
+import RichTextImage from './RichTextImage.astro'
+
+type Props = { value: RichText | null; class?: string }
+
+const { value, class: className = 'prose-palmes' } = Astro.props
+---
+
+{value && value.length > 0 && (
+  <div class={className}>
+    <PortableText
+      value={value}
+      components={{
+        type: {
+          image: RichTextImage,
+          photoGrid: PhotoGrid,
+          embed: Embed,
+          helloAsso: HelloAssoBlock
+        },
+        mark: { link: Link }
+      }}
+    />
+  </div>
+)}

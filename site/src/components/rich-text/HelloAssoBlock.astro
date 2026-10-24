@@ -1,0 +1,9 @@
+---
+import HelloAssoWidget from './HelloAssoWidget.astro'
+
+type Props = { node: { url: string; title?: string } }
+
+const { url, title } = Astro.props.node
+---
+
+<HelloAssoWidget url={url} title={title} />

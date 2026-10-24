@@ -1,0 +1,17 @@
+---
+type Props = { class?: string; flip?: boolean }
+
+const { class: className, flip = false } = Astro.props
+---
+
+<svg
+  aria-hidden="true"
+  viewBox="0 0 1440 80"
+  preserveAspectRatio="none"
+  class:list={['block h-10 w-full sm:h-16', flip && 'rotate-180', className]}
+>
+  <path
+    fill="currentColor"
+    d="M0 48c120-26 240-39 360-26s240 52 360 52 240-39 360-52 240 0 360 26v32H0z"
+  ></path>
+</svg>

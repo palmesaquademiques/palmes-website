@@ -1,0 +1,29 @@
+---
+type Props = { count?: number; class?: string }
+
+const { count = 14, class: className } = Astro.props
+
+const bubbles = Array.from({ length: count }, (_, bubbleIndex) => ({
+  left: (bubbleIndex * 37 + 11) % 100,
+  size: 4 + ((bubbleIndex * 7) % 12),
+  delay: (bubbleIndex * 1.7) % 14,
+  duration: 10 + ((bubbleIndex * 5) % 12),
+  drift: ((bubbleIndex % 5) - 2) * 18,
+  opacity: 0.25 + ((bubbleIndex * 3) % 5) / 10
+}))
+---
+
+<div
+  aria-hidden="true"
+  class:list={[
+    'pointer-events-none absolute inset-0 overflow-hidden motion-reduce:hidden',
+    className
+  ]}
+>
+  {bubbles.map((bubble) => (
+    <span
+      class="absolute -bottom-6 animate-rise rounded-full border border-white/50 bg-white/10 shadow-[inset_-2px_-2px_4px_rgb(255_255_255/0.35)]"
+      style={`left:${bubble.left}%;width:${bubble.size}px;height:${bubble.size}px;animation-delay:-${bubble.delay}s;--rise-duration:${bubble.duration}s;--bubble-drift:${bubble.drift}px;--bubble-opacity:${bubble.opacity}`}
+    />
+  ))}
+</div>

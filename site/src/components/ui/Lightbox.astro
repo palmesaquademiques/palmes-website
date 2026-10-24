@@ -1,0 +1,119 @@
+<dialog
+  data-lightbox-dialog
+  aria-label="Visionneuse de photos"
+  class="m-0 h-dvh max-h-none w-dvw max-w-none bg-transparent p-0 text-white backdrop:bg-abyss/95 backdrop:backdrop-blur-md open:flex"
+>
+  <figure class="relative flex size-full flex-col items-center justify-center gap-3 p-4 sm:p-12">
+    <img
+      data-lightbox-image
+      alt=""
+      class="max-h-[85dvh] max-w-full rounded-lg object-contain shadow-2xl"
+    />
+    <figcaption data-lightbox-caption class="text-center text-sm text-white/70"></figcaption>
+  </figure>
+
+  <button
+    type="button"
+    data-lightbox-close
+    class="absolute top-4 right-4 flex size-12 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
+  >
+    <span class="sr-only">Fermer</span>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      class="size-6"
+    >
+      <path d="M6 6l12 12M18 6L6 18"></path>
+    </svg>
+  </button>
+  <button
+    type="button"
+    data-lightbox-previous
+    class="absolute top-1/2 left-3 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
+  >
+    <span class="sr-only">Photo précédente</span>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      class="size-6"
+    >
+      <path d="M15 6l-6 6 6 6"></path>
+    </svg>
+  </button>
+  <button
+    type="button"
+    data-lightbox-next
+    class="absolute top-1/2 right-3 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
+  >
+    <span class="sr-only">Photo suivante</span>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      class="size-6"
+    >
+      <path d="M9 6l6 6-6 6"></path>
+    </svg>
+  </button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]')!
+  const image = dialog.querySelector<HTMLImageElement>('[data-lightbox-image]')!
+  const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!
+
+  let group: HTMLAnchorElement[] = []
+  let currentIndex = 0
+
+  const show = (index: number) => {
+    currentIndex = (index + group.length) % group.length
+    const link = group[currentIndex]
+    image.src = link.href
+    image.alt = link.querySelector('img')?.alt ?? ''
+    caption.textContent = link.dataset.caption ?? ''
+  }
+
+  const groupOf = (link: HTMLAnchorElement) =>
+    [...document.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]')].filter(
+      (candidate) => candidate.dataset.lightbox === link.dataset.lightbox
+    )
+
+  document.addEventListener('click', (event) => {
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[data-lightbox]')
+    if (!link || event.metaKey || event.ctrlKey) return
+    event.preventDefault()
+    group = groupOf(link)
+    show(group.indexOf(link))
+    dialog.showModal()
+  })
+
+  dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close())
+  dialog
+    .querySelector('[data-lightbox-previous]')!
+    .addEventListener('click', () => show(currentIndex - 1))
+  dialog
+    .querySelector('[data-lightbox-next]')!
+    .addEventListener('click', () => show(currentIndex + 1))
+  dialog.addEventListener('click', (event) => event.target === dialog && dialog.close())
+  dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') show(currentIndex - 1)
+    if (event.key === 'ArrowRight') show(currentIndex + 1)
+  })
+
+  let touchStartX = 0
+  dialog.addEventListener('touchstart', (event) => (touchStartX = event.touches[0].clientX), {
+    passive: true
+  })
+  dialog.addEventListener('touchend', (event) => {
+    const distance = event.changedTouches[0].clientX - touchStartX
+    if (Math.abs(distance) > 50) show(currentIndex + (distance < 0 ? 1 : -1))
+  })
+</script>

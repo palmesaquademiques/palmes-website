@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Page introuvable" noindex bodyClass="bg-abyss">
+  <section class="relative flex min-h-svh items-center text-white">
+    <div class="container-page">
+      <p class="kicker text-lagoon">Erreur 404 · −60 m</p>
+      <h1 class="mt-5 max-w-3xl text-6xl leading-none font-bold tracking-tight sm:text-8xl">
+        Vous êtes descendu trop profond.
+      </h1>
+      <p class="mt-6 max-w-lg text-lg text-white/70">
+        Cette page n’existe pas ou a changé d’adresse. Remontez doucement, sans oublier le palier.
+      </p>
+      <a href="/" class="button-primary mt-10">
+        Remonter à la surface
+      </a>
+    </div>
+  </section>
+</BaseLayout>

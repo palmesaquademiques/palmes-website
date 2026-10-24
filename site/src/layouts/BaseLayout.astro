@@ -1,0 +1,47 @@
+---
+import '@fontsource-variable/bricolage-grotesque/wdth.css'
+import '@fontsource-variable/inter'
+import '../styles/global.css'
+
+import Footer from '../components/layout/Footer.astro'
+import Header from '../components/layout/Header.astro'
+import Lightbox from '../components/ui/Lightbox.astro'
+import Seo, { type SeoProps } from '../components/seo/Seo.astro'
+
+type Props = SeoProps & { bodyClass?: string }
+
+const { bodyClass, ...seo } = Astro.props
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo {...seo} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/favicon-180x180.png" />
+    <meta name="theme-color" content="#020c16" />
+    <slot name="head" />
+  </head>
+
+  <body class:list={['flex min-h-dvh flex-col', bodyClass]}>
+    <a
+      href="#contenu"
+      class="sr-only rounded-full bg-white px-4 py-2 font-medium text-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60]"
+    >
+      Aller au contenu
+    </a>
+
+    <Header />
+
+    <main id="contenu" class="grow">
+      <slot />
+    </main>
+
+    <Footer />
+    <Lightbox />
+  </body>
+</html>

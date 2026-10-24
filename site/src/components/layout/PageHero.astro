@@ -1,0 +1,48 @@
+---
+import type { SanityImage as SanityImageType } from '../../lib/queries'
+import Bubbles from '../ui/Bubbles.astro'
+import SanityImage from '../ui/SanityImage.astro'
+import Wave from '../ui/Wave.astro'
+
+type Props = {
+  kicker: string
+  title: string
+  intro?: string | null
+  image?: SanityImageType | null
+}
+
+const { kicker, title, intro, image } = Astro.props
+---
+
+<section class="relative isolate overflow-hidden bg-abyss pt-[calc(var(--spacing-header)+4.5rem)] pb-28 text-white sm:pb-36">
+  {image && (
+    <SanityImage
+      image={image}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 -z-10 size-full animate-ken-burns object-cover opacity-45"
+    />
+  )}
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_20%_0%,rgb(43_167_222/0.35),transparent_55%),linear-gradient(180deg,transparent,var(--color-abyss))]"
+  ></div>
+  <div aria-hidden="true" class="caustics absolute inset-0 -z-10 opacity-30"></div>
+  <Bubbles count={8} />
+
+  <div class="container-page relative">
+    <p class="kicker animate-fade-up text-lagoon">{kicker}</p>
+    <h1 class="mt-5 max-w-4xl animate-fade-up text-[clamp(3rem,8vw,6.5rem)] leading-[0.9] font-bold tracking-[-0.03em] [animation-delay:120ms]">
+      {title}
+    </h1>
+    {intro && (
+      <p class="mt-7 max-w-2xl animate-fade-up text-lg leading-relaxed text-white/75 [animation-delay:240ms]">
+        {intro}
+      </p>
+    )}
+    <slot />
+  </div>
+
+  <Wave class="absolute inset-x-0 -bottom-px text-sand" />
+</section>

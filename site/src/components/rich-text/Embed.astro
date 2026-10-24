@@ -1,0 +1,28 @@
+---
+type Props = { node: { url: string; title?: string; format?: 'video' | 'map' | 'square' | 'form' } }
+
+const { url, title, format = 'video' } = Astro.props.node
+
+const aspectClasses = {
+  video: 'aspect-video',
+  map: 'aspect-[4/3]',
+  square: 'aspect-square',
+  form: 'h-[48rem]'
+}
+---
+
+<div
+  class:list={[
+    'not-prose my-10 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-ink/5',
+    aspectClasses[format]
+  ]}
+>
+  <iframe
+    src={url}
+    title={title ?? 'Contenu intégré'}
+    loading="lazy"
+    allowfullscreen
+    referrerpolicy="strict-origin-when-cross-origin"
+    class="size-full border-0"
+  ></iframe>
+</div>

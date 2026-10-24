@@ -1,0 +1,193 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-abyss: #020c16;
+  --color-deep: #04213a;
+  --color-ocean: #0772b9;
+  --color-lagoon: #2ba7de;
+  --color-foam: #e4f4fb;
+  --color-sand: #f7f4ee;
+  --color-ink: #0a1826;
+  --color-coral: #ff7a59;
+  --color-coral-light: #ff9b80;
+
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --spacing-header: 4.5rem;
+
+  --ease-swim: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-rise: rise var(--rise-duration, 14s) linear infinite;
+  --animate-sway: sway 9s ease-in-out infinite alternate;
+  --animate-shimmer: shimmer 18s linear infinite;
+  --animate-surface-in: surface-in 1.1s var(--ease-swim) both;
+  --animate-fade-up: fade-up 1s var(--ease-swim) both;
+  --animate-ken-burns: ken-burns 2.6s var(--ease-swim) both;
+  --animate-current: current 6s linear infinite;
+  --animate-scroll-cue: scroll-cue 2.2s var(--ease-swim) infinite;
+
+  @keyframes surface-in {
+    from {
+      transform: translateY(110%) rotate(4deg);
+    }
+    to {
+      transform: translateY(0) rotate(0);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ken-burns {
+    from {
+      transform: scale(1.14);
+      filter: blur(6px) brightness(0.6);
+    }
+    to {
+      transform: scale(1);
+      filter: blur(0) brightness(1);
+    }
+  }
+
+  @keyframes current {
+    to {
+      stroke-dashoffset: -240;
+    }
+  }
+
+  @keyframes scroll-cue {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(200%);
+    }
+  }
+
+  @keyframes rise {
+    from {
+      transform: translate3d(0, 0, 0);
+      opacity: 0;
+    }
+    10% {
+      opacity: var(--bubble-opacity, 0.5);
+    }
+    to {
+      transform: translate3d(var(--bubble-drift, 20px), -110vh, 0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes sway {
+    from {
+      transform: skewX(-12deg) translateX(-4%);
+    }
+    to {
+      transform: skewX(-6deg) translateX(4%);
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position:
+        0 0,
+        0 0;
+    }
+    to {
+      background-position:
+        600px 300px,
+        -400px 500px;
+    }
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+@layer base {
+  html {
+    scroll-padding-top: calc(var(--spacing-header) + 1rem);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-sand font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    font-stretch: 88%;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    @apply bg-lagoon/40 text-current;
+  }
+
+  :focus-visible {
+    @apply rounded-sm outline-2 outline-offset-4 outline-lagoon;
+  }
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+}
+
+@utility kicker {
+  @apply font-display text-xs font-semibold tracking-[0.2em] uppercase;
+}
+
+@utility button-primary {
+  @apply inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 font-semibold text-ink shadow-[0_10px_30px_-10px] shadow-coral/60 transition duration-300 ease-swim hover:-translate-y-0.5 hover:bg-coral-light;
+}
+
+@utility button-ghost {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white backdrop-blur-sm transition duration-300 ease-swim hover:border-white/60 hover:bg-white/10;
+}
+
+@utility button-dark {
+  @apply inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-semibold text-white transition duration-300 ease-swim hover:-translate-y-0.5 hover:bg-deep;
+}
+
+@utility prose-palmes {
+  @apply prose prose-lg max-w-none prose-slate prose-headings:font-display prose-headings:font-semibold prose-headings:text-ink prose-h2:text-3xl prose-a:font-medium prose-a:text-ocean prose-a:decoration-lagoon/40 prose-a:underline-offset-4 hover:prose-a:decoration-lagoon prose-blockquote:rounded-2xl prose-blockquote:border-l-0 prose-blockquote:bg-foam prose-blockquote:px-6 prose-blockquote:py-1 prose-blockquote:font-normal prose-blockquote:text-ink prose-blockquote:not-italic prose-strong:text-ink prose-li:marker:text-lagoon;
+}
+
+@utility caustics {
+  background-image:
+    radial-gradient(ellipse 120px 40px at 30% 40%, rgb(255 255 255 / 0.18), transparent 70%),
+    radial-gradient(ellipse 90px 30px at 70% 60%, rgb(255 255 255 / 0.12), transparent 70%);
+  background-size:
+    300px 220px,
+    260px 180px;
+  mix-blend-mode: overlay;
+  @apply animate-shimmer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

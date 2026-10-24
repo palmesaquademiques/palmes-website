@@ -1,0 +1,32 @@
+---
+import { type DisplayStatus, statusLabels } from '../../lib/trips'
+
+type Props = { status: DisplayStatus; class?: string }
+
+const { status, class: className } = Astro.props
+
+const tones: Record<DisplayStatus, string> = {
+  'to-confirm': 'bg-amber-200 text-amber-950',
+  confirmed: 'bg-sky-200 text-sky-950',
+  'registration-open': 'bg-emerald-300 text-emerald-950',
+  full: 'bg-rose-200 text-rose-950',
+  cancelled: 'bg-slate-300 text-slate-800 line-through',
+  past: 'bg-white/80 text-slate-700'
+}
+---
+
+<span
+  class:list={[
+    'inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap',
+    tones[status],
+    className
+  ]}
+>
+  {status === 'registration-open' && (
+    <span class="relative flex size-2">
+      <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-600 opacity-60" />
+      <span class="relative inline-flex size-2 rounded-full bg-emerald-700" />
+    </span>
+  )}
+  {statusLabels[status]}
+</span>

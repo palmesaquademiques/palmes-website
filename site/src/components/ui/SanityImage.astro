@@ -1,0 +1,69 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { SanityImage } from '../../lib/queries'
+import { imageUrl } from '../../lib/sanity'
+
+type Props = Omit<HTMLAttributes<'img'>, 'src' | 'srcset' | 'width' | 'height'> & {
+  image: SanityImage
+  sizes: string
+  widths?: number[]
+  aspectRatio?: number
+  blur?: boolean
+}
+
+const DEFAULT_WIDTHS = [400, 640, 960, 1280, 1600, 2000, 2400]
+
+const {
+  image,
+  sizes,
+  widths = DEFAULT_WIDTHS,
+  aspectRatio,
+  blur = true,
+  alt,
+  loading = 'lazy',
+  style,
+  ...attributes
+} = Astro.props
+
+const {
+  width: originalWidth,
+  height: originalHeight,
+  lqip
+} = {
+  ...image.asset.metadata.dimensions,
+  lqip: image.asset.metadata.lqip
+}
+
+const ratio = aspectRatio ?? originalWidth / originalHeight
+const availableWidths = widths.filter((width) => width <= originalWidth)
+const usableWidths = availableWidths.length > 0 ? availableWidths : [originalWidth]
+const largestWidth = usableWidths[usableWidths.length - 1]
+
+const urlFor = (width: number) =>
+  aspectRatio
+    ? imageUrl(image)
+        .width(width)
+        .height(Math.round(width / aspectRatio))
+        .fit('crop')
+        .url()
+    : imageUrl(image).width(width).url()
+
+const objectPosition = image.hotspot
+  ? `object-position: ${image.hotspot.x * 100}% ${image.hotspot.y * 100}%;`
+  : ''
+
+const placeholder = blur && lqip ? `background: url(${lqip}) center / cover no-repeat;` : ''
+---
+
+<img
+  src={urlFor(largestWidth)}
+  srcset={usableWidths.map((width) => `${urlFor(width)} ${width}w`).join(', ')}
+  sizes={sizes}
+  width={largestWidth}
+  height={Math.round(largestWidth / ratio)}
+  alt={alt ?? image.alt ?? ''}
+  loading={loading}
+  decoding="async"
+  style={`${objectPosition}${placeholder}${style ?? ''}`}
+  {...attributes}
+/>
