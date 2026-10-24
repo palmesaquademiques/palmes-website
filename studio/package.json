@@ -1,0 +1,29 @@
+{
+  "name": "studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "test": "tsc --noEmit && sanity schema validate",
+    "migrate:palmes-test": "tsx migrations/import-from-palmes-test.ts"
+  },
+  "dependencies": {
+    "@sanity/icons": "^5.2.3",
+    "@sanity/locale-fr-fr": "^1.2.37",
+    "@sanity/vision": "^6.20.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.20.0",
+    "styled-components": "^6.6.0"
+  },
+  "devDependencies": {
+    "@markdoc/markdoc": "^0.5.10",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "yaml": "^2.9.1"
+  }
+}
