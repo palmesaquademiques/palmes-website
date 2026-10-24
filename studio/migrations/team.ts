@@ -125,8 +125,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Constance Gay',
     team: 'committee',
     role: 'Responsable site internet',
-    title: 'Araignée de mer du Web',
-    emblem: 'spiderCrab',
+    title: 'Hippocampe du Web',
+    emblem: 'seahorse',
     order: 18
   }
 ]

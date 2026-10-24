@@ -21,7 +21,7 @@ export const emblems = [
   { title: '🏷️ Étiquette de prêt', value: 'loanTag' },
   { title: '🥂 Coupes de champagne', value: 'champagne' },
   { title: '🧭 Rose des vents', value: 'compass' },
-  { title: '🦀 Araignée de mer', value: 'spiderCrab' }
+  { title: '🌊 Hippocampe', value: 'seahorse' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'
