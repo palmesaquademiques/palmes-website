@@ -21,6 +21,7 @@ L’interface d’édition est à l’adresse **lespalmesaquademiques.fr/admin**
 | Changer un texte de l’accueil   | **Pages** › **Accueil** (onglets « Grande photo », « Présentation du club », « Fin de page »)                   |
 | Ajouter des photos à la galerie | **Pages** › **Page Galerie** : glisser-déposer plusieurs photos d’un coup                                       |
 | Mettre à jour l’adhésion        | **Pages** › **Page Contact** › onglet « Adhésion » : coller le lien HelloAsso de la nouvelle saison             |
+| Déposer un PV d’AG              | **Pages** › **Page Contact** › onglet « Documents » : ajouter un titre et le PDF                                |
 
 Quelques repères :
 

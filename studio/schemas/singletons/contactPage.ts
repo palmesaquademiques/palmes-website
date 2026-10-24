@@ -9,7 +9,8 @@ export const contactPage = defineType({
   groups: [
     { name: 'infos', title: 'Informations', default: true },
     { name: 'membership', title: 'Adhésion' },
-    { name: 'faq', title: 'Questions fréquentes' }
+    { name: 'faq', title: 'Questions fréquentes' },
+    { name: 'documents', title: 'Documents' }
   ],
   fields: [
     defineField({ name: 'intro', title: 'Texte d’accueil', type: 'richText', group: 'infos' }),
@@ -61,14 +62,52 @@ export const contactPage = defineType({
           type: 'object',
           fields: [
             defineField({
+              name: 'category',
+              title: 'Rubrique',
+              description:
+                'Les questions d’une même rubrique sont regroupées, par exemple « 📍 Pratique »',
+              type: 'string'
+            }),
+            defineField({
               name: 'question',
               title: 'Question',
               type: 'string',
               validation: (rule) => rule.required()
             }),
-            defineField({ name: 'answer', title: 'Réponse', type: 'text', rows: 4 })
+            defineField({ name: 'answer', title: 'Réponse', type: 'richText' })
           ],
-          preview: { select: { title: 'question', subtitle: 'answer' } }
+          preview: { select: { title: 'question', subtitle: 'category' } }
+        })
+      ]
+    }),
+    defineField({
+      name: 'documents',
+      title: 'Documents du club',
+      description:
+        'Procès-verbaux d’assemblée générale, statuts… Ils sont téléchargeables par tous',
+      type: 'array',
+      group: 'documents',
+      of: [
+        defineArrayMember({
+          name: 'clubDocument',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Titre',
+              description: 'Par exemple « PV de l’AG, saison 2025-2026 »',
+              type: 'string',
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: 'file',
+              title: 'Fichier',
+              type: 'file',
+              options: { accept: 'application/pdf' },
+              validation: (rule) => rule.required()
+            })
+          ],
+          preview: { select: { title: 'title' } }
         })
       ]
     })
