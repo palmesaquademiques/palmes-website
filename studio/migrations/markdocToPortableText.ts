@@ -4,7 +4,7 @@ export type SanityImage = {
   _type: 'imageWithAlt' | 'image'
   _key?: string
   alt?: string
-  asset: { _sanityAsset: string }
+  _sanityAsset: string
 }
 
 type Span = { _type: 'span'; _key: string; text: string; marks: string[] }

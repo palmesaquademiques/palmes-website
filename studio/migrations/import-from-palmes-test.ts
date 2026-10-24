@@ -53,9 +53,7 @@ const imageResolverFor =
   (source: string, alt = ''): SanityImage => ({
     _type: 'imageWithAlt',
     ...(alt ? { alt } : {}),
-    asset: {
-      _sanityAsset: `image@file://${path.join(contentDirectory, collection, source)}`
-    }
+    _sanityAsset: `image@file://${path.join(contentDirectory, collection, source)}`
   })
 
 const optionalImage = (collection: string, source: unknown, alt = '') =>
@@ -255,7 +253,7 @@ const buildContactPage = async () => {
 const teamPhoto = (fileName: string, alt: string): SanityImage => ({
   _type: 'imageWithAlt',
   alt,
-  asset: { _sanityAsset: `image@file://${path.join(teamPhotosDirectory, fileName)}` }
+  _sanityAsset: `image@file://${path.join(teamPhotosDirectory, fileName)}`
 })
 
 const buildMembers = () =>
