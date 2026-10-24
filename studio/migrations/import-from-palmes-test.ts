@@ -8,7 +8,6 @@ import { TEAM_2025_2026 } from './team.ts'
 const contentDirectory = path.resolve(process.argv[2] ?? '../../palmes_test/src/content')
 const outputFile = path.resolve('../migration-output/palmes.ndjson')
 const localPhotosDirectory = path.resolve('migrations')
-const documentsDirectory = path.resolve('../migration-output/documents')
 
 const TRIP_STATUSES: Record<string, string> = {
   'a-confirmer': 'to-confirm',
@@ -23,6 +22,14 @@ const TRIPS_INTRO =
   'Plusieurs sorties sont organisées durant l’année. Ce sont généralement des week-ends du vendredi soir au dimanche après-midi, ou de 3 à 4 jours pour les ponts comme la Pentecôte. Des sorties plongée à la journée, avec pique-nique, sont aussi proposées, par exemple au lac de Sède près de Saint-Gaudens. Les inscriptions se font via HelloAsso avec un acompte, le solde étant réglé après la sortie. Le club organise toujours l’hébergement, et les clubs de plongée locaux nous emmènent en bateau. Le covoiturage permet de partager les frais de route.'
 
 const MEMBERSHIP_POST_ID = 'post-cest-la-rentree-les-inscriptions-cest-par-ici'
+
+const CLUB_DOCUMENTS = [
+  { title: 'Statuts de l’association (2026)', fileName: 'statuts-2026.pdf' },
+  { title: 'Règlement intérieur (2026)', fileName: 'reglement-interieur-2026.pdf' },
+  { title: 'PV de l’AG, saison 2025-2026', fileName: 'pv-ag-2025-2026.pdf' },
+  { title: 'PV de l’AG, saison 2024-2025', fileName: 'pv-ag-2024-2025.pdf' },
+  { title: 'PV de l’AG, saison 2023-2024', fileName: 'pv-ag-2023-2024.pdf' }
+]
 
 const CLUB_SUMMARY =
   'Le club **Les Palmes Aquadémiques** est un club **associatif** de **plongée sous-marine**, affilié à la **FFESSM**. Son fonctionnement repose sur un engagement entièrement bénévole. Le club existe depuis 1986.'
@@ -258,48 +265,19 @@ const buildFaq = (faqMarkdown: string) =>
     }))
   )
 
-const downloadDriveFile = async (fileId: string, fileName: string) => {
-  const response = await fetch(`https://drive.google.com/uc?export=download&id=${fileId}`)
-  const content = Buffer.from(await response.arrayBuffer())
-  if (!content.subarray(0, 4).equals(Buffer.from('%PDF'))) {
-    throw new Error(`Le document Drive ${fileId} n’est pas un PDF téléchargeable`)
+const localDocument = ({ title, fileName }: { title: string; fileName: string }) => ({
+  _type: 'clubDocument',
+  title,
+  file: {
+    _type: 'file',
+    _sanityAsset: `file@file://${path.join(localPhotosDirectory, 'documents', fileName)}`
   }
-  const filePath = path.join(documentsDirectory, fileName)
-  await mkdir(documentsDirectory, { recursive: true })
-  await writeFile(filePath, content)
-  return filePath
-}
-
-const buildDocuments = (documentsMarkdown: string) =>
-  Promise.all(
-    [
-      ...documentsMarkdown.matchAll(
-        /\[([^\]]+)\]\(https:\/\/drive\.google\.com\/file\/d\/([^/]+)\/[^)]*\)/g
-      )
-    ].map(async ([, title, fileId]) => ({
-      _type: 'clubDocument',
-      title,
-      file: {
-        _type: 'file',
-        _sanityAsset: `file@file://${await downloadDriveFile(fileId, `${slugOf(title)}.pdf`)}`
-      }
-    }))
-  )
-
-const slugOf = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
+})
 
 const buildContactPage = async () => {
   const { frontmatter, body } = await readEntry(path.join(contentDirectory, 'pages/contact.mdoc'))
   const [introMarkdown, faqAndDocuments = ''] = body.split(/^## FAQ\s*$/m)
-  const [faqMarkdown, documentsMarkdown = ''] = faqAndDocuments.split(
-    /^## Documents importants\s*$/m
-  )
+  const [faqMarkdown] = faqAndDocuments.split(/^## Documents importants\s*$/m)
 
   return {
     _id: 'contactPage',
@@ -311,7 +289,7 @@ const buildContactPage = async () => {
     mapUrl: frontmatter.urlCarte,
     membershipPost: { _type: 'reference', _ref: MEMBERSHIP_POST_ID },
     faq: keyed(buildFaq(faqMarkdown), 'question'),
-    documents: keyed(await buildDocuments(documentsMarkdown), 'document')
+    documents: keyed(CLUB_DOCUMENTS.map(localDocument), 'document')
   }
 }
 
