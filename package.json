@@ -1,0 +1,15 @@
+{
+  "name": "palmes",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=22.23"
+  },
+  "scripts": {
+    "dev": "pnpm --filter site dev",
+    "studio": "pnpm --filter studio dev",
+    "build": "pnpm --filter site build",
+    "test": "pnpm -r test"
+  }
+}
