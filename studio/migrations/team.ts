@@ -5,6 +5,8 @@ type TeamMember = {
   team: 'board' | 'committee' | 'none'
   role: string
   title: string
+  emblem: string
+  secretTitle?: string
   instructorLevel?: 'E1' | 'E2' | 'N4' | 'MF1' | 'MF2'
   order: number
 }
@@ -15,7 +17,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Marion Cabrol',
     team: 'board',
     role: 'Présidente · Co-référente harcèlement',
-    title: 'Grande Amirale des Abysses',
+    title: 'Reine des Palmes',
+    emblem: 'crown',
     order: 1
   },
   {
@@ -23,7 +26,9 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Jules Cléro',
     team: 'board',
     role: 'Trésorier',
-    title: 'Grand Argentier des Trésors Engloutis',
+    title: 'Grand Argentier',
+    emblem: 'coins',
+    secretTitle: 'Expert ès vidage de masque',
     instructorLevel: 'E1',
     order: 2
   },
@@ -33,6 +38,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     team: 'board',
     role: 'Secrétaire',
     title: 'Garde des Sceaux Étanches',
+    emblem: 'seal',
     order: 3
   },
   {
@@ -40,7 +46,9 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Elie Trognon',
     team: 'committee',
     role: 'Vice-président et adjoint matériel',
-    title: 'Connétable des Mers',
+    title: 'Dauphin de la Reine',
+    emblem: 'dolphin',
+    secretTitle: 'Ne perd jamais sa palanquée',
     instructorLevel: 'N4',
     order: 10
   },
@@ -49,7 +57,9 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Nicolas Scotto di Rinaldi',
     team: 'committee',
     role: 'Trésorier adjoint',
-    title: 'Gardien du Coffre Corallien',
+    title: 'Octopus du Grand Argentier',
+    emblem: 'tentacleCoin',
+    secretTitle: 'As du canard',
     instructorLevel: 'E1',
     order: 11
   },
@@ -58,7 +68,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Sophie Danguy',
     team: 'committee',
     role: 'Secrétaire adjoint',
-    title: 'Scribe des Marées',
+    title: 'Octopus de la Plume',
+    emblem: 'tentacleQuill',
     order: 12
   },
   {
@@ -66,7 +77,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Pascal Khair',
     team: 'committee',
     role: 'Secrétaire adjoint',
-    title: 'Scribe des Courants',
+    title: 'Octopus de l’Encrier',
+    emblem: 'tentacleInkwell',
     order: 13
   },
   {
@@ -75,7 +87,9 @@ export const TEAM_2025_2026: TeamMember[] = [
     nickname: 'Doumé',
     team: 'committee',
     role: 'Responsable formations',
-    title: 'Oracle de l’Ordre des Palmes',
+    title: 'Grand Sage des Profondeurs',
+    emblem: 'certificates',
+    secretTitle: 'A formé des générations de plongeurs',
     instructorLevel: 'MF1',
     order: 14
   },
@@ -85,6 +99,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     team: 'committee',
     role: 'Responsable sorties · Co-référente harcèlement',
     title: 'Grande Navigatrice des Expéditions',
+    emblem: 'compass',
     order: 15
   },
   {
@@ -92,7 +107,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Hakima El Ouakiri',
     team: 'committee',
     role: 'Responsable matériel',
-    title: 'Garde de l’Armurerie',
+    title: 'Quartier-maître des stabs',
+    emblem: 'loanTag',
     order: 16
   },
   {
@@ -100,7 +116,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Léna Maury',
     team: 'committee',
     role: 'Responsable événementiel',
-    title: 'Capitaine des Festins',
+    title: 'Bulle de Champagne de la Cour',
+    emblem: 'champagne',
     order: 17
   },
   {
@@ -108,15 +125,8 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Constance Gay',
     team: 'committee',
     role: 'Responsable site internet',
-    title: 'Mage du Grimoire Numérique',
+    title: 'Araignée de mer du Web',
+    emblem: 'spiderCrab',
     order: 18
-  },
-  {
-    slug: 'miryam-quintero',
-    name: 'Miryam Quintero',
-    team: 'committee',
-    role: 'Membre du comité directeur',
-    title: 'Sentinelle des Profondeurs',
-    order: 19
   }
 ]

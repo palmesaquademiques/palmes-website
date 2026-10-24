@@ -9,6 +9,21 @@ export const instructorLevels = [
   { title: 'MF2 · Moniteur fédéral 2e degré', value: 'MF2' }
 ]
 
+export const emblems = [
+  { title: '👑 Couronne', value: 'crown' },
+  { title: '🪙 Pièces d’or', value: 'coins' },
+  { title: '🔏 Sceau de cire', value: 'seal' },
+  { title: '🐬 Dauphin', value: 'dolphin' },
+  { title: '🐙 Tentacule tenant une pièce', value: 'tentacleCoin' },
+  { title: '🐙 Tentacule tenant une plume', value: 'tentacleQuill' },
+  { title: '🐙 Tentacule tenant un encrier', value: 'tentacleInkwell' },
+  { title: '🫧 Bulles de brevets', value: 'certificates' },
+  { title: '🏷️ Étiquette de prêt', value: 'loanTag' },
+  { title: '🥂 Coupes de champagne', value: 'champagne' },
+  { title: '🧭 Rose des vents', value: 'compass' },
+  { title: '🦀 Araignée de mer', value: 'spiderCrab' }
+]
+
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'
 
 export const member = defineType({
@@ -67,11 +82,25 @@ export const member = defineType({
     }),
     defineField({
       name: 'title',
-      title: 'Titre de chevalerie',
-      description:
-        'Le titre honorifique affiché en doré, par exemple « Grand Argentier des Trésors Engloutis »',
+      title: 'Titre',
+      description: 'Le titre honorifique affiché en doré, par exemple « Grand Argentier »',
       type: 'string',
       hidden: ({ document }) => isInstructorOnly(document)
+    }),
+    defineField({
+      name: 'emblem',
+      title: 'Emblème animé',
+      description:
+        'Petite animation autour du médaillon, jouée quand la personne remonte à la surface et au survol',
+      type: 'string',
+      options: { list: emblems }
+    }),
+    defineField({
+      name: 'secretTitle',
+      title: 'Titre secret',
+      description:
+        'Remplace le titre quand on voit la personne en plongée, par exemple « Expert ès vidage de masque »',
+      type: 'string'
     }),
     defineField({
       name: 'instructorLevel',
@@ -79,6 +108,14 @@ export const member = defineType({
       description: 'À remplir pour les encadrants : ils apparaissent alors dans « Les encadrants »',
       type: 'string',
       options: { list: instructorLevels, layout: 'radio' }
+    }),
+    defineField({
+      name: 'instructorTitle',
+      title: 'Titre d’encadrant',
+      description:
+        'Laisser vide pour le titre du niveau : Précepteur des bassins (E1), Précepteur des mers (E2), Éclaireur des profondeurs (N4), Maître précepteur (MF1), Grand précepteur (MF2)',
+      type: 'string',
+      hidden: ({ document }) => !document?.instructorLevel
     }),
     defineField({
       name: 'order',
