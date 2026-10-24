@@ -22,7 +22,7 @@ export const sportsClub = (imageUrl?: string) => ({
     addressLocality: siteConfig.city,
     addressCountry: 'FR'
   },
-  sameAs: [siteConfig.facebook, siteConfig.instagram]
+  sameAs: [siteConfig.instagram]
 })
 
 export const event = ({

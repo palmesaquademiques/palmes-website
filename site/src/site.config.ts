@@ -7,7 +7,6 @@ export const siteConfig = {
   locale: 'fr_FR',
   city: 'Toulouse',
   email: 'contact@lespalmesaquademiques.fr',
-  facebook: 'https://facebook.com/groups/palmes.aquademiques',
   instagram: 'https://instagram.com/palmes.aquademiques'
 } as const
 
