@@ -32,21 +32,21 @@ const { page, upcomingTrips, recentTrips, latestPosts } = await sanityQuery<{
     <div data-depth="0" data-phase="Surface">
       <Hero page={page} />
     </div>
-    <div data-depth="6" data-phase="Descente">
+    <div data-depth="5" data-phase="Descente">
       <ClubIntro page={page} />
     </div>
     {page.chapters && page.chapters.length > 0 && (
-      <div data-depth="14" data-phase="Descente">
+      <div data-depth="20" data-phase="Descente">
         <Chapters chapters={page.chapters} />
       </div>
     )}
-    <div data-depth="30" data-phase="Exploration">
+    <div data-depth="40" data-phase="Exploration">
       <TripsCarousel upcomingTrips={upcomingTrips} recentTrips={recentTrips} today={today} />
     </div>
-    <div data-depth="40" data-phase="Au fond">
+    <div data-depth="60" data-phase="Au fond">
       <LatestPosts posts={latestPosts} />
     </div>
-    <div data-depth="40" data-phase="Remontée">
+    <div data-depth="60" data-phase="Remontée">
       <Closing page={page} />
     </div>
   </div>

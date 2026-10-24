@@ -1,5 +1,6 @@
 ---
-const ticks = [0, 10, 20, 30, 40]
+const MAXIMUM_DEPTH = 60
+const ticks = [0, 10, 20, 30, 40, 50, 60]
 ---
 
 <aside
@@ -8,11 +9,11 @@ const ticks = [0, 10, 20, 30, 40]
   class="pointer-events-none fixed top-1/2 right-4 z-40 hidden -translate-y-1/2 flex-col items-center gap-4 rounded-full bg-abyss/50 px-3 py-6 text-white ring-1 ring-white/10 backdrop-blur-md min-[1440px]:flex"
 >
   <span class="kicker text-[0.6rem] text-white/50">Profondeur</span>
-  <div class="relative h-60 w-px bg-gradient-to-b from-lagoon/60 via-white/20 to-white/5">
+  <div class="relative h-72 w-px bg-gradient-to-b from-lagoon/60 via-white/20 to-white/5">
     {ticks.map((tick) => (
       <span
         class="absolute right-2 flex -translate-y-1/2 items-center gap-1.5 text-[0.6rem] text-white/40 tabular-nums"
-        style={`top: ${(tick / 40) * 100}%`}
+        style={`top: ${(tick / MAXIMUM_DEPTH) * 100}%`}
       >
         {tick}
         <span class="h-px w-2 bg-white/30" />

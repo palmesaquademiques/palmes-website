@@ -5,7 +5,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 type DepthAnchor = { position: number; depth: number; phase: string }
 
-const MAXIMUM_DEPTH = 40
+const MAXIMUM_DEPTH = 60
 
 const readDepthAnchors = (): DepthAnchor[] => {
   const halfViewport = window.innerHeight / 2

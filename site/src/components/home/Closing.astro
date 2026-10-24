@@ -10,14 +10,19 @@ const { closingTitle, closingText } = Astro.props.page
 
 <section
   data-closing
-  class="relative isolate overflow-hidden bg-gradient-to-b from-transparent via-deep to-ocean pt-32 pb-44 text-center text-white sm:pt-44"
+  class="relative isolate overflow-hidden bg-gradient-to-b from-transparent via-deep to-ocean pt-[45svh] pb-44 text-center lg:pt-[85svh] text-white"
 >
   <div
     aria-hidden="true"
     class="absolute inset-x-0 bottom-0 -z-10 h-2/3 bg-[radial-gradient(ellipse_at_50%_100%,rgb(43_167_222/0.55),transparent_65%)]"
   ></div>
-  <div aria-hidden="true" class="caustics absolute inset-0 -z-10 opacity-40"></div>
+  <div aria-hidden="true" class="caustics absolute inset-x-0 bottom-0 -z-10 h-1/2 opacity-40"></div>
   <Bubbles count={24} />
+
+  <div aria-hidden="true" class="absolute inset-x-0 top-24 flex flex-col items-center gap-5">
+    <p class="kicker text-[0.65rem] text-white/50">Remontée · 10 m/min maximum</p>
+    <span class="h-[25svh] w-px lg:h-[58svh] bg-gradient-to-b from-white/0 via-white/30 to-lagoon"></span>
+  </div>
 
   <div class="container-page relative" data-depth="5" data-phase="Palier">
     <p class="kicker text-lagoon" data-reveal>
@@ -43,4 +48,6 @@ const { closingTitle, closingText } = Astro.props.page
       </a>
     </div>
   </div>
+
+  <span aria-hidden="true" data-depth="5" data-phase="Palier" class="block"></span>
 </section>
