@@ -115,12 +115,11 @@ const stackChapters = () => {
   const cards = gsap.utils.toArray<HTMLElement>('[data-chapter-card]')
   cards.slice(0, -1).forEach((card, cardIndex) =>
     gsap.to(card, {
-      scale: 0.92,
-      filter: 'brightness(0.5)',
+      scale: 0.94,
       ease: 'none',
       scrollTrigger: {
         trigger: cards[cardIndex + 1],
-        start: 'top bottom',
+        start: 'top 75%',
         end: 'top top+=160',
         scrub: true
       }
