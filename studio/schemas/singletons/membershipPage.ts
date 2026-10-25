@@ -1,5 +1,6 @@
 import { HeartIcon } from '@sanity/icons/Heart'
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { bannerImageField } from '../objects/bannerImageField'
 
 export const membershipPage = defineType({
   name: 'membershipPage',
@@ -13,6 +14,7 @@ export const membershipPage = defineType({
     { name: 'form', title: 'Formulaire' }
   ],
   fields: [
+    bannerImageField({ fallback: 'pas de photo', group: 'season' }),
     defineField({
       name: 'season',
       title: 'Saison',

@@ -1,5 +1,6 @@
 import { EnvelopeIcon } from '@sanity/icons/Envelope'
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { bannerImageField } from '../objects/bannerImageField'
 
 export const contactPage = defineType({
   name: 'contactPage',
@@ -12,6 +13,7 @@ export const contactPage = defineType({
     { name: 'documents', title: 'Documents' }
   ],
   fields: [
+    bannerImageField({ fallback: 'pas de photo', group: 'infos' }),
     defineField({ name: 'intro', title: 'Texte d’accueil', type: 'richText', group: 'infos' }),
     defineField({
       name: 'address',

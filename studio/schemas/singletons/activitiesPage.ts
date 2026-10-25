@@ -1,5 +1,6 @@
 import { ActivityIcon } from '@sanity/icons/Activity'
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { bannerImageField } from '../objects/bannerImageField'
 
 export const activitiesPage = defineType({
   name: 'activitiesPage',
@@ -7,6 +8,7 @@ export const activitiesPage = defineType({
   type: 'document',
   icon: ActivityIcon,
   fields: [
+    bannerImageField({ fallback: 'la première photo des sections' }),
     defineField({ name: 'intro', title: 'Introduction', type: 'text', rows: 3 }),
     defineField({
       name: 'sections',

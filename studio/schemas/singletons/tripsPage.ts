@@ -1,5 +1,6 @@
 import { CalendarIcon } from '@sanity/icons/Calendar'
 import { defineField, defineType } from 'sanity'
+import { bannerImageField } from '../objects/bannerImageField'
 
 export const tripsPage = defineType({
   name: 'tripsPage',
@@ -7,6 +8,7 @@ export const tripsPage = defineType({
   type: 'document',
   icon: CalendarIcon,
   fields: [
+    bannerImageField({ fallback: 'la photo de la prochaine sortie' }),
     defineField({
       name: 'intro',
       title: 'Introduction',
