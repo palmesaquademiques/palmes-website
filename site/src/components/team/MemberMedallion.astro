@@ -15,6 +15,7 @@ type Props = {
 
 const { member, title, detail, secretTitle, badge, size = 'regular' } = Astro.props
 const name = displayName(member)
+const detailLines = detail?.split(' · ') ?? []
 const bubbles = [18, 34, 52, 68, 80]
 ---
 
@@ -88,17 +89,37 @@ const bubbles = [18, 34, 52, 68, 80]
     </button>
     {member.emblem && <MemberEmblem emblem={member.emblem} uid={member._id} />}
   </div>
-  <figcaption class="mt-6">
-    {title && (
-      <p class="title-stack grid font-display text-lg leading-tight font-semibold text-balance">
-        <span class="public-title text-gold-deep">{title}</span>
-        {secretTitle && <span class="secret-title text-ocean">{secretTitle}</span>}
-      </p>
+  <figcaption class="mt-6 grid">
+    <div class="col-start-1 row-start-1">
+      {title && (
+        <p class="title-stack grid font-display text-lg leading-tight font-semibold text-balance">
+          <span class="public-title grid text-gold-deep">
+            <span class="overflow-hidden">{title}</span>
+          </span>
+          {secretTitle && (
+            <span class="secret-title grid text-ocean">
+              <span class="overflow-hidden">{secretTitle}</span>
+            </span>
+          )}
+        </p>
+      )}
+      <p class="mt-1.5 font-medium text-ink">{name}</p>
+      {detailLines.map((line) => (
+        <p class="mt-0.5 text-sm leading-snug text-balance text-slate-600">{line}</p>
+      ))}
+    </div>
+    {secretTitle && (
+      <div aria-hidden="true" class="invisible col-start-1 row-start-1">
+        <p class="grid font-display text-lg leading-tight font-semibold text-balance">
+          <span class="col-start-1 row-start-1">{title}</span>
+          <span class="col-start-1 row-start-1">{secretTitle}</span>
+        </p>
+        <p class="mt-1.5 font-medium">{name}</p>
+        {detailLines.map((line) => (
+          <p class="mt-0.5 text-sm leading-snug text-balance">{line}</p>
+        ))}
+      </div>
     )}
-    <p class="mt-1.5 font-medium text-ink">{name}</p>
-    {detail?.split(' · ').map((line) => (
-      <p class="mt-0.5 text-sm leading-snug text-balance text-slate-600">{line}</p>
-    ))}
   </figcaption>
 </figure>
 
@@ -142,28 +163,38 @@ const bubbles = [18, 34, 52, 68, 80]
   }
 
   .title-stack > * {
-    grid-area: 1 / 1;
-    transition: opacity 0.5s var(--ease-swim);
+    transition:
+      opacity 0.5s var(--ease-swim),
+      grid-template-rows 0.5s var(--ease-swim);
+  }
+
+  .public-title {
+    grid-template-rows: 1fr;
   }
 
   .secret-title {
+    grid-template-rows: 0fr;
     opacity: 0;
   }
 
   [data-member][data-diving] .secret-title {
+    grid-template-rows: 1fr;
     opacity: 1;
   }
 
   [data-member][data-diving] .title-stack:has(.secret-title) .public-title {
+    grid-template-rows: 0fr;
     opacity: 0;
   }
 
   @media (hover: hover) {
     [data-member]:hover .secret-title {
+      grid-template-rows: 1fr;
       opacity: 1;
     }
 
     [data-member]:hover .title-stack:has(.secret-title) .public-title {
+      grid-template-rows: 0fr;
       opacity: 0;
     }
   }
