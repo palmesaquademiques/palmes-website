@@ -23,7 +23,7 @@ L’interface d’édition est à l’adresse **lespalmesaquademiques.fr/admin**
 | Préparer la rentrée             | **Pages** › **Page Inscriptions** : saison, dates, tarifs, rappels et lien d’adhésion HelloAsso                                 |
 | Raconter l’histoire du club     | **Pages** › **Page Le club** › onglet « Histoire » : remplir « Notre histoire » et ajouter la photo des 40 ans                  |
 | Mettre à jour les formations    | **Pages** › **Page Le club** › onglet « Formations » : une fiche par niveau, et la liste du Codep 31 (taper le nom puis Entrée) |
-| Déposer un PV d’AG              | **Pages** › **Page Le club** › onglet « Documents » : ajouter un titre et le PDF                                                |
+| Déposer un PV d’AG              | **Pages** › **Page Le club** › onglet « Documents » : ajouter un titre, le type « PV d’assemblée générale » et le PDF           |
 
 Quelques repères :
 

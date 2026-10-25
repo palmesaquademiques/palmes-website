@@ -16,6 +16,15 @@ const sections = page.sections
 const formations = page.formations ?? []
 const codepCourses = page.codepCourses ?? []
 const documents = page.documents ?? []
+const documentGroups = [
+  { title: 'Statuts et règlement', kind: 'rules' },
+  { title: 'Procès-verbaux d’assemblée générale', kind: 'minutes' }
+]
+  .map((group) => ({
+    ...group,
+    documents: documents.filter((document) => document.kind === group.kind)
+  }))
+  .filter((group) => group.documents.length > 0)
 const clubAge = new Date().getFullYear() - FOUNDING_YEAR
 const heroImage = page.bannerImage ?? sections.find((section) => section.image)?.image
 
@@ -203,28 +212,33 @@ const pageLinks = [
     <section id="documents" class="container-page py-20">
       <p class="kicker text-ocean">Vie associative</p>
       <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Documents du club</h2>
-      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {documents.map((document) => (
-          <li>
-            <a
-              href={document.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group flex items-center gap-4 rounded-2xl bg-white p-5 ring-1 ring-ink/5 transition hover:ring-lagoon/50"
-            >
-              <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-foam text-ocean transition group-hover:bg-lagoon group-hover:text-white">
-                <Icon name="document" class="size-6" />
-              </span>
-              <span>
-                <span class="block font-medium text-ink">{document.title}</span>
-                <span class="text-sm text-slate-500">
-                  PDF · {Math.round(document.size / 1024)} Ko
-                </span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      {documentGroups.map((group) => (
+        <div class="mt-10">
+          <h3 class="font-display text-2xl font-semibold tracking-tight">{group.title}</h3>
+          <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {group.documents.map((document) => (
+              <li>
+                <a
+                  href={document.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group flex items-center gap-4 rounded-2xl bg-white p-5 ring-1 ring-ink/5 transition hover:ring-lagoon/50"
+                >
+                  <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-foam text-ocean transition group-hover:bg-lagoon group-hover:text-white">
+                    <Icon name="document" class="size-6" />
+                  </span>
+                  <span>
+                    <span class="block font-medium text-ink">{document.title}</span>
+                    <span class="text-sm text-slate-500">
+                      PDF · {Math.round(document.size / 1024)} Ko
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </section>
   )}
 

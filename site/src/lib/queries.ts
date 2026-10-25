@@ -67,7 +67,13 @@ export type HomePage = {
   closingText: string | null
 }
 
-export type ClubDocument = { _key: string; title: string; url: string; size: number }
+export type ClubDocument = {
+  _key: string
+  kind: 'rules' | 'minutes'
+  title: string
+  url: string
+  size: number
+}
 
 export type Formation = {
   _key: string
@@ -219,7 +225,7 @@ export const clubPageQuery = `{
     "formationsIntro": formationsIntro${richText},
     "formations": formations[]{ _key, code, name, summary, prerequisites, "details": details${richText} },
     codepCourses,
-    "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
+    "documents": documents[defined(file.asset)]{ _key, kind, title, "url": file.asset->url, "size": file.asset->size }
   },
   "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
     _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
