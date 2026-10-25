@@ -1,5 +1,6 @@
 import { createImageUrlBuilder } from '@sanity/image-url'
 import type { SanityImage } from './queries'
+import { withFrenchSpacing } from './typography'
 
 const projectId = import.meta.env.SANITY_PROJECT_ID
 const dataset = import.meta.env.SANITY_DATASET ?? 'production'
@@ -29,7 +30,7 @@ export const sanityQuery = async <Result>(
   }
 
   const { result } = await response.json()
-  return result
+  return withFrenchSpacing(result) as Result
 }
 
 const imageBuilder = createImageUrlBuilder({ projectId, dataset })
