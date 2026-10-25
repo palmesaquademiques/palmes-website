@@ -13,15 +13,17 @@ Coût : 0 €. Le plan gratuit de Sanity couvre 20 éditeurs, 10 000 documents e
 
 L’interface d’édition est à l’adresse **lespalmesaquademiques.fr/admin**. On s’y connecte avec son compte Google ou son adresse e-mail, après avoir été invité.
 
-| Je veux…                        | Où aller                                                                                                        |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Annoncer une sortie             | **Sorties** › bouton ➕ › remplir le lieu, les dates et le statut, puis cliquer sur « Generate » pour l’adresse |
-| Ouvrir les inscriptions         | Dans la sortie, coller l’adresse de la billetterie HelloAsso et passer le statut à « Inscriptions ouvertes »    |
-| Écrire un article               | **Blog** › bouton ➕                                                                                            |
-| Changer un texte de l’accueil   | **Pages** › **Accueil** (onglets « Grande photo », « Présentation du club », « Fin de page »)                   |
-| Ajouter des photos à la galerie | **Pages** › **Page Galerie** : glisser-déposer plusieurs photos d’un coup                                       |
-| Préparer la rentrée             | **Pages** › **Page Inscriptions** : saison, dates, tarifs, rappels et lien d’adhésion HelloAsso                 |
-| Déposer un PV d’AG              | **Pages** › **Page Contact** › onglet « Documents » : ajouter un titre et le PDF                                |
+| Je veux…                        | Où aller                                                                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Annoncer une sortie             | **Sorties** › bouton ➕ › remplir le lieu, les dates et le statut, puis cliquer sur « Generate » pour l’adresse                 |
+| Ouvrir les inscriptions         | Dans la sortie, coller l’adresse de la billetterie HelloAsso et passer le statut à « Inscriptions ouvertes »                    |
+| Écrire un article               | **Blog** › bouton ➕                                                                                                            |
+| Changer un texte de l’accueil   | **Pages** › **Accueil** (onglets « Grande photo », « Présentation du club », « Fin de page »)                                   |
+| Ajouter des photos à la galerie | **Pages** › **Page Galerie** : glisser-déposer plusieurs photos d’un coup                                                       |
+| Préparer la rentrée             | **Pages** › **Page Inscriptions** : saison, dates, tarifs, rappels et lien d’adhésion HelloAsso                                 |
+| Raconter l’histoire du club     | **Pages** › **Page Le club** › onglet « Histoire » : remplir « Notre histoire » et ajouter la photo des 40 ans                  |
+| Mettre à jour les formations    | **Pages** › **Page Le club** › onglet « Formations » : une fiche par niveau, et la liste du Codep 31 (taper le nom puis Entrée) |
+| Déposer un PV d’AG              | **Pages** › **Page Le club** › onglet « Documents » : ajouter un titre et le PDF                                                |
 
 Quelques repères :
 
@@ -80,7 +82,7 @@ Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, 
 3. Dans Sanity (**API › Webhooks**), créer un webhook vers cette adresse, méthode `POST`, déclenché à la création, la modification et la suppression, avec le filtre :
 
    ```groq
-   _type in ["trip", "post", "homePage", "tripsPage", "activitiesPage", "galleryPage", "contactPage"]
+   _type in ["trip", "post", "member", "homePage", "tripsPage", "clubPage", "galleryPage", "contactPage", "membershipPage"]
    ```
 
 4. Dans le dépôt GitHub, ajouter le secret `VERCEL_DEPLOY_HOOK` avec cette même adresse : il sert à la reconstruction de chaque nuit.
