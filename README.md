@@ -77,7 +77,7 @@ Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, 
 
 ### 4. Brancher Vercel
 
-1. Dans le projet Vercel, ajouter les variables `SANITY_PROJECT_ID` et `SANITY_DATASET=production`. Les autres réglages (Astro, commande de build, dossier `site/dist`) viennent du `vercel.json` à la racine du dépôt.
+1. Dans le projet Vercel, ajouter les variables `SANITY_PROJECT_ID` et `SANITY_DATASET=production`. Les autres réglages (Astro, commande de build, dossier `site/dist`) viennent du `vercel.json` à la racine du dépôt. Pour le staging, ajouter aussi `SITE_URL=https://staging.lespalmesaquademiques.fr` dans l’environnement Preview : sans elle, les aperçus de lien (WhatsApp, Facebook…) pointent vers le site de production.
 2. Dans **Settings › Git › Deploy Hooks**, créer un hook et copier son adresse.
 3. Dans Sanity (**API › Webhooks**), créer un webhook vers cette adresse, méthode `POST`, déclenché à la création, la modification et la suppression, avec le filtre :
 

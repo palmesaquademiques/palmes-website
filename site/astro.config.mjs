@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 
 export default defineConfig({
-  site: 'https://www.lespalmesaquademiques.fr',
+  site: process.env.SITE_URL ?? 'https://www.lespalmesaquademiques.fr',
   trailingSlash: 'never',
   build: { format: 'file' },
   prefetch: { prefetchAll: true },
