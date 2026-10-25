@@ -17,7 +17,7 @@ export const sportsClub = (imageUrl?: string) => ({
   },
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Piscine Léo Lagrange, Place Riquet',
+    streetAddress: 'Piscine Léo Lagrange, 1 place Riquet',
     postalCode: '31000',
     addressLocality: siteConfig.city,
     addressCountry: 'FR'
