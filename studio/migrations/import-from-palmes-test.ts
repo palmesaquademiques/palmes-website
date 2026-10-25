@@ -154,7 +154,7 @@ const buildHomePage = async () => {
             'Plongeur faisant le signe OK'
           ),
           linkLabel: 'Découvrir les formations',
-          linkUrl: '/les-activites'
+          linkUrl: '/le-club#formations'
         },
         {
           kicker: 'Le mardi soir',
@@ -201,17 +201,17 @@ const splitByHeading = (blocks: PortableTextBlocks) =>
     return [...sections.slice(0, -1), { ...lastSection, body: [...lastSection.body, block] }]
   }, [])
 
-const buildActivitiesPage = async () => {
+const buildClubPage = async () => {
   const { body } = await readEntry(path.join(contentDirectory, 'pages/activites.mdoc'))
   const sections = splitByHeading(
     markdocToPortableText(body.replace(SWIMMING_TRIAL_SENTENCE, ''), pageImage)
   ).filter((section) => !/nage en eau vive/i.test(section.title))
 
   return {
-    _id: 'activitiesPage',
-    _type: 'activitiesPage',
+    _id: 'clubPage',
+    _type: 'clubPage',
     intro:
-      'Plongée sous-marine, entraînements en piscine et baptêmes : voici tout ce que propose le club, de septembre à juin.',
+      'Un club associatif de plongée à Toulouse, affilié à la FFESSM depuis 1986. On s’entraîne le mardi soir à la piscine, on se forme du niveau 1 au niveau 3 et on part plonger en mer de mai à octobre.',
     sections: keyed(
       sections.map((section) => {
         const image = section.body.find((block) => block._type === 'image')
@@ -224,7 +224,8 @@ const buildActivitiesPage = async () => {
         }
       }),
       'activity'
-    )
+    ),
+    documents: keyed(CLUB_DOCUMENTS.map(localDocument), 'document')
   }
 }
 
@@ -284,8 +285,7 @@ const buildContactPage = async () => {
     schedule:
       'Le mardi de 21h à 22h15, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
     location: { _type: 'geopoint', lat: 43.6072173, lng: 1.4537693 },
-    faq: keyed(buildFaq(faqMarkdown), 'question'),
-    documents: keyed(CLUB_DOCUMENTS.map(localDocument), 'document')
+    faq: keyed(buildFaq(faqMarkdown), 'question')
   }
 }
 
@@ -384,7 +384,7 @@ const migrate = async () => {
     ...(await buildPosts()),
     await buildHomePage(),
     buildTripsPage(),
-    await buildActivitiesPage(),
+    await buildClubPage(),
     await buildGalleryPage(),
     await buildContactPage(),
     buildMembershipPage(),

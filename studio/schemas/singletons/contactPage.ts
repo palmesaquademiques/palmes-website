@@ -9,8 +9,7 @@ export const contactPage = defineType({
   icon: EnvelopeIcon,
   groups: [
     { name: 'infos', title: 'Informations', default: true },
-    { name: 'faq', title: 'Questions fréquentes' },
-    { name: 'documents', title: 'Documents' }
+    { name: 'faq', title: 'Questions fréquentes' }
   ],
   fields: [
     bannerImageField({ fallback: 'pas de photo', group: 'infos' }),
@@ -63,37 +62,6 @@ export const contactPage = defineType({
             defineField({ name: 'answer', title: 'Réponse', type: 'richText' })
           ],
           preview: { select: { title: 'question', subtitle: 'category' } }
-        })
-      ]
-    }),
-    defineField({
-      name: 'documents',
-      title: 'Documents du club',
-      description:
-        'Procès-verbaux d’assemblée générale, statuts… Ils sont téléchargeables par tous',
-      type: 'array',
-      group: 'documents',
-      of: [
-        defineArrayMember({
-          name: 'clubDocument',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'title',
-              title: 'Titre',
-              description: 'Par exemple « PV de l’AG, saison 2025-2026 »',
-              type: 'string',
-              validation: (rule) => rule.required()
-            }),
-            defineField({
-              name: 'file',
-              title: 'Fichier',
-              type: 'file',
-              options: { accept: 'application/pdf' },
-              validation: (rule) => rule.required()
-            })
-          ],
-          preview: { select: { title: 'title' } }
         })
       ]
     })
