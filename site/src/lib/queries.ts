@@ -153,7 +153,6 @@ export type ContactPage = {
   schedule: string | null
   location: { lat: number; lng: number } | null
   faq: { _key: string; category: string | null; question: string; answer: RichText | null }[] | null
-  documents: ClubDocument[] | null
 }
 
 const asset = '"asset": asset->{ _id, metadata { lqip, dimensions } }'
@@ -211,13 +210,6 @@ export const postsWithBodyQuery = `*[_type == "post" && defined(slug.current)] |
   ${postFields}, "body": body${richText}
 }`
 
-const clubDocuments = `"documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }`
-
-const members = `"members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
-    _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
-    "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
-  }`
-
 export const clubPageQuery = `{
   "page": *[_id == "clubPage"][0]{
     ${bannerImage}, intro,
@@ -227,22 +219,21 @@ export const clubPageQuery = `{
     "formationsIntro": formationsIntro${richText},
     "formations": formations[]{ _key, code, name, summary, prerequisites, "details": details${richText} },
     codepCourses,
-    ${clubDocuments}
+    "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
   },
-  ${members}
+  "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
+    _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
+    "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
+  }
 }`
 
 export const galleryPageQuery = `*[_id == "galleryPage"][0]{
   intro, ${bannerImage}, "photos": photos[]${image}
 }`
 
-export const contactPageQuery = `{
-  "page": *[_id == "contactPage"][0]{
-    ${bannerImage}, address, schedule, location,
-    "faq": faq[]{ _key, category, question, "answer": answer${richText} },
-    ${clubDocuments}
-  },
-  ${members}
+export const contactPageQuery = `*[_id == "contactPage"][0]{
+  ${bannerImage}, address, schedule, location,
+  "faq": faq[]{ _key, category, question, "answer": answer${richText} }
 }`
 
 export const membershipPageQuery = `*[_id == "membershipPage"][0]{
