@@ -73,11 +73,11 @@ Pour repartir du contenu Notion le plus récent, relancer d’abord `pnpm migrat
 pnpm --filter studio deploy
 ```
 
-Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, et `/admin` sur le site y redirige. Si ce nom est déjà pris, en choisir un autre dans `studio/sanity.cli.ts` et mettre à jour la redirection `/admin` dans `site/vercel.json`.
+Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, et `/admin` sur le site y redirige. Si ce nom est déjà pris, en choisir un autre dans `studio/sanity.cli.ts` et mettre à jour la redirection `/admin` dans `vercel.json`.
 
 ### 4. Brancher Vercel
 
-1. Dans le projet Vercel, régler **Root Directory** sur `site` et ajouter les variables `SANITY_PROJECT_ID` et `SANITY_DATASET=production`.
+1. Dans le projet Vercel, ajouter les variables `SANITY_PROJECT_ID` et `SANITY_DATASET=production`. Les autres réglages (Astro, commande de build, dossier `site/dist`) viennent du `vercel.json` à la racine du dépôt.
 2. Dans **Settings › Git › Deploy Hooks**, créer un hook et copier son adresse.
 3. Dans Sanity (**API › Webhooks**), créer un webhook vers cette adresse, méthode `POST`, déclenché à la création, la modification et la suppression, avec le filtre :
 
