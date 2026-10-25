@@ -77,15 +77,15 @@ const faqStructuredData = {
     </div>
 
     <a
-      href="#adhesion"
+      href="/inscriptions"
       class="group flex flex-col justify-between rounded-[1.75rem] bg-abyss p-8 text-white transition hover:bg-deep"
     >
       <Icon name="users" class="size-7 text-coral" />
       <div>
         <h2 class="mt-6 text-2xl font-semibold tracking-tight">Adhérer au club</h2>
-        <p class="mt-3 text-white/70">Tarifs, documents et inscription en ligne.</p>
-        <span class="mt-6 flex size-11 items-center justify-center rounded-full bg-coral text-ink transition duration-500 ease-swim group-hover:rotate-90">
-          <Icon name="arrowDown" />
+        <p class="mt-3 text-white/70">Dates, tarifs, documents et inscription en ligne.</p>
+        <span class="mt-6 flex size-11 items-center justify-center rounded-full bg-coral text-ink transition duration-500 ease-swim group-hover:-rotate-45">
+          <Icon name="arrowRight" />
         </span>
       </div>
     </a>
@@ -103,31 +103,6 @@ const faqStructuredData = {
         />
       </div>
     )}
-  </section>
-
-  <section id="adhesion" class="scroll-mt-20 bg-foam py-20 sm:py-28">
-    <div class="container-page max-w-4xl">
-      <p class="kicker text-ocean">Adhésion</p>
-      <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Rejoindre le club</h2>
-      <RichText value={page.membershipText} class="prose-palmes mt-8" />
-      {page.membershipPost ? (
-        <div class="mt-8">
-          <p class="max-w-2xl text-lg text-slate-600">
-            Tarifs, licence, assurance, certificat médical, dates de reprise : tout ce qu’il faut
-            savoir avant de s’inscrire est réuni dans un article, avec le lien d’inscription en
-            ligne.
-          </p>
-          <a href={`/blog/${page.membershipPost.slug}`} class="button-primary mt-8">
-            Toutes les infos pour s’inscrire <Icon name="arrowRight" class="size-4" />
-          </a>
-        </div>
-      ) : (
-        <p class="mt-8 max-w-2xl text-lg text-slate-600">
-          Les adhésions pour la saison ouvrent à la rentrée de septembre. Les nouveaux peuvent faire
-          une séance d’essai avant de s’inscrire : écrivez-nous ou passez un mardi soir.
-        </p>
-      )}
-    </div>
   </section>
 
   {faq.length > 0 && (

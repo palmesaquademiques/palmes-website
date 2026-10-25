@@ -45,11 +45,6 @@
       "permanent": true
     },
     {
-      "source": "/inscriptions",
-      "destination": "/blog/cest-la-rentree-les-inscriptions-cest-par-ici",
-      "permanent": true
-    },
-    {
       "source": "/marseille_2025",
       "destination": "/blog/marseille-2025",
       "permanent": true

@@ -105,13 +105,30 @@ export type Member = {
   diverPhoto: SanityImage | null
 }
 
+export type MembershipPage = {
+  season: string
+  intro: string | null
+  keyDates:
+    | {
+        _key: string
+        date: string
+        title: string
+        details: string | null
+        linkUrl: string | null
+      }[]
+    | null
+  prices: { _key: string; label: string; amount: string; note: string | null }[] | null
+  pricesNote: RichText | null
+  checklist: { _key: string; title: string; details: RichText | null }[] | null
+  goodToKnow: RichText | null
+  helloAssoUrl: string | null
+}
+
 export type ContactPage = {
   intro: RichText | null
   address: string | null
   schedule: string | null
   mapUrl: string | null
-  membershipPost: { title: string; slug: string } | null
-  membershipText: RichText | null
   faq: { _key: string; category: string | null; question: string; answer: RichText | null }[] | null
   documents: { _key: string; title: string; url: string; size: number }[] | null
 }
@@ -178,8 +195,6 @@ export const galleryPageQuery = `*[_id == "galleryPage"][0]{ intro, "photos": ph
 export const contactPageQuery = `{
   "page": *[_id == "contactPage"][0]{
     "intro": intro${richText}, address, schedule, mapUrl,
-    "membershipPost": membershipPost->{ title, "slug": slug.current },
-    "membershipText": membershipText${richText},
     "faq": faq[]{ _key, category, question, "answer": answer${richText} },
     "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
   },
@@ -187,6 +202,12 @@ export const contactPageQuery = `{
     _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
     "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
   }
+}`
+
+export const membershipPageQuery = `*[_id == "membershipPage"][0]{
+  season, intro, keyDates, prices, "pricesNote": pricesNote${richText},
+  "checklist": checklist[]{ _key, title, "details": details${richText} },
+  "goodToKnow": goodToKnow${richText}, helloAssoUrl
 }`
 
 export const shareImagesQuery = `{
