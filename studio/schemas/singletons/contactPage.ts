@@ -14,7 +14,6 @@ export const contactPage = defineType({
   ],
   fields: [
     bannerImageField({ fallback: 'pas de photo', group: 'infos' }),
-    defineField({ name: 'intro', title: 'Texte d’accueil', type: 'richText', group: 'infos' }),
     defineField({
       name: 'address',
       title: 'Adresse de la piscine',

@@ -95,10 +95,15 @@ const faqStructuredData = {
     </a>
   </section>
 
-  <section class="container-page grid gap-12 pb-20 lg:grid-cols-2 lg:items-center">
-    <RichText value={page.intro} />
-    {page.location && <ClubMap latitude={page.location.lat} longitude={page.location.lng} />}
-  </section>
+  {page.location && (
+    <section class="container-page pb-20">
+      <ClubMap
+        latitude={page.location.lat}
+        longitude={page.location.lng}
+        class="aspect-[4/3] rounded-[2rem] ring-1 ring-ink/10 sm:aspect-[21/9]"
+      />
+    </section>
+  )}
 
   {faq.length > 0 && (
     <section class="container-page grid gap-12 py-20 lg:grid-cols-[1fr_2fr]">

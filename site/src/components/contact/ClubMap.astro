@@ -1,7 +1,7 @@
 ---
-type Props = { latitude: number; longitude: number }
+type Props = { latitude: number; longitude: number; class?: string }
 
-const { latitude, longitude } = Astro.props
+const { latitude, longitude, class: className } = Astro.props
 ---
 
 <div
@@ -10,7 +10,7 @@ const { latitude, longitude } = Astro.props
   data-longitude={longitude}
   role="region"
   aria-label="Plan d’accès à la piscine Léo Lagrange"
-  class="isolate aspect-[4/3] overflow-hidden rounded-[2rem] bg-foam ring-1 ring-ink/10 [&_.leaflet-tile-pane]:saturate-[0.65]"
+  class:list={['isolate overflow-hidden bg-foam [&_.leaflet-tile-pane]:saturate-[0.65]', className]}
 ></div>
 
 <template data-fin-marker>

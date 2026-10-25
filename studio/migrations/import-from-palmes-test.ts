@@ -274,13 +274,12 @@ const localDocument = ({ title, fileName }: { title: string; fileName: string })
 
 const buildContactPage = async () => {
   const { frontmatter, body } = await readEntry(path.join(contentDirectory, 'pages/contact.mdoc'))
-  const [introMarkdown, faqAndDocuments = ''] = body.split(/^## FAQ\s*$/m)
+  const [, faqAndDocuments = ''] = body.split(/^## FAQ\s*$/m)
   const [faqMarkdown] = faqAndDocuments.split(/^## Documents importants\s*$/m)
 
   return {
     _id: 'contactPage',
     _type: 'contactPage',
-    intro: markdocToPortableText(introMarkdown, pageImage),
     address: frontmatter.adresse,
     schedule:
       'Le mardi de 21h à 22h15, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
