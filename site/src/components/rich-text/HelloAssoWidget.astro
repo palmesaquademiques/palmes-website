@@ -35,6 +35,8 @@ const widgetUrl = `${pageUrl}/widget`
 </div>
 
 <script>
+  const poweredByBadgeHeight = 60
+
   window.addEventListener('message', (event) => {
     if (!new URL(event.origin).hostname.endsWith('helloasso.com')) return
     const height = Number(event.data?.height)
@@ -43,7 +45,7 @@ const widgetUrl = `${pageUrl}/widget`
     const sourceFrame = [
       ...document.querySelectorAll<HTMLIFrameElement>('iframe[data-helloasso]')
     ].find((frame) => frame.contentWindow === event.source)
-    if (sourceFrame) sourceFrame.style.height = `${Math.ceil(height)}px`
+    if (sourceFrame) sourceFrame.style.height = `${Math.ceil(height) + poweredByBadgeHeight}px`
   })
 
   document.querySelectorAll<HTMLIFrameElement>('iframe[data-helloasso]').forEach((frame) => {
