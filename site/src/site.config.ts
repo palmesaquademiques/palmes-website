@@ -11,8 +11,8 @@ export const siteConfig = {
 } as const
 
 export const navigationLinks = [
-  { label: 'Les Sorties', href: '/les-sorties' },
-  { label: 'Les Activités', href: '/les-activites' },
+  { label: 'Sorties', href: '/les-sorties' },
+  { label: 'Activités', href: '/les-activites' },
   { label: 'Blog', href: '/blog' },
   { label: 'Galerie', href: '/galerie' },
   { label: 'Contact', href: '/contact' }
