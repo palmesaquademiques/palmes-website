@@ -40,8 +40,8 @@ const status = displayStatus(trip, today)
     aria-hidden="true"
   ></div>
 
-  <div class="flex items-start justify-between gap-2">
-    <span class="rounded-full bg-abyss/45 px-3 py-1.5 font-display text-sm font-semibold backdrop-blur-md">
+  <div class="flex flex-wrap items-start justify-between gap-2">
+    <span class="rounded-full bg-abyss/45 px-3 py-1.5 font-display text-sm font-semibold whitespace-nowrap backdrop-blur-md">
       {formatShortDateRange(trip.startDate, trip.endDate)}
     </span>
     <StatusBadge status={status} />

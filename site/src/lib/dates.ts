@@ -1,25 +1,8 @@
 const fromIsoDate = (isoDate: string) => new Date(`${isoDate}T00:00:00Z`)
 
-const longFormat = new Intl.DateTimeFormat('fr-FR', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-  timeZone: 'UTC'
-})
+const NO_BREAK_SPACE = '\u00A0'
 
-const dayAndMonthFormat = new Intl.DateTimeFormat('fr-FR', {
-  day: 'numeric',
-  month: 'long',
-  timeZone: 'UTC'
-})
-
-const shortDayAndMonthFormat = new Intl.DateTimeFormat('fr-FR', {
-  day: 'numeric',
-  month: 'short',
-  timeZone: 'UTC'
-})
-
-const dayFormat = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', timeZone: 'UTC' })
+const monthFormat = new Intl.DateTimeFormat('fr-FR', { month: 'long', timeZone: 'UTC' })
 
 const parisDateFormat = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris' })
 
@@ -28,30 +11,33 @@ const isSameDay = (startDate: string, endDate: string | null) => !endDate || end
 const isSameMonth = (startDate: string, endDate: string) =>
   startDate.slice(0, 7) === endDate.slice(0, 7)
 
+const dayOf = (date: Date) => (date.getUTCDate() === 1 ? '1er' : String(date.getUTCDate()))
+
+const dayAndMonthOf = (date: Date) => `${dayOf(date)} ${monthFormat.format(date)}`
+
 export const todayInParis = () => parisDateFormat.format(new Date())
 
-export const formatDate = (isoDate: string) => longFormat.format(fromIsoDate(isoDate))
+export const formatDate = (isoDate: string) => {
+  const date = fromIsoDate(isoDate)
+  return `${dayAndMonthOf(date)} ${date.getUTCFullYear()}`
+}
 
 export const formatDateRange = (startDate: string, endDate: string | null) => {
   if (!endDate || isSameDay(startDate, endDate)) return `le ${formatDate(startDate)}`
 
   const start = fromIsoDate(startDate)
-  if (isSameMonth(startDate, endDate)) {
-    return `du ${dayFormat.format(start)} au ${formatDate(endDate)}`
-  }
+  if (isSameMonth(startDate, endDate)) return `du ${dayOf(start)} au ${formatDate(endDate)}`
 
   const sameYear = startDate.slice(0, 4) === endDate.slice(0, 4)
-  return `du ${sameYear ? dayAndMonthFormat.format(start) : formatDate(startDate)} au ${formatDate(endDate)}`
+  return `du ${sameYear ? dayAndMonthOf(start) : formatDate(startDate)} au ${formatDate(endDate)}`
 }
 
 export const formatShortDateRange = (startDate: string, endDate: string | null) => {
-  if (!endDate || isSameDay(startDate, endDate)) {
-    return shortDayAndMonthFormat.format(fromIsoDate(startDate))
-  }
+  const start = fromIsoDate(startDate)
+  if (!endDate || isSameDay(startDate, endDate)) return dayAndMonthOf(start)
 
-  return isSameMonth(startDate, endDate)
-    ? `${dayFormat.format(fromIsoDate(startDate))}–${shortDayAndMonthFormat.format(fromIsoDate(endDate))}`
-    : `${shortDayAndMonthFormat.format(fromIsoDate(startDate))} – ${shortDayAndMonthFormat.format(fromIsoDate(endDate))}`
+  const startLabel = isSameMonth(startDate, endDate) ? dayOf(start) : dayAndMonthOf(start)
+  return `${startLabel}${NO_BREAK_SPACE}– ${dayAndMonthOf(fromIsoDate(endDate))}`
 }
 
 export const dayCount = (startDate: string, endDate: string | null) =>
