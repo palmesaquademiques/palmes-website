@@ -20,6 +20,7 @@ const heroImage = sections.find((section) => section.image)?.image
 ---
 
 <BaseLayout
+  headerTone="light"
   title="Les activités"
   description={intro ?? 'Plongée sous-marine, entraînements en piscine et baptêmes.'}
   image="/og/les-activites.png"
@@ -31,7 +32,7 @@ const heroImage = sections.find((section) => section.image)?.image
           <li>
             <a
               href={`#${anchorOf(section.title)}`}
-              class="inline-flex rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white/85 backdrop-blur-sm transition hover:border-lagoon hover:bg-lagoon/15 hover:text-white"
+              class="inline-flex rounded-full border border-ink/15 bg-white/60 px-4 py-2 text-sm font-medium text-ink/80 backdrop-blur-sm transition hover:border-ocean hover:text-ocean"
             >
               {section.title}
             </a>

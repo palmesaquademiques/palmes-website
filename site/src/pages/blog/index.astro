@@ -9,7 +9,7 @@ const [featuredPost, ...otherPosts] = await sanityQuery<PostSummary[]>(postsQuer
 const intro = 'Récits de sorties, vie du club et conseils pratiques pour bien plonger.'
 ---
 
-<BaseLayout title="Le blog" description={intro} image="/og/blog.png">
+<BaseLayout headerTone="light" title="Le blog" description={intro} image="/og/blog.png">
   <PageHero kicker="Carnet de plongée" title="Le blog" intro={intro} />
 
   <section class="container-page py-20">

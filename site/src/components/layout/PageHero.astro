@@ -14,30 +14,35 @@ type Props = {
 const { kicker, title, intro, image } = Astro.props
 ---
 
-<section class="relative isolate overflow-hidden bg-abyss pt-[calc(var(--spacing-header)+4.5rem)] pb-28 text-white sm:pb-36">
+<section class="relative isolate overflow-hidden bg-surface pt-[calc(var(--spacing-header)+4.5rem)] pb-28 text-ink sm:pb-36">
   {image && (
-    <SanityImage
-      image={image}
-      sizes="100vw"
-      loading="eager"
-      fetchpriority="high"
-      class="absolute inset-0 -z-10 size-full animate-ken-burns object-cover opacity-45"
-    />
+    <div class="absolute inset-0 -z-10 overflow-hidden lg:left-[38%]">
+      <SanityImage
+        image={image}
+        sizes="(min-width: 1024px) 62vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="size-full animate-ken-burns object-cover opacity-25 lg:opacity-100"
+      />
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 bg-surface/50 lg:bg-transparent lg:bg-gradient-to-r lg:from-surface lg:via-surface/60 lg:to-transparent"
+      />
+    </div>
   )}
   <div
     aria-hidden="true"
-    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_20%_0%,rgb(43_167_222/0.35),transparent_55%),linear-gradient(180deg,transparent,var(--color-abyss))]"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_15%_0%,rgb(43_167_222/0.25),transparent_55%)]"
   ></div>
-  <div aria-hidden="true" class="caustics absolute inset-0 -z-10 opacity-30"></div>
-  <Bubbles count={8} />
+  <Bubbles count={8} tone="light" />
 
   <div class="container-page relative">
-    <p class="kicker animate-fade-up text-lagoon">{kicker}</p>
+    <p class="kicker animate-fade-up text-ocean">{kicker}</p>
     <h1 class="mt-5 max-w-4xl animate-fade-up text-[clamp(3rem,8vw,6.5rem)] leading-[0.9] font-bold tracking-[-0.03em] [animation-delay:120ms]">
       {title}
     </h1>
     {intro && (
-      <p class="mt-7 max-w-2xl animate-fade-up text-lg leading-relaxed text-white/75 [animation-delay:240ms]">
+      <p class="mt-7 max-w-2xl animate-fade-up text-lg leading-relaxed text-slate-700 [animation-delay:240ms]">
         {intro}
       </p>
     )}

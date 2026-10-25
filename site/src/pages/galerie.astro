@@ -9,6 +9,7 @@ const { intro, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
 ---
 
 <BaseLayout
+  headerTone="light"
   title="Galerie photo"
   description={intro ?? 'Les photos de nos plongées et de la vie du club.'}
   image="/og/galerie.png"

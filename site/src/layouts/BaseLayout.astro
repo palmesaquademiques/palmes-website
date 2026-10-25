@@ -8,9 +8,9 @@ import Header from '../components/layout/Header.astro'
 import Lightbox from '../components/ui/Lightbox.astro'
 import Seo, { type SeoProps } from '../components/seo/Seo.astro'
 
-type Props = SeoProps & { bodyClass?: string }
+type Props = SeoProps & { bodyClass?: string; headerTone?: 'dark' | 'light' }
 
-const { bodyClass, ...seo } = Astro.props
+const { bodyClass, headerTone, ...seo } = Astro.props
 ---
 
 <!doctype html>
@@ -35,7 +35,7 @@ const { bodyClass, ...seo } = Astro.props
       Aller au contenu
     </a>
 
-    <Header />
+    <Header tone={headerTone} />
 
     <main id="contenu" class="grow">
       <slot />

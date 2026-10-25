@@ -1,7 +1,7 @@
 ---
-type Props = { count?: number; class?: string }
+type Props = { count?: number; class?: string; tone?: 'dark' | 'light' }
 
-const { count = 14, class: className } = Astro.props
+const { count = 14, class: className, tone = 'dark' } = Astro.props
 
 const bubbles = Array.from({ length: count }, (_, bubbleIndex) => ({
   left: (bubbleIndex * 37 + 11) % 100,
@@ -22,7 +22,12 @@ const bubbles = Array.from({ length: count }, (_, bubbleIndex) => ({
 >
   {bubbles.map((bubble) => (
     <span
-      class="absolute -bottom-6 animate-rise rounded-full border border-white/50 bg-white/10 shadow-[inset_-2px_-2px_4px_rgb(255_255_255/0.35)]"
+      class:list={[
+        'absolute -bottom-6 animate-rise rounded-full border',
+        tone === 'dark'
+          ? 'border-white/50 bg-white/10 shadow-[inset_-2px_-2px_4px_rgb(255_255_255/0.35)]'
+          : 'border-ocean/25 bg-white/50 shadow-[inset_-2px_-2px_4px_rgb(255_255_255/0.8)]'
+      ]}
       style={`left:${bubble.left}%;width:${bubble.size}px;height:${bubble.size}px;animation-delay:-${bubble.delay}s;--rise-duration:${bubble.duration}s;--bubble-drift:${bubble.drift}px;--bubble-opacity:${bubble.opacity}`}
     />
   ))}

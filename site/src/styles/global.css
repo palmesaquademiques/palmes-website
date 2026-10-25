@@ -12,6 +12,7 @@
   --color-coral: #ff7a59;
   --color-coral-light: #ff9b80;
   --color-gold: #e8c46a;
+  --color-surface: #e2f4fb;
 
   --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -175,6 +176,10 @@
 
 @utility button-ghost {
   @apply inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white backdrop-blur-sm transition duration-300 ease-swim hover:border-white/60 hover:bg-white/10;
+}
+
+@utility button-outline {
+  @apply inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3 font-semibold text-ink transition duration-300 ease-swim hover:border-ocean hover:text-ocean;
 }
 
 @utility button-dark {

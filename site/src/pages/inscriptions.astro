@@ -14,6 +14,7 @@ const checklist = page.checklist ?? []
 ---
 
 <BaseLayout
+  headerTone="light"
   title={`Inscriptions ${page.season}`}
   description={page.intro ?? 'Toutes les informations pour rejoindre le club.'}
   image="/og/inscriptions.png"
@@ -25,7 +26,7 @@ const checklist = page.checklist ?? []
           Je m’inscris <Icon name="arrowDown" class="size-4" />
         </a>
       )}
-      <a href="/contact" class="button-ghost">
+      <a href="/contact" class="button-outline">
         Venir essayer un mardi
       </a>
     </div>

@@ -2,11 +2,18 @@
 import { navigationLinks, siteConfig } from '../../site.config'
 import Icon from '../ui/Icon.astro'
 
+type Props = { tone?: 'dark' | 'light' }
+
+const { tone = 'dark' } = Astro.props
 const currentPath = Astro.url.pathname.replace(/\/$/, '')
 const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`)
 ---
 
-<header data-header class="group fixed inset-x-0 top-0 z-50 text-white">
+<header
+  data-header
+  data-tone={tone}
+  class="group fixed inset-x-0 top-0 z-50 text-(--header-ink) [--header-accent:var(--color-lagoon)] [--header-ink:var(--color-white)] data-[tone=light]:not-data-scrolled:not-data-menu-open:[--header-accent:var(--color-ocean)] data-[tone=light]:not-data-scrolled:not-data-menu-open:[--header-ink:var(--color-ink)]"
+>
   <div
     aria-hidden="true"
     class="absolute inset-0 -z-10 transition-[background-color,box-shadow,backdrop-filter] duration-500 group-data-scrolled:bg-abyss/90 group-data-scrolled:shadow-[0_1px_0_rgb(255_255_255/0.08)] group-data-scrolled:backdrop-blur-xl"
@@ -27,7 +34,7 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
       <span class="font-display text-[1.05rem] leading-[1.05] font-semibold tracking-tight">
         Les Palmes
         <br />
-        <span class="text-lagoon">Aquadémiques</span>
+        <span class="text-(--header-accent)">Aquadémiques</span>
       </span>
     </a>
 
@@ -38,7 +45,7 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
             <a
               href={link.href}
               aria-current={isActive(link.href) ? 'page' : undefined}
-              class="relative rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:text-white aria-[current=page]:text-white after:absolute after:inset-x-4 after:bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-lagoon after:transition-transform after:duration-500 after:ease-swim hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+              class="relative rounded-full px-4 py-2 text-sm font-medium text-(--header-ink)/80 transition-colors hover:text-(--header-ink) aria-[current=page]:text-(--header-ink) after:absolute after:inset-x-4 after:bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-(--header-accent) after:transition-transform after:duration-500 after:ease-swim hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
             >
               {link.label}
             </a>
@@ -56,7 +63,7 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
         data-menu-toggle
         aria-expanded="false"
         aria-controls="menu-mobile"
-        class="relative z-10 flex size-11 items-center justify-center rounded-full transition-colors hover:bg-white/10 lg:hidden"
+        class="relative z-10 flex size-11 items-center justify-center rounded-full transition-colors hover:bg-(--header-ink)/10 lg:hidden"
       >
         <span class="sr-only">Ouvrir le menu</span>
         <Icon name="menu" class="size-6 group-data-menu-open:hidden" />
