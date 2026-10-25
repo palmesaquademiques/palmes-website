@@ -231,3 +231,5 @@ export const shareImagesQuery = `{
     title, "slug": slug.current, author, publishedAt, "coverImage": coverImage${image}
   }
 }`
+
+export const boardMembersQuery = `*[_type == "member" && team == "board"]{ name, role }`

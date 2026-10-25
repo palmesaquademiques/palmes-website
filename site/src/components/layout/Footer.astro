@@ -91,7 +91,10 @@ const currentYear = new Date().getFullYear()
   <div class="border-t border-white/10">
     <div class="container-page flex flex-col gap-2 py-6 text-xs text-white/50 sm:flex-row sm:justify-between">
       <p>
-        © {currentYear} {siteConfig.name} · Club affilié à la FFESSM
+        © {currentYear} {siteConfig.name} · Club affilié à la FFESSM ·{' '}
+        <a href="/mentions-legales" class="transition hover:text-white">
+          Mentions légales
+        </a>
       </p>
       <p>Fait avec 🤿 à {siteConfig.city}</p>
     </div>

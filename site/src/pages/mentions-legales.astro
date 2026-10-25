@@ -1,0 +1,94 @@
+---
+import PageHero from '../components/layout/PageHero.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { boardMembersQuery, type Member } from '../lib/queries'
+import { sanityQuery } from '../lib/sanity'
+import { siteConfig } from '../site.config'
+
+const boardMembers = await sanityQuery<Pick<Member, 'name' | 'role'>[]>(boardMembersQuery)
+const president = boardMembers.find((member) => /^présidente?(\s|$)/i.test(member.role ?? ''))
+const presidentTitle = president?.role?.split(' · ')[0].toLowerCase()
+---
+
+<BaseLayout
+  headerTone="light"
+  title="Mentions légales"
+  description="Éditeur, hébergement et données personnelles du site des Palmes Aquadémiques."
+>
+  <PageHero kicker="Informations légales" title="Mentions légales" compact />
+
+  <article class="container-page max-w-3xl py-16 sm:py-20">
+    <div class="prose-palmes">
+      <h2>Éditeur du site</h2>
+      <p>
+        Ce site est édité par <strong>Les Palmes Aquadémiques</strong>, association loi 1901.
+      </p>
+      <ul>
+        <li>Siège social : 56 chemin du Ramelet Moundi, 31100 Toulouse</li>
+        <li>RNA : W313007751</li>
+        <li>SIRET : 452 404 338 00025</li>
+        <li>Affiliée à la FFESSM sous le n° 08.31.0179</li>
+        <li>Agrément Jeunesse et Sports n° 31-AS-351</li>
+        <li>
+          Contact : <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+        </li>
+      </ul>
+
+      <h2>Directeur de la publication</h2>
+      <p>
+        {president
+          ? `${president.name}, ${presidentTitle} de l’association.`
+          : 'Le président ou la présidente de l’association.'}
+      </p>
+
+      <h2>Hébergement</h2>
+      <p>
+        Le site est hébergé par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723,
+        États-Unis (<a href="https://vercel.com">vercel.com</a>). Ses textes et ses photos sont
+        stockés chez Sanity AS, en Norvège (<a href="https://www.sanity.io">sanity.io</a>).
+      </p>
+
+      <h2>Données personnelles</h2>
+      <p>
+        Le site ne dépose aucun cookie et ne mesure pas son audience. Il ne vous demande aucune
+        information personnelle.
+      </p>
+      <ul>
+        <li>
+          Si vous nous écrivez, votre adresse et votre message servent uniquement à vous répondre.
+          Ils ne sont jamais transmis à des tiers.
+        </li>
+        <li>
+          Les adhésions et les inscriptions aux sorties se font sur HelloAsso, intégré à certaines
+          pages. Vos données sont alors traitées par HelloAsso, selon{' '}
+          <a href="https://info.helloasso.com/confidentialite">sa politique de confidentialité</a>.
+        </li>
+        <li>
+          La carte de la page Contact est fournie par OpenStreetMap. En l’affichant, votre
+          navigateur charge des images depuis ses serveurs, selon{' '}
+          <a href="https://osmfoundation.org/wiki/Privacy_Policy">
+            sa politique de confidentialité
+          </a>
+          .
+        </li>
+        <li>
+          Le jeu du poulpe garde votre meilleur score dans votre navigateur, sur votre appareil.
+          Rien n’est envoyé.
+        </li>
+      </ul>
+      <p>
+        Vous pouvez demander l’accès, la correction ou la suppression de vos données en écrivant à{' '}
+        <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>. Vous pouvez aussi adresser
+        une réclamation à la <a href="https://www.cnil.fr">CNIL</a>.
+      </p>
+
+      <h2>Photos et contenus</h2>
+      <p>
+        Les textes, les photos et le logo appartiennent à l’association ou aux membres qui les ont
+        réalisés. Merci de nous demander avant de les réutiliser. Vous apparaissez sur une photo et
+        souhaitez qu’on la retire ? Écrivez-nous, nous le ferons rapidement.
+      </p>
+      <p>Fond de carte © les contributeurs d’OpenStreetMap.</p>
+    </div>
+  </article>
+</BaseLayout>
