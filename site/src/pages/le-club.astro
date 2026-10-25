@@ -1,0 +1,251 @@
+---
+import PageHero from '../components/layout/PageHero.astro'
+import RichText from '../components/rich-text/RichText.astro'
+import TeamSection from '../components/team/TeamSection.astro'
+import Bubbles from '../components/ui/Bubbles.astro'
+import Icon from '../components/ui/Icon.astro'
+import SanityImage from '../components/ui/SanityImage.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { type ClubPage, clubPageQuery, type Member } from '../lib/queries'
+import { sanityQuery } from '../lib/sanity'
+
+const FOUNDING_YEAR = 1986
+
+const { page, members } = await sanityQuery<{ page: ClubPage; members: Member[] }>(clubPageQuery)
+const sections = page.sections
+const formations = page.formations ?? []
+const codepCourses = page.codepCourses ?? []
+const documents = page.documents ?? []
+const clubAge = new Date().getFullYear() - FOUNDING_YEAR
+const heroImage = page.bannerImage ?? sections.find((section) => section.image)?.image
+
+const anchorOf = (title: string) =>
+  title
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+const pageLinks = [
+  { label: `Depuis ${FOUNDING_YEAR}`, href: '#histoire', shown: true },
+  { label: 'Activités', href: '#activites', shown: sections.length > 0 },
+  { label: 'Formations', href: '#formations', shown: formations.length > 0 },
+  { label: 'Les bénévoles', href: '#equipe', shown: members.length > 0 },
+  { label: 'Documents', href: '#documents', shown: documents.length > 0 }
+].filter((pageLink) => pageLink.shown)
+---
+
+<BaseLayout
+  headerTone="light"
+  title="Le club"
+  description={page.intro ?? 'Plongée, formations et bénévoles des Palmes Aquadémiques.'}
+  image="/og/le-club.png"
+>
+  <PageHero
+    kicker="Club de plongée à Toulouse"
+    title="Le club"
+    intro={page.intro}
+    image={heroImage}
+  >
+    <nav aria-label="Sections de la page" class="mt-10 animate-fade-up [animation-delay:360ms]">
+      <ul class="flex flex-wrap gap-2">
+        {pageLinks.map((pageLink) => (
+          <li>
+            <a
+              href={pageLink.href}
+              class="inline-flex rounded-full border border-ink/15 bg-white/60 px-4 py-2 text-sm font-medium text-ink/80 backdrop-blur-sm transition hover:border-ocean hover:text-ocean"
+            >
+              {pageLink.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </PageHero>
+
+  <section id="histoire" class="container-page grid gap-12 py-20 lg:grid-cols-2 lg:items-center">
+    <div>
+      <p class="kicker text-ocean">Depuis {FOUNDING_YEAR}</p>
+      <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+        {clubAge} ans de plongée
+      </h2>
+      {page.history && <RichText value={page.history} class="prose-palmes mt-8" />}
+      <ul class="mt-8 flex flex-wrap gap-2">
+        {['Association loi 1901', '100 % bénévole', 'Affiliée à la FFESSM'].map((fact) => (
+          <li class="rounded-full bg-white px-4 py-2 text-sm font-medium text-ink ring-1 ring-ink/10">
+            {fact}
+          </li>
+        ))}
+      </ul>
+    </div>
+    {page.anniversaryImage ? (
+      <SanityImage
+        image={page.anniversaryImage}
+        aspectRatio={4 / 3}
+        sizes="(min-width: 1024px) 36rem, 100vw"
+        class="w-full rounded-[2rem] object-cover shadow-[0_40px_80px_-40px] shadow-deep/50"
+      />
+    ) : (
+      <div class="relative isolate flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-[2rem] bg-gradient-to-br from-lagoon via-ocean to-deep text-white shadow-[0_40px_80px_-40px] shadow-deep/50">
+        <Bubbles count={10} />
+        <p class="font-display text-[clamp(6rem,16vw,10rem)] leading-none font-bold tracking-tight">
+          {clubAge}
+        </p>
+        <p class="mt-2 font-display text-2xl font-semibold">ans de plongée</p>
+        <p class="kicker mt-6 text-white/70">
+          {FOUNDING_YEAR} – {FOUNDING_YEAR + clubAge}
+        </p>
+      </div>
+    )}
+  </section>
+
+  {sections.length > 0 && (
+    <section id="activites" class="border-t border-ink/10 pt-20">
+      <div class="container-page">
+        <p class="kicker text-ocean">Ce que l’on fait</p>
+        <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Nos activités</h2>
+      </div>
+      <div class="container-page divide-y divide-ink/10 pb-10">
+        {sections.map((section, sectionIndex) => (
+          <section
+            id={anchorOf(section.title)}
+            class:list={[
+              'grid gap-10 py-16 lg:gap-20',
+              section.image && 'lg:grid-cols-2 lg:items-start'
+            ]}
+          >
+            <div class:list={[section.image && sectionIndex % 2 === 1 && 'lg:order-2']}>
+              <p class="font-display text-7xl font-bold tracking-tight text-lagoon/30 tabular-nums">
+                {String(sectionIndex + 1).padStart(2, '0')}
+              </p>
+              <h3 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+                {section.title}
+              </h3>
+              <RichText value={section.body} class="prose-palmes mt-8" />
+            </div>
+            {section.image && (
+              <div class="lg:sticky lg:top-28">
+                <SanityImage
+                  image={section.image}
+                  aspectRatio={4 / 5}
+                  sizes="(min-width: 1024px) 36rem, 100vw"
+                  class="w-full rounded-[2rem] object-cover shadow-[0_40px_80px_-40px] shadow-deep/50"
+                />
+              </div>
+            )}
+          </section>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {formations.length > 0 && (
+    <section id="formations" class="border-y border-ink/10 bg-white/50 py-24">
+      <div class="container-page">
+        <div class="max-w-3xl">
+          <p class="kicker text-ocean">Se former</p>
+          <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Les formations</h2>
+          <RichText value={page.formationsIntro} class="prose-palmes mt-8" />
+        </div>
+
+        <ul class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {formations.map((formation) => (
+            <li class="flex flex-col rounded-[1.75rem] bg-white p-8 ring-1 ring-ink/5">
+              <span class="flex size-16 items-center justify-center rounded-full bg-gradient-to-br from-lagoon to-ocean font-display text-xl font-bold text-white shadow-[0_12px_30px_-12px] shadow-ocean/70">
+                {formation.code}
+              </span>
+              <h3 class="mt-6 text-2xl font-semibold tracking-tight">{formation.name}</h3>
+              {formation.summary && <p class="mt-2 text-lg text-slate-700">{formation.summary}</p>}
+              {formation.prerequisites && (
+                <div class="mt-6 rounded-2xl bg-foam px-5 py-4">
+                  <p class="kicker text-ocean">Prérequis</p>
+                  <p class="mt-2 text-sm text-ink">{formation.prerequisites}</p>
+                </div>
+              )}
+              <RichText
+                value={formation.details}
+                class="prose mt-6 max-w-none prose-slate prose-p:my-2 prose-ul:my-2 prose-li:my-0.5 prose-li:marker:text-lagoon"
+              />
+            </li>
+          ))}
+        </ul>
+
+        {codepCourses.length > 0 && (
+          <div class="mt-6 grid gap-6 rounded-[1.75rem] bg-gradient-to-br from-foam to-[#c3e9f8] p-8 sm:p-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+            <div>
+              <p class="kicker text-ocean">Avec le Codep 31</p>
+              <h3 class="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Et pour aller plus loin
+              </h3>
+              <p class="mt-3 text-slate-700">
+                Membres du club, vous avez aussi accès aux formations du Codep 31, le comité
+                départemental de la FFESSM.
+              </p>
+            </div>
+            <ul class="flex flex-wrap gap-2">
+              {codepCourses.map((course) => (
+                <li class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-ink/10">
+                  {course}
+                </li>
+              ))}
+              <li class="px-2 py-2 text-sm text-slate-600">et bien d’autres</li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  {members.length > 0 && <TeamSection members={members} />}
+
+  {documents.length > 0 && (
+    <section id="documents" class="container-page py-20">
+      <p class="kicker text-ocean">Vie associative</p>
+      <h2 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Documents du club</h2>
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {documents.map((document) => (
+          <li>
+            <a
+              href={document.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center gap-4 rounded-2xl bg-white p-5 ring-1 ring-ink/5 transition hover:ring-lagoon/50"
+            >
+              <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-foam text-ocean transition group-hover:bg-lagoon group-hover:text-white">
+                <Icon name="document" class="size-6" />
+              </span>
+              <span>
+                <span class="block font-medium text-ink">{document.title}</span>
+                <span class="text-sm text-slate-500">
+                  PDF · {Math.round(document.size / 1024)} Ko
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="container-page pb-24">
+    <div class="flex flex-col gap-8 rounded-[2rem] bg-gradient-to-br from-lagoon to-ocean p-10 text-white sm:p-14 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Envie de plonger avec nous ?
+        </h2>
+        <p class="mt-3 text-lg text-white/85">
+          Venez essayer un mardi soir, puis inscrivez-vous en ligne.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/inscriptions" class="button-primary">
+          S’inscrire <Icon name="arrowRight" class="size-4" />
+        </a>
+        <a href="/contact" class="button-ghost">
+          Venir essayer un mardi
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

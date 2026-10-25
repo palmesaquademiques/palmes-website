@@ -67,10 +67,27 @@ export type HomePage = {
   closingText: string | null
 }
 
-export type ActivitiesPage = {
-  intro: string | null
+export type ClubDocument = { _key: string; title: string; url: string; size: number }
+
+export type Formation = {
+  _key: string
+  code: string
+  name: string
+  summary: string | null
+  prerequisites: string | null
+  details: RichText | null
+}
+
+export type ClubPage = {
   bannerImage: SanityImage | null
+  intro: string | null
+  anniversaryImage: SanityImage | null
+  history: RichText | null
   sections: { _key: string; title: string; image: SanityImage | null; body: RichText | null }[]
+  formationsIntro: RichText | null
+  formations: Formation[] | null
+  codepCourses: string[] | null
+  documents: ClubDocument[] | null
 }
 
 export type GalleryPage = {
@@ -136,7 +153,7 @@ export type ContactPage = {
   schedule: string | null
   location: { lat: number; lng: number } | null
   faq: { _key: string; category: string | null; question: string; answer: RichText | null }[] | null
-  documents: { _key: string; title: string; url: string; size: number }[] | null
+  documents: ClubDocument[] | null
 }
 
 const asset = '"asset": asset->{ _id, metadata { lqip, dimensions } }'
@@ -194,8 +211,25 @@ export const postsWithBodyQuery = `*[_type == "post" && defined(slug.current)] |
   ${postFields}, "body": body${richText}
 }`
 
-export const activitiesPageQuery = `*[_id == "activitiesPage"][0]{
-  intro, ${bannerImage}, "sections": coalesce(sections[]{ _key, title, "image": image${image}, "body": body${richText} }, [])
+const clubDocuments = `"documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }`
+
+const members = `"members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
+    _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
+    "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
+  }`
+
+export const clubPageQuery = `{
+  "page": *[_id == "clubPage"][0]{
+    ${bannerImage}, intro,
+    "anniversaryImage": select(defined(anniversaryImage.asset) => anniversaryImage${image}),
+    "history": history${richText},
+    "sections": coalesce(sections[]{ _key, title, "image": image${image}, "body": body${richText} }, []),
+    "formationsIntro": formationsIntro${richText},
+    "formations": formations[]{ _key, code, name, summary, prerequisites, "details": details${richText} },
+    codepCourses,
+    ${clubDocuments}
+  },
+  ${members}
 }`
 
 export const galleryPageQuery = `*[_id == "galleryPage"][0]{
@@ -206,12 +240,9 @@ export const contactPageQuery = `{
   "page": *[_id == "contactPage"][0]{
     ${bannerImage}, address, schedule, location,
     "faq": faq[]{ _key, category, question, "answer": answer${richText} },
-    "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
+    ${clubDocuments}
   },
-  "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){
-    _id, name, nickname, team, role, title, emblem, secretTitle, instructorLevel, instructorTitle,
-    "landPhoto": landPhoto${image}, "diverPhoto": diverPhoto${image}
-  }
+  ${members}
 }`
 
 export const membershipPageQuery = `*[_id == "membershipPage"][0]{
@@ -222,7 +253,7 @@ export const membershipPageQuery = `*[_id == "membershipPage"][0]{
 
 export const shareImagesQuery = `{
   "heroImage": *[_id == "homePage"][0].heroImage${image},
-  "activityImage": *[_id == "activitiesPage"][0].sections[defined(image)][0].image${image},
+  "clubImage": *[_id == "clubPage"][0].sections[defined(image)][0].image${image},
   "galleryImage": *[_id == "galleryPage"][0].photos[0]${image},
   "trips": *[_type == "trip" && defined(slug.current)] | order(startDate asc){
     title, "slug": slug.current, startDate, endDate, "coverImage": coverImage${image}

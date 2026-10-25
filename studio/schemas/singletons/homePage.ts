@@ -107,7 +107,7 @@ export const homePage = defineType({
             defineField({
               name: 'linkUrl',
               title: 'Lien du bouton',
-              description: 'Par exemple /les-activites ou une adresse complète',
+              description: 'Par exemple /le-club ou une adresse complète',
               type: 'url',
               validation: (rule) => rule.uri({ allowRelative: true })
             })

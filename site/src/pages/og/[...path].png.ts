@@ -8,7 +8,7 @@ type ShareImage = { title: string; subtitle: string; image: SanityImage | null }
 
 type ShareImagesData = {
   heroImage: SanityImage
-  activityImage: SanityImage | null
+  clubImage: SanityImage | null
   galleryImage: SanityImage | null
   trips: {
     title: string
@@ -29,7 +29,7 @@ type ShareImagesData = {
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
 
 export const getStaticPaths = (async () => {
-  const { heroImage, activityImage, galleryImage, trips, posts } =
+  const { heroImage, clubImage, galleryImage, trips, posts } =
     await sanityQuery<ShareImagesData>(shareImagesQuery)
 
   const pages: [string, ShareImage][] = [
@@ -50,11 +50,11 @@ export const getStaticPaths = (async () => {
       }
     ],
     [
-      'les-activites',
+      'le-club',
       {
-        title: 'Les activités',
-        subtitle: 'Plongée, entraînements en piscine et baptêmes',
-        image: activityImage ?? heroImage
+        title: 'Le club',
+        subtitle: 'Plongée, formations et bénévoles depuis 1986',
+        image: clubImage ?? heroImage
       }
     ],
     [

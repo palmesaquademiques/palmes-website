@@ -185,18 +185,23 @@
       "permanent": true
     },
     {
+      "source": "/les-activites",
+      "destination": "/le-club",
+      "permanent": true
+    },
+    {
       "source": "/index.php/les-activites/:chemin*",
-      "destination": "/les-activites",
+      "destination": "/le-club",
       "permanent": true
     },
     {
       "source": "/index.php/la-plongee/:chemin*",
-      "destination": "/les-activites",
+      "destination": "/le-club",
       "permanent": true
     },
     {
       "source": "/index.php/mnuclubenpratique/:chemin*",
-      "destination": "/les-activites",
+      "destination": "/le-club",
       "permanent": true
     },
     {
