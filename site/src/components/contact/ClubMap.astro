@@ -1,0 +1,106 @@
+---
+type Props = { latitude: number; longitude: number }
+
+const { latitude, longitude } = Astro.props
+---
+
+<div
+  data-club-map
+  data-latitude={latitude}
+  data-longitude={longitude}
+  role="region"
+  aria-label="Plan d’accès à la piscine Léo Lagrange"
+  class="isolate aspect-[4/3] overflow-hidden rounded-[2rem] bg-foam ring-1 ring-ink/10 [&_.leaflet-tile-pane]:saturate-[0.65]"
+></div>
+
+<template data-fin-marker>
+  <svg viewBox="0 0 40 80" width="40" height="80" aria-hidden="true">
+    <defs>
+      <linearGradient id="fin-blade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--color-coral)"></stop>
+        <stop offset="1" stop-color="var(--color-coral-light)"></stop>
+      </linearGradient>
+    </defs>
+    <ellipse cx="20" cy="75" rx="8" ry="2.2" fill="var(--color-ink)" fill-opacity="0.25"></ellipse>
+    <g stroke-linejoin="round" class="origin-bottom animate-bob [transform-box:fill-box]">
+      <path
+        d="M12.5 27C10.5 44 5 58 3.5 71L20 66L36.5 71C35 58 29.5 44 27.5 27Z"
+        fill="white"
+        stroke="white"
+        stroke-width="4"
+      ></path>
+      <path
+        d="M12.5 14C12.5 4 27.5 4 27.5 14L28 31C24 34.5 16 34.5 12 31Z"
+        fill="white"
+        stroke="white"
+        stroke-width="4"
+      ></path>
+      <path
+        d="M12.5 27C10.5 44 5 58 3.5 71L20 66L36.5 71C35 58 29.5 44 27.5 27Z"
+        fill="url(#fin-blade)"
+      ></path>
+      <path
+        d="M12.5 27C10.5 44 5 58 3.5 71M27.5 27C29.5 44 35 58 36.5 71"
+        fill="none"
+        stroke="#d9512f"
+        stroke-width="2.4"
+        stroke-linecap="round"
+      ></path>
+      <path
+        d="M17 35L14 64M23 35L26 64"
+        stroke="white"
+        stroke-opacity="0.6"
+        stroke-width="1.2"
+        stroke-linecap="round"
+      ></path>
+      <path
+        d="M12.5 14C12.5 4 27.5 4 27.5 14L28 31C24 34.5 16 34.5 12 31Z"
+        fill="var(--color-ink)"
+      ></path>
+      <ellipse
+        cx="20"
+        cy="13"
+        rx="4.6"
+        ry="6"
+        fill="var(--color-lagoon)"
+        fill-opacity="0.35"
+      ></ellipse>
+      <ellipse cx="20" cy="13.6" rx="3.4" ry="4.8" fill="var(--color-abyss)"></ellipse>
+    </g>
+  </svg>
+</template>
+
+<script>
+  import L from 'leaflet'
+  import 'leaflet/dist/leaflet.css'
+
+  const mapElement = document.querySelector<HTMLElement>('[data-club-map]')!
+  const finMarker = document.querySelector<HTMLTemplateElement>('[data-fin-marker]')!
+  const meetingPoint = L.latLng(
+    Number(mapElement.dataset.latitude),
+    Number(mapElement.dataset.longitude)
+  )
+
+  const map = L.map(mapElement, {
+    center: meetingPoint,
+    zoom: 16,
+    scrollWheelZoom: false,
+    dragging: !L.Browser.mobile
+  })
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map)
+
+  L.marker(meetingPoint, {
+    icon: L.divIcon({
+      className: '',
+      html: finMarker.innerHTML,
+      iconSize: [40, 80],
+      iconAnchor: [20, 70]
+    }),
+    title: 'Piscine Léo Lagrange',
+    keyboard: false
+  }).addTo(map)
+</script>

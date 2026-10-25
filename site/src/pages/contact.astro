@@ -1,4 +1,5 @@
 ---
+import ClubMap from '../components/contact/ClubMap.astro'
 import PageHero from '../components/layout/PageHero.astro'
 import RichText from '../components/rich-text/RichText.astro'
 import JsonLd from '../components/seo/JsonLd.astro'
@@ -96,16 +97,7 @@ const faqStructuredData = {
 
   <section class="container-page grid gap-12 pb-20 lg:grid-cols-2 lg:items-center">
     <RichText value={page.intro} />
-    {page.mapUrl && (
-      <div class="aspect-[4/3] overflow-hidden rounded-[2rem] ring-1 ring-ink/10">
-        <iframe
-          src={page.mapUrl}
-          title="Plan d’accès à la piscine Léo Lagrange"
-          loading="lazy"
-          class="size-full border-0"
-        />
-      </div>
-    )}
+    {page.location && <ClubMap latitude={page.location.lat} longitude={page.location.lng} />}
   </section>
 
   {faq.length > 0 && (

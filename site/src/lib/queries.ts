@@ -135,7 +135,7 @@ export type ContactPage = {
   intro: RichText | null
   address: string | null
   schedule: string | null
-  mapUrl: string | null
+  location: { lat: number; lng: number } | null
   faq: { _key: string; category: string | null; question: string; answer: RichText | null }[] | null
   documents: { _key: string; title: string; url: string; size: number }[] | null
 }
@@ -205,7 +205,7 @@ export const galleryPageQuery = `*[_id == "galleryPage"][0]{
 
 export const contactPageQuery = `{
   "page": *[_id == "contactPage"][0]{
-    ${bannerImage}, "intro": intro${richText}, address, schedule, mapUrl,
+    ${bannerImage}, "intro": intro${richText}, address, schedule, location,
     "faq": faq[]{ _key, category, question, "answer": answer${richText} },
     "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
   },

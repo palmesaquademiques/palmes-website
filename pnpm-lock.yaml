@@ -50,6 +50,9 @@ importers:
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
+      leaflet:
+        specifier: 1.9.4
+        version: 1.9.4
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -66,6 +69,9 @@ importers:
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
+      '@types/leaflet':
+        specifier: 1.9.22
+        version: 1.9.22
       satori:
         specifier: ^0.63.2
         version: 0.63.2
@@ -2807,11 +2813,17 @@ packages:
   '@types/eventsource@1.1.15':
     resolution: {integrity: sha512-XQmGcbnxUNa06HR3VBVkc9+A2Vpi9ZyLJcdS5dwaQQ/4ZMWFO+5c90FnMUpbtMZwB/FChoYHwuVg8TvkECacTA==}
 
+  '@types/geojson@7946.0.16':
+    resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
+
   '@types/google_interactive_media_ads_types@3.697.1':
     resolution: {integrity: sha512-gRjJoPKQRjjTuySHqZe8Pnu6a5B0bKbTUD2ioDLPSWlEuBaAc2p1mzUzy42SCeWkyYffo2Mnv+blUGuvVvx3dQ==}
 
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
+
+  '@types/leaflet@1.9.22':
+    resolution: {integrity: sha512-h3lhECYEKDasG7LFHu+GiHqAvsgLuQvlJvVZzJDGONo3sEL+wUOqSFLnwkZlK0qVxnxbuGFW8iBlJNYs5wgndA==}
 
   '@types/linkify-it@3.0.5':
     resolution: {integrity: sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==}
@@ -4234,6 +4246,9 @@ packages:
   lambda-runtimes@3.0.0:
     resolution: {integrity: sha512-fre88KwPAjsDq8jeenv8GlgkdqbKf4wPGTlnKMXEDA5K12A3IptirNFv1koG47IBcgSykCbWYF9T3wmmKJFJtQ==}
     engines: {node: '>=22'}
+
+  leaflet@1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
 
   leven@4.1.0:
     resolution: {integrity: sha512-KZ9W9nWDT7rF7Dazg8xyLHGLrmpgq2nVNFUckhqdW3szVP6YhCpp/RAnpmVExA9JvrMynjwSLVrEj3AepHR6ew==}
@@ -9257,11 +9272,17 @@ snapshots:
 
   '@types/eventsource@1.1.15': {}
 
+  '@types/geojson@7946.0.16': {}
+
   '@types/google_interactive_media_ads_types@3.697.1': {}
 
   '@types/hast@3.0.5':
     dependencies:
       '@types/unist': 3.0.3
+
+  '@types/leaflet@1.9.22':
+    dependencies:
+      '@types/geojson': 7946.0.16
 
   '@types/linkify-it@3.0.5':
     optional: true
@@ -10725,6 +10746,8 @@ snapshots:
   kleur@4.1.5: {}
 
   lambda-runtimes@3.0.0: {}
+
+  leaflet@1.9.4: {}
 
   leven@4.1.0: {}
 
