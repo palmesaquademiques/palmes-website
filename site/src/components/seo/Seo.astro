@@ -26,7 +26,8 @@ const {
 const pageTitle = title
   ? `${title} · ${siteConfig.name}`
   : `${siteConfig.name} · Plongée à Toulouse`
-const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href
+const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/'
+const canonical = new URL(cleanPath, Astro.site).href
 const absoluteImage = new URL(image, Astro.site).href
 ---
 
