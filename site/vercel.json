@@ -190,6 +190,11 @@
       "permanent": true
     },
     {
+      "source": "/blog/cest-la-rentree-les-inscriptions-cest-par-ici",
+      "destination": "/inscriptions",
+      "permanent": true
+    },
+    {
       "source": "/index.php/les-activites/:chemin*",
       "destination": "/le-club",
       "permanent": true
