@@ -31,7 +31,7 @@ const bubbles = [18, 34, 52, 68, 80]
         size === 'large' ? 'size-36 sm:size-48' : 'size-32 sm:size-40'
       ]}
     >
-      <span class="medallion relative block size-full overflow-hidden rounded-full ring-4 ring-abyss">
+      <span class="medallion relative block size-full overflow-hidden rounded-full ring-4 ring-white">
         {member.diverPhoto && (
           <>
             <SanityImage
@@ -91,13 +91,13 @@ const bubbles = [18, 34, 52, 68, 80]
   <figcaption class="mt-6">
     {title && (
       <p class="title-stack grid font-display text-lg leading-tight font-semibold text-balance">
-        <span class="public-title text-gold">{title}</span>
-        {secretTitle && <span class="secret-title text-lagoon">{secretTitle}</span>}
+        <span class="public-title text-gold-deep">{title}</span>
+        {secretTitle && <span class="secret-title text-ocean">{secretTitle}</span>}
       </p>
     )}
-    <p class="mt-1.5 font-medium text-white">{name}</p>
+    <p class="mt-1.5 font-medium text-ink">{name}</p>
     {detail?.split(' · ').map((line) => (
-      <p class="mt-0.5 text-sm leading-snug text-balance text-white/60">{line}</p>
+      <p class="mt-0.5 text-sm leading-snug text-balance text-slate-600">{line}</p>
     ))}
   </figcaption>
 </figure>
