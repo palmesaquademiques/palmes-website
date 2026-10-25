@@ -3,9 +3,8 @@ import type { GetStaticPaths } from 'astro'
 import PostCard from '../../components/cards/PostCard.astro'
 import RichText from '../../components/rich-text/RichText.astro'
 import JsonLd from '../../components/seo/JsonLd.astro'
-import Bubbles from '../../components/ui/Bubbles.astro'
+import PageHero from '../../components/layout/PageHero.astro'
 import Icon from '../../components/ui/Icon.astro'
-import SanityImage from '../../components/ui/SanityImage.astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { formatDate } from '../../lib/dates'
 import { type Post, postsWithBodyQuery } from '../../lib/queries'
@@ -31,6 +30,7 @@ const description = truncate(post.excerpt || plainTextOf(post.body) || post.titl
 ---
 
 <BaseLayout
+  headerTone="light"
   title={post.title}
   description={description}
   image={`/og/blog/${post.slug}.png`}
@@ -49,51 +49,21 @@ const description = truncate(post.excerpt || plainTextOf(post.body) || post.titl
     })}
   />
 
-  <section
-    class:list={[
-      'relative isolate overflow-hidden bg-abyss pt-[calc(var(--spacing-header)+4rem)] text-white',
-      post.coverImage ? 'pb-48 sm:pb-64' : 'pb-24'
-    ]}
+  <PageHero
+    kicker={[formatDate(post.publishedAt), post.author].filter(Boolean).join(' · ')}
+    title={post.title}
+    intro={post.excerpt}
+    image={post.coverImage}
+    compact
   >
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_0%,rgb(43_167_222/0.3),transparent_55%)]"
-    ></div>
-    <Bubbles count={8} />
-    <div class="container-page max-w-4xl">
-      <a
-        href="/blog"
-        class="inline-flex animate-fade-up items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white"
-      >
-        <Icon name="arrowLeft" class="size-4" /> Le blog
-      </a>
-      <p class="kicker mt-8 animate-fade-up text-lagoon [animation-delay:80ms]">
-        <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-        {post.author && <span class="text-white/60"> · {post.author}</span>}
-      </p>
-      <h1 class="mt-4 animate-fade-up text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-bold tracking-[-0.03em] [animation-delay:160ms]">
-        {post.title}
-      </h1>
-      {post.excerpt && (
-        <p class="mt-6 animate-fade-up text-xl text-white/75 [animation-delay:240ms]">
-          {post.excerpt}
-        </p>
-      )}
-    </div>
-  </section>
-
-  {post.coverImage && (
-    <div class="container-page relative z-10 -mt-36 max-w-5xl sm:-mt-52">
-      <SanityImage
-        image={post.coverImage}
-        aspectRatio={16 / 9}
-        sizes="(min-width: 64rem) 62rem, 100vw"
-        loading="eager"
-        fetchpriority="high"
-        class="w-full animate-fade-up rounded-[2rem] shadow-[0_40px_80px_-40px] shadow-abyss/60 [animation-delay:300ms]"
-      />
-    </div>
-  )}
+    <a
+      slot="before"
+      href="/blog"
+      class="mb-8 inline-flex animate-fade-up items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-ink"
+    >
+      <Icon name="arrowLeft" class="size-4" /> Le blog
+    </a>
+  </PageHero>
 
   <article class="container-page max-w-3xl py-16 sm:py-20">
     <RichText value={post.body} />

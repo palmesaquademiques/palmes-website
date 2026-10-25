@@ -9,9 +9,10 @@ type Props = {
   title: string
   intro?: string | null
   image?: SanityImageType | null
+  compact?: boolean
 }
 
-const { kicker, title, intro, image } = Astro.props
+const { kicker, title, intro, image, compact = false } = Astro.props
 ---
 
 <section class="relative isolate overflow-hidden bg-surface pt-[calc(var(--spacing-header)+4.5rem)] pb-28 text-ink sm:pb-36">
@@ -37,8 +38,16 @@ const { kicker, title, intro, image } = Astro.props
   <Bubbles count={8} tone="light" />
 
   <div class="container-page relative">
+    <slot name="before" />
     <p class="kicker animate-fade-up text-ocean">{kicker}</p>
-    <h1 class="mt-5 max-w-4xl animate-fade-up text-[clamp(3rem,8vw,6.5rem)] leading-[0.9] font-bold tracking-[-0.03em] [animation-delay:120ms]">
+    <h1
+      class:list={[
+        'mt-5 animate-fade-up font-bold tracking-[-0.03em] [animation-delay:120ms]',
+        compact
+          ? 'max-w-3xl text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95]'
+          : 'max-w-4xl text-[clamp(3rem,8vw,6.5rem)] leading-[0.9]'
+      ]}
+    >
       {title}
     </h1>
     {intro && (
