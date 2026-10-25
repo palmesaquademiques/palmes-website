@@ -88,7 +88,7 @@ export const getStaticPaths = (async () => {
     [
       'contact',
       {
-        title: 'Nous rejoindre',
+        title: 'Contact',
         subtitle: 'Le mardi soir à la piscine Léo Lagrange',
         image: heroImage
       }
