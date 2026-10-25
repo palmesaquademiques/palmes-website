@@ -9,10 +9,11 @@ type Props = {
   title: string
   intro?: string | null
   image?: SanityImageType | null
+  imageTransitionName?: string
   compact?: boolean
 }
 
-const { kicker, title, intro, image, compact = false } = Astro.props
+const { kicker, title, intro, image, imageTransitionName, compact = false } = Astro.props
 ---
 
 <section class="relative isolate overflow-hidden bg-surface pt-[calc(var(--spacing-header)+4.5rem)] pb-28 text-ink sm:pb-36">
@@ -24,6 +25,7 @@ const { kicker, title, intro, image, compact = false } = Astro.props
         loading="eager"
         fetchpriority="high"
         class="size-full animate-ken-burns object-cover opacity-25 lg:opacity-100"
+        style={imageTransitionName && `view-transition-name: ${imageTransitionName};`}
       />
       <div
         aria-hidden="true"
