@@ -12,9 +12,10 @@ const widgetUrl = `${pageUrl}/widget`
   <div class="overflow-hidden rounded-3xl bg-white p-2 shadow-[0_30px_80px_-40px] shadow-deep/40 ring-1 ring-ink/5">
     <iframe
       data-helloasso
-      src={widgetUrl}
+      data-src={widgetUrl}
       title={`${title ?? 'Formulaire'} sur HelloAsso`}
       loading="lazy"
+      scrolling="no"
       allow="payment"
       allowtransparency="true"
       class="block h-[760px] w-full rounded-2xl border-0"
@@ -42,6 +43,10 @@ const widgetUrl = `${pageUrl}/widget`
     const sourceFrame = [
       ...document.querySelectorAll<HTMLIFrameElement>('iframe[data-helloasso]')
     ].find((frame) => frame.contentWindow === event.source)
-    if (sourceFrame) sourceFrame.style.height = `${height}px`
+    if (sourceFrame) sourceFrame.style.height = `${Math.ceil(height)}px`
+  })
+
+  document.querySelectorAll<HTMLIFrameElement>('iframe[data-helloasso]').forEach((frame) => {
+    frame.src = frame.dataset.src ?? ''
   })
 </script>
