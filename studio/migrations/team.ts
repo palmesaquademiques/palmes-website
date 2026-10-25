@@ -3,9 +3,9 @@ type TeamMember = {
   name: string
   nickname?: string
   team: 'board' | 'committee' | 'none'
-  role: string
-  title: string
-  emblem: string
+  role?: string
+  title?: string
+  emblem?: string
   secretTitle?: string
   instructorLevel?: 'E1' | 'E2' | 'N4' | 'MF1' | 'MF2'
   order: number
@@ -59,7 +59,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     role: 'Trésorier adjoint',
     title: 'Octopus du Grand Argentier',
     emblem: 'tentacleCoin',
-    secretTitle: 'As du canard',
+    secretTitle: 'Ne remonte respirer que par politesse',
     instructorLevel: 'E1',
     order: 11
   },
@@ -128,5 +128,39 @@ export const TEAM_2025_2026: TeamMember[] = [
     title: 'Hippocampe du Web',
     emblem: 'seahorse',
     order: 18
+  },
+  {
+    slug: 'laurence-janin',
+    name: 'Laurence Janin',
+    team: 'none',
+    secretTitle: 'Reine du canard',
+    instructorLevel: 'E1',
+    order: 20
+  },
+  {
+    slug: 'arnaud-lenoir',
+    name: 'Arnaud Lenoir',
+    team: 'none',
+    secretTitle: 'Paparazzo des nudibranches',
+    instructorLevel: 'E1',
+    order: 21
+  },
+  {
+    slug: 'gerard-brefel',
+    name: 'Gérard Brefel',
+    nickname: 'GG',
+    team: 'none',
+    secretTitle: 'A donné le premier coup de palme du club',
+    instructorLevel: 'E2',
+    order: 22
+  },
+  {
+    slug: 'jean-claude-meunier',
+    name: 'Jean-Claude Meunier',
+    nickname: 'JC',
+    team: 'none',
+    secretTitle: 'Schtroumpf grognon',
+    instructorLevel: 'E2',
+    order: 23
   }
 ]
