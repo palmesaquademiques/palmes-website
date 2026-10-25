@@ -135,6 +135,17 @@ const faqStructuredData = {
             </div>
           </div>
         ))}
+        <div class="flex flex-col gap-5 rounded-[1.75rem] bg-foam p-7 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="font-display text-xl font-semibold tracking-tight">Une autre question ?</p>
+            <p class="mt-1 text-slate-600">
+              Venez nous rencontrer un mardi soir au bord du bassin, ou écrivez-nous.
+            </p>
+          </div>
+          <a href={`mailto:${siteConfig.email}`} class="button-dark shrink-0">
+            <Icon name="mail" class="size-4" /> Nous écrire
+          </a>
+        </div>
       </div>
     </section>
   )}
