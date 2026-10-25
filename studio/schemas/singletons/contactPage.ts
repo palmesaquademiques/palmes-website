@@ -31,10 +31,11 @@ export const contactPage = defineType({
       group: 'infos'
     }),
     defineField({
-      name: 'mapUrl',
-      title: 'Carte OpenStreetMap',
-      description: 'Adresse du cadre « Partager › HTML » sur openstreetmap.org',
-      type: 'url',
+      name: 'location',
+      title: 'Position sur la carte',
+      description:
+        'Là où la palme est plantée. Sur Google Maps, un clic droit sur le lieu affiche ses coordonnées : la première est la latitude, la seconde la longitude',
+      type: 'geopoint',
       group: 'infos'
     }),
     defineField({

@@ -284,7 +284,7 @@ const buildContactPage = async () => {
     address: frontmatter.adresse,
     schedule:
       'Le mardi de 21h à 22h15, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
-    mapUrl: frontmatter.urlCarte,
+    location: { _type: 'geopoint', lat: 43.6072173, lng: 1.4537693 },
     faq: keyed(buildFaq(faqMarkdown), 'question'),
     documents: keyed(CLUB_DOCUMENTS.map(localDocument), 'document')
   }
