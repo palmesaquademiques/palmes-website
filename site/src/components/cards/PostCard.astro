@@ -1,23 +1,35 @@
 ---
 import { formatDate } from '../../lib/dates'
 import type { PostSummary } from '../../lib/queries'
+import Icon from '../ui/Icon.astro'
 import SanityImage from '../ui/SanityImage.astro'
 
 type Props = {
   post: PostSummary
   featured?: boolean
+  split?: boolean
   tone?: 'dark' | 'light'
   headingLevel?: 'h2' | 'h3'
 }
 
-const { post, featured = false, tone = 'light', headingLevel: Heading = 'h3' } = Astro.props
+const {
+  post,
+  featured = false,
+  split = false,
+  tone = 'light',
+  headingLevel: Heading = 'h3'
+} = Astro.props
 ---
 
 <a
   href={`/blog/${post.slug}`}
   class:list={[
     'group flex gap-5',
-    featured ? 'flex-col' : 'flex-col sm:flex-row sm:items-center',
+    split
+      ? 'flex-col lg:grid lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-12'
+      : featured
+        ? 'flex-col'
+        : 'flex-col sm:flex-row sm:items-center',
     tone === 'dark' ? 'text-white' : 'text-ink'
   ]}
 >
@@ -55,6 +67,15 @@ const { post, featured = false, tone = 'light', headingLevel: Heading = 'h3' } =
       <p class:list={['mt-3 line-clamp-3', tone === 'dark' ? 'text-white/65' : 'text-slate-600']}>
         {post.excerpt}
       </p>
+    )}
+    {split && (
+      <span class="mt-6 inline-flex items-center gap-2 font-semibold text-ocean">
+        Lire l’article
+        <Icon
+          name="arrowRight"
+          class="size-4 transition duration-500 ease-swim group-hover:translate-x-1"
+        />
+      </span>
     )}
   </div>
 </a>

@@ -10,12 +10,18 @@ const intro = 'Récits de sorties, vie du club et conseils pratiques pour bien p
 ---
 
 <BaseLayout headerTone="light" title="Le blog" description={intro} image="/og/blog.png">
-  <PageHero kicker="Carnet de plongée" title="Le blog" intro={intro} />
+  <PageHero
+    kicker="Carnet de plongée"
+    title="Le blog"
+    intro={intro}
+    image={featuredPost?.coverImage}
+  />
 
   <section class="container-page py-20">
     {featuredPost && (
       <div class="border-b border-ink/10 pb-16">
-        <PostCard post={featuredPost} featured headingLevel="h2" />
+        <p class="kicker mb-6 text-ocean">Dernier article</p>
+        <PostCard post={featuredPost} featured split headingLevel="h2" />
       </div>
     )}
 
