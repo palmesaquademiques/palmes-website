@@ -128,6 +128,20 @@ export const clubPage = defineType({
           type: 'object',
           fields: [
             defineField({
+              name: 'kind',
+              title: 'Type de document',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Statuts et règlement', value: 'rules' },
+                  { title: 'PV d’assemblée générale', value: 'minutes' }
+                ],
+                layout: 'radio'
+              },
+              initialValue: 'minutes',
+              validation: (rule) => rule.required()
+            }),
+            defineField({
               name: 'title',
               title: 'Titre',
               description: 'Par exemple « PV de l’AG, saison 2025-2026 »',
@@ -142,7 +156,13 @@ export const clubPage = defineType({
               validation: (rule) => rule.required()
             })
           ],
-          preview: { select: { title: 'title' } }
+          preview: {
+            select: { title: 'title', kind: 'kind' },
+            prepare: ({ title, kind }) => ({
+              title,
+              subtitle: kind === 'rules' ? 'Statuts et règlement' : 'PV d’assemblée générale'
+            })
+          }
         })
       ]
     })

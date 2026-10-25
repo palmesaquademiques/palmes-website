@@ -22,11 +22,11 @@ const TRIPS_INTRO =
   'Plusieurs sorties sont organisées durant l’année. Ce sont généralement des week-ends du vendredi soir au dimanche après-midi, ou de 3 à 4 jours pour les ponts comme la Pentecôte. Des sorties plongée à la journée, avec pique-nique, sont aussi proposées, par exemple au lac de Sède près de Saint-Gaudens. Les inscriptions se font via HelloAsso avec un acompte, le solde étant réglé après la sortie. Le club organise toujours l’hébergement, et les clubs de plongée locaux nous emmènent en bateau. Le covoiturage permet de partager les frais de route.'
 
 const CLUB_DOCUMENTS = [
-  { title: 'Statuts de l’association (2026)', fileName: 'statuts-2026.pdf' },
-  { title: 'Règlement intérieur (2026)', fileName: 'reglement-interieur-2026.pdf' },
-  { title: 'PV de l’AG, saison 2025-2026', fileName: 'pv-ag-2025-2026.pdf' },
-  { title: 'PV de l’AG, saison 2024-2025', fileName: 'pv-ag-2024-2025.pdf' },
-  { title: 'PV de l’AG, saison 2023-2024', fileName: 'pv-ag-2023-2024.pdf' }
+  { kind: 'rules', title: 'Statuts de l’association (2026)', fileName: 'statuts-2026.pdf' },
+  { kind: 'rules', title: 'Règlement intérieur (2026)', fileName: 'reglement-interieur-2026.pdf' },
+  { kind: 'minutes', title: 'PV de l’AG, saison 2025-2026', fileName: 'pv-ag-2025-2026.pdf' },
+  { kind: 'minutes', title: 'PV de l’AG, saison 2024-2025', fileName: 'pv-ag-2024-2025.pdf' },
+  { kind: 'minutes', title: 'PV de l’AG, saison 2023-2024', fileName: 'pv-ag-2023-2024.pdf' }
 ]
 
 const CLUB_SUMMARY =
@@ -264,8 +264,17 @@ const buildFaq = (faqMarkdown: string) =>
     }))
   )
 
-const localDocument = ({ title, fileName }: { title: string; fileName: string }) => ({
+const localDocument = ({
+  kind,
+  title,
+  fileName
+}: {
+  kind: string
+  title: string
+  fileName: string
+}) => ({
   _type: 'clubDocument',
+  kind,
   title,
   file: {
     _type: 'file',
