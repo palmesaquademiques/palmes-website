@@ -5,5 +5,6 @@ export default defineCliConfig({
     projectId: process.env.SANITY_STUDIO_PROJECT_ID,
     dataset: process.env.SANITY_STUDIO_DATASET ?? 'production'
   },
-  studioHost: 'palmes-aquademiques'
+  studioHost: 'palmes-aquademiques',
+  deployment: { appId: 'xtl5v8ury8pao9et5mr4fwgs' }
 })
