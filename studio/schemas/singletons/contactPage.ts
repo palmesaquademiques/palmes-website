@@ -8,7 +8,6 @@ export const contactPage = defineType({
   icon: EnvelopeIcon,
   groups: [
     { name: 'infos', title: 'Informations', default: true },
-    { name: 'membership', title: 'Adhésion' },
     { name: 'faq', title: 'Questions fréquentes' },
     { name: 'documents', title: 'Documents' }
   ],
@@ -35,22 +34,6 @@ export const contactPage = defineType({
       description: 'Adresse du cadre « Partager › HTML » sur openstreetmap.org',
       type: 'url',
       group: 'infos'
-    }),
-    defineField({
-      name: 'membershipPost',
-      title: 'Article sur les inscriptions',
-      description:
-        'L’article du blog qui détaille les inscriptions de la saison (tarifs, licence, certificat médical, lien HelloAsso). À changer à chaque rentrée',
-      type: 'reference',
-      to: [{ type: 'post' }],
-      group: 'membership'
-    }),
-    defineField({
-      name: 'membershipText',
-      title: 'Texte sur l’adhésion',
-      description: 'Tarifs, documents à fournir (certificat médical, licence…)',
-      type: 'richText',
-      group: 'membership'
     }),
     defineField({
       name: 'faq',

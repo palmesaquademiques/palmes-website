@@ -21,8 +21,6 @@ const TRIP_STATUSES: Record<string, string> = {
 const TRIPS_INTRO =
   'Plusieurs sorties sont organisées durant l’année. Ce sont généralement des week-ends du vendredi soir au dimanche après-midi, ou de 3 à 4 jours pour les ponts comme la Pentecôte. Des sorties plongée à la journée, avec pique-nique, sont aussi proposées, par exemple au lac de Sède près de Saint-Gaudens. Les inscriptions se font via HelloAsso avec un acompte, le solde étant réglé après la sortie. Le club organise toujours l’hébergement, et les clubs de plongée locaux nous emmènent en bateau. Le covoiturage permet de partager les frais de route.'
 
-const MEMBERSHIP_POST_ID = 'post-cest-la-rentree-les-inscriptions-cest-par-ici'
-
 const CLUB_DOCUMENTS = [
   { title: 'Statuts de l’association (2026)', fileName: 'statuts-2026.pdf' },
   { title: 'Règlement intérieur (2026)', fileName: 'reglement-interieur-2026.pdf' },
@@ -287,11 +285,85 @@ const buildContactPage = async () => {
     schedule:
       'Le mardi de 21h à 22h15, de septembre à juin, hors vacances scolaires.\nRendez-vous à 20h45, à droite sur le parvis.',
     mapUrl: frontmatter.urlCarte,
-    membershipPost: { _type: 'reference', _ref: MEMBERSHIP_POST_ID },
     faq: keyed(buildFaq(faqMarkdown), 'question'),
     documents: keyed(CLUB_DOCUMENTS.map(localDocument), 'document')
   }
 }
+
+const MEMBERSHIP_GOOD_TO_KNOW = `**Vous souhaitez passer un niveau ?** Inscrivez-vous avant le 1er novembre 2026 : les responsables des formations pourront valider vos choix et les formations commencer au plus vite.
+
+**Anciens membres :** inscrivez-vous dès que possible. Sans inscription au 1er janvier 2027, l’accès à la piscine sera refusé pour des raisons d’assurance.
+
+**Encadrants à partir de N4-GP, formateurs, dirigeants, juges, arbitres, entraîneurs et toute personne encadrant des mineurs :** des informations supplémentaires vous seront demandées (nom, prénom, ville, département et pays de naissance) pour la vérification d’honorabilité du ministère des Sports, sans laquelle il n’est pas possible d’encadrer. [Plus d’informations sur le site de la FFESSM](https://ffessm.fr/actualites/saisie-des-nouvelles-licences-et-honorabilite).`
+
+const buildMembershipPage = () => ({
+  _id: 'membershipPage',
+  _type: 'membershipPage',
+  season: '2026-2027',
+  intro:
+    'Toutes les informations pour rejoindre les Palmes Aquadémiques cette saison. Les nouveaux peuvent faire une séance d’essai avant de s’inscrire.',
+  keyDates: keyed(
+    [
+      {
+        date: 'Mardi 15 septembre',
+        title: 'Reprise de la piscine',
+        details:
+          'Rendez-vous à partir de 20h30 à la piscine Léo Lagrange. Les nouveaux peuvent faire une séance d’essai avant de s’inscrire.'
+      },
+      {
+        date: 'Week-end des 3 et 4 octobre',
+        title: 'Les 40 ans du club',
+        details: 'Venez souffler les bougies !',
+        linkUrl:
+          'https://www.helloasso.com/associations/les-palmes-aquademiques/evenements/week-end-40-ans-des-palmes'
+      },
+      {
+        date: 'Mardi 20 octobre',
+        title: 'Assemblée générale',
+        details: 'Assemblée générale de la saison 2025-2026.'
+      }
+    ].map((keyDate) => ({ _type: 'keyDate', ...keyDate })),
+    'date'
+  ),
+  prices: keyed(
+    [
+      { label: 'Adhérent', amount: '80 €' },
+      { label: 'Membre passager', amount: '50 €', note: 'Conditions spéciales' }
+    ].map((price) => ({ _type: 'price', ...price })),
+    'price'
+  ),
+  pricesNote: markdocToPortableText(
+    'La **licence** et l’**assurance** FFESSM s’ajoutent à l’adhésion : tous les tarifs sont sur la [grille des tarifs de la FFESSM](https://ffessm.fr/gerer/grille-des-tarifs).',
+    pageImage
+  ),
+  checklist: keyed(
+    [
+      {
+        title: 'La licence FFESSM 2026-2027',
+        details:
+          'Pensez à prendre la **licence** dans le formulaire. Si vous en avez déjà une, choisissez le tarif « adhésion seule ».'
+      },
+      {
+        title: 'L’assurance',
+        details:
+          'Pensez à prendre l’**assurance**. Si vous en avez déjà une, cochez la case « J’ai déjà une assurance ». Des questions ? Lisez [notre article sur l’assurance](/blog/comment-choisir-mon-assurance-plongee).'
+      },
+      {
+        title: 'Le certificat médical',
+        details:
+          'Comme la licence et l’assurance, il est **obligatoire** pour chaque sortie et chaque séance de piscine. Des questions ? Lisez [notre article sur le certificat médical](/blog/certificat-medical).'
+      }
+    ].map(({ title, details }) => ({
+      _type: 'checklistItem',
+      title,
+      details: markdocToPortableText(details, pageImage)
+    })),
+    'item'
+  ),
+  goodToKnow: markdocToPortableText(MEMBERSHIP_GOOD_TO_KNOW, pageImage),
+  helloAssoUrl:
+    'https://www.helloasso.com/associations/les-palmes-aquademiques/adhesions/adhesion-inscription-au-club-des-palmes-aquademiques-2026-2027'
+})
 
 const buildMembers = () =>
   TEAM_2025_2026.map(({ slug, ...member }) => ({
@@ -316,6 +388,7 @@ const migrate = async () => {
     await buildActivitiesPage(),
     await buildGalleryPage(),
     await buildContactPage(),
+    buildMembershipPage(),
     ...buildMembers()
   ].map(withoutUndefined)
 

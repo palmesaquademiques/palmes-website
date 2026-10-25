@@ -10,9 +10,17 @@ import { activitiesPage } from './singletons/activitiesPage'
 import { contactPage } from './singletons/contactPage'
 import { galleryPage } from './singletons/galleryPage'
 import { homePage } from './singletons/homePage'
+import { membershipPage } from './singletons/membershipPage'
 import { tripsPage } from './singletons/tripsPage'
 
-export const singletonTypes = [homePage, tripsPage, activitiesPage, galleryPage, contactPage]
+export const singletonTypes = [
+  homePage,
+  tripsPage,
+  activitiesPage,
+  galleryPage,
+  contactPage,
+  membershipPage
+]
 
 export const schemaTypes = [
   trip,
