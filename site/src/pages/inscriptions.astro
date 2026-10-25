@@ -19,7 +19,12 @@ const checklist = page.checklist ?? []
   description={page.intro ?? 'Toutes les informations pour rejoindre le club.'}
   image="/og/inscriptions.png"
 >
-  <PageHero kicker={`Saison ${page.season}`} title="Inscriptions" intro={page.intro}>
+  <PageHero
+    kicker={`Saison ${page.season}`}
+    title="Inscriptions"
+    intro={page.intro}
+    image={page.bannerImage}
+  >
     <div class="mt-10 flex animate-fade-up flex-wrap gap-3 [animation-delay:360ms]">
       {page.helloAssoUrl && (
         <a href="#formulaire" class="button-primary">

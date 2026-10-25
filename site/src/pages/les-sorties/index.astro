@@ -4,22 +4,24 @@ import TripCard from '../../components/cards/TripCard.astro'
 import PageHero from '../../components/layout/PageHero.astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { todayInParis, yearOf } from '../../lib/dates'
-import { type TripSummary, tripsPageQuery } from '../../lib/queries'
+import { type SanityImage, type TripSummary, tripsPageQuery } from '../../lib/queries'
 import { truncate } from '../../lib/richText'
 import { sanityQuery } from '../../lib/sanity'
 import { splitTrips } from '../../lib/trips'
 
 const today = todayInParis()
-const { intro, trips } = await sanityQuery<{ intro: string | null; trips: TripSummary[] }>(
-  tripsPageQuery
-)
+const { intro, bannerImage, trips } = await sanityQuery<{
+  intro: string | null
+  bannerImage: SanityImage | null
+  trips: TripSummary[]
+}>(tripsPageQuery)
 const { upcoming, past } = splitTrips(trips, today)
 
 const pastTripsByYear = Object.entries(
   Object.groupBy(past, (trip) => yearOf(trip.startDate)) as Record<string, TripSummary[]>
 ).sort(([firstYear], [secondYear]) => secondYear.localeCompare(firstYear))
 
-const heroImage = upcoming[0]?.coverImage ?? past[0]?.coverImage
+const heroImage = bannerImage ?? upcoming[0]?.coverImage ?? past[0]?.coverImage
 ---
 
 <BaseLayout

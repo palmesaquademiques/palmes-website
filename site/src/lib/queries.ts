@@ -69,10 +69,15 @@ export type HomePage = {
 
 export type ActivitiesPage = {
   intro: string | null
+  bannerImage: SanityImage | null
   sections: { _key: string; title: string; image: SanityImage | null; body: RichText | null }[]
 }
 
-export type GalleryPage = { intro: string | null; photos: SanityImage[] | null }
+export type GalleryPage = {
+  intro: string | null
+  bannerImage: SanityImage | null
+  photos: SanityImage[] | null
+}
 
 export type InstructorLevel = 'E1' | 'E2' | 'N4' | 'MF1' | 'MF2'
 
@@ -106,6 +111,7 @@ export type Member = {
 }
 
 export type MembershipPage = {
+  bannerImage: SanityImage | null
   season: string
   intro: string | null
   keyDates:
@@ -125,6 +131,7 @@ export type MembershipPage = {
 }
 
 export type ContactPage = {
+  bannerImage: SanityImage | null
   intro: RichText | null
   address: string | null
   schedule: string | null
@@ -136,6 +143,8 @@ export type ContactPage = {
 const asset = '"asset": asset->{ _id, metadata { lqip, dimensions } }'
 
 const image = `{ ..., ${asset} }`
+
+const bannerImage = `"bannerImage": select(defined(bannerImage.asset) => bannerImage${image})`
 
 const richText = `[]{
   ...,
@@ -170,7 +179,7 @@ export const homeQuery = `{
 }`
 
 export const tripsPageQuery = `{
-  "intro": *[_id == "tripsPage"][0].intro,
+  ...*[_id == "tripsPage"][0]{ intro, ${bannerImage} },
   "trips": *[_type == "trip" && defined(slug.current)] | order(startDate asc){ ${tripFields} }
 }`
 
@@ -187,14 +196,16 @@ export const postsWithBodyQuery = `*[_type == "post" && defined(slug.current)] |
 }`
 
 export const activitiesPageQuery = `*[_id == "activitiesPage"][0]{
-  intro, "sections": coalesce(sections[]{ _key, title, "image": image${image}, "body": body${richText} }, [])
+  intro, ${bannerImage}, "sections": coalesce(sections[]{ _key, title, "image": image${image}, "body": body${richText} }, [])
 }`
 
-export const galleryPageQuery = `*[_id == "galleryPage"][0]{ intro, "photos": photos[]${image} }`
+export const galleryPageQuery = `*[_id == "galleryPage"][0]{
+  intro, ${bannerImage}, "photos": photos[]${image}
+}`
 
 export const contactPageQuery = `{
   "page": *[_id == "contactPage"][0]{
-    "intro": intro${richText}, address, schedule, mapUrl,
+    ${bannerImage}, "intro": intro${richText}, address, schedule, mapUrl,
     "faq": faq[]{ _key, category, question, "answer": answer${richText} },
     "documents": documents[defined(file.asset)]{ _key, title, "url": file.asset->url, "size": file.asset->size }
   },
@@ -205,7 +216,7 @@ export const contactPageQuery = `{
 }`
 
 export const membershipPageQuery = `*[_id == "membershipPage"][0]{
-  season, intro, keyDates, prices, "pricesNote": pricesNote${richText},
+  ${bannerImage}, season, intro, keyDates, prices, "pricesNote": pricesNote${richText},
   "checklist": checklist[]{ _key, title, "details": details${richText} },
   "goodToKnow": goodToKnow${richText}, helloAssoUrl
 }`

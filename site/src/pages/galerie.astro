@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import { type GalleryPage, galleryPageQuery } from '../lib/queries'
 import { imageUrl, sanityQuery } from '../lib/sanity'
 
-const { intro, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
+const { intro, bannerImage, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
 ---
 
 <BaseLayout
@@ -14,7 +14,12 @@ const { intro, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
   description={intro ?? 'Les photos de nos plongées et de la vie du club.'}
   image="/og/galerie.png"
 >
-  <PageHero kicker="Sous la surface" title="Galerie" intro={intro} />
+  <PageHero
+    kicker="Sous la surface"
+    title="Galerie"
+    intro={intro}
+    image={bannerImage ?? photos?.[0]}
+  />
 
   <section class="container-page py-16">
     <ul class="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">

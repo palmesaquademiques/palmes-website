@@ -6,7 +6,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import { type ActivitiesPage, activitiesPageQuery } from '../lib/queries'
 import { sanityQuery } from '../lib/sanity'
 
-const { intro, sections } = await sanityQuery<ActivitiesPage>(activitiesPageQuery)
+const { intro, bannerImage, sections } = await sanityQuery<ActivitiesPage>(activitiesPageQuery)
 
 const anchorOf = (title: string) =>
   title
@@ -16,7 +16,7 @@ const anchorOf = (title: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 
-const heroImage = sections.find((section) => section.image)?.image
+const heroImage = bannerImage ?? sections.find((section) => section.image)?.image
 ---
 
 <BaseLayout
