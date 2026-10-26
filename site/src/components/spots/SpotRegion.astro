@@ -1,0 +1,253 @@
+---
+import type { MEDITERRANEAN } from './regions'
+
+type GeoPoint = { lat: number; lng: number }
+type Region = typeof MEDITERRANEAN
+type MapText = { text: string; at: GeoPoint; kind: 'country' | 'sea' }
+type LabelColumn = { at: GeoPoint; west: number; east: number }
+type RegionSpot = { _id: string; name: string; location: GeoPoint; hasNextTrip: boolean }
+
+type Props = {
+  region: Region
+  regionName: string
+  viewportWidth: number
+  spots: RegionSpot[]
+  texts: MapText[]
+  mountains?: GeoPoint[]
+  labelColumn?: LabelColumn
+  home?: { at: GeoPoint; label: string }
+  selectedSpotId: string
+}
+
+const {
+  region,
+  regionName,
+  viewportWidth,
+  spots,
+  texts,
+  mountains = [],
+  labelColumn,
+  home,
+  selectedSpotId
+} = Astro.props
+
+const LABEL_SPACING = 44
+const LABEL_MARGIN = 18
+
+const radians = (degrees: number) => (degrees * Math.PI) / 180
+
+const project = ({ lat, lng }: GeoPoint) => ({
+  x: region.projection.scale * radians(lng) + region.projection.translateX,
+  y:
+    region.projection.translateY -
+    region.projection.scale * Math.log(Math.tan(Math.PI / 4 + radians(lat) / 2))
+})
+
+const percentOf = ({ x, y }: { x: number; y: number }) =>
+  `left:${(x / region.width) * 100}%; top:${(y / region.height) * 100}%`
+
+const spreadDown = (positions: number[]) =>
+  positions.reduce<number[]>(
+    (spread, position) => [
+      ...spread,
+      Math.max(position, (spread.at(-1) ?? -Infinity) + LABEL_SPACING)
+    ],
+    []
+  )
+
+const spreadWithinMap = (positions: number[]) => {
+  const spread = spreadDown(positions)
+  const overflow = Math.max(0, (spread.at(-1) ?? 0) - (region.height - LABEL_MARGIN))
+  return spread.map((position) => position - overflow)
+}
+
+const isInLabelColumn = ({ lng }: GeoPoint) =>
+  Boolean(labelColumn) && lng > labelColumn!.west && lng < labelColumn!.east
+
+const placedSpots = spots.map((spot) => ({ ...spot, point: project(spot.location) }))
+const columnSpots = placedSpots
+  .filter((spot) => isInLabelColumn(spot.location))
+  .toSorted((first, second) => first.point.y - second.point.y)
+const columnX = labelColumn ? project(labelColumn.at).x : 0
+const columnLabelYs = spreadWithinMap(columnSpots.map((spot) => spot.point.y))
+
+const labels = [
+  ...columnSpots.map((spot, spotIndex) => ({
+    spot,
+    position: { x: columnX, y: columnLabelYs[spotIndex] }
+  })),
+  ...placedSpots
+    .filter((spot) => !isInLabelColumn(spot.location))
+    .map((spot) => ({ spot, position: { x: spot.point.x + 16, y: spot.point.y } }))
+]
+---
+
+<div class="relative h-full" style={`width: ${(region.width / viewportWidth) * 100}%`}>
+  <svg
+    viewBox={`0 0 ${region.width} ${region.height}`}
+    aria-hidden="true"
+    class="absolute inset-0 size-full"
+  >
+    <defs>
+      <linearGradient id={`spots-sea-${regionName}`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#d4eefa" />
+        <stop offset="1" stop-color="#9fd8f0" />
+      </linearGradient>
+      <linearGradient id={`spots-land-${regionName}`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f3ead6" />
+        <stop offset="1" stop-color="#ece0c6" />
+      </linearGradient>
+    </defs>
+    <rect width={region.width} height={region.height} fill={`url(#spots-sea-${regionName})`} />
+    <g fill="none" stroke="#2ba7de" stroke-linejoin="round">
+      <path d={region.landPath} stroke-width="34" stroke-opacity="0.12" />
+      <path d={region.landPath} stroke-width="20" stroke-opacity="0.16" />
+      <path d={region.landPath} stroke-width="8" stroke-opacity="0.25" />
+    </g>
+    <path
+      d={region.landPath}
+      fill={`url(#spots-land-${regionName})`}
+      stroke="white"
+      stroke-width="3"
+      stroke-linejoin="round"
+    />
+    <path
+      d={region.borderPath}
+      fill="none"
+      stroke="#c9b48a"
+      stroke-width="2.5"
+      stroke-dasharray="1 7"
+      stroke-linecap="round"
+    />
+    {mountains.map((mountain) => {
+      const { x, y } = project(mountain)
+      return (
+        <g transform={`translate(${x} ${y})`}>
+          <path d="M-13 9 0-9l13 18Z" fill="#ddcca6" />
+          <path d="M-4.5 -2.6 0-9l4.5 6.4-2.2-1-2.3 1.6-2.2-1.6Z" fill="white" />
+        </g>
+      )
+    })}
+    {texts.map(({ text, at, kind }) => {
+      const { x, y } = project(at)
+      return kind === 'country' ? (
+        <text
+          x={x}
+          y={y}
+          class="font-display"
+          fill="#b49f74"
+          font-size="17"
+          font-weight="700"
+          letter-spacing="7"
+        >
+          {text}
+        </text>
+      ) : (
+        <text
+          x={x}
+          y={y}
+          class="font-display"
+          fill="#0772b9"
+          fill-opacity="0.45"
+          font-size="20"
+          font-style="italic"
+          letter-spacing="2"
+        >
+          {text}
+        </text>
+      )
+    })}
+    <g fill="none" stroke="#0772b9" stroke-opacity="0.35" stroke-width="1.5">
+      {columnSpots.map((spot, spotIndex) => (
+        <path
+          data-spot={spot._id}
+          class="spot-leader"
+          d={`M${spot.point.x} ${spot.point.y}L${columnX - 26} ${columnLabelYs[spotIndex]}H${columnX - 4}`}
+        />
+      ))}
+    </g>
+  </svg>
+
+  {home && (
+    <>
+      <img
+        src="/logo.png"
+        alt=""
+        width="40"
+        height="40"
+        draggable="false"
+        class="absolute size-8 -translate-1/2 rounded-full bg-white shadow-md ring-2 ring-white"
+        style={percentOf(project(home.at))}
+      />
+      <span
+        class="absolute translate-x-5 -translate-y-1/2 rounded-full bg-abyss px-2.5 py-0.5 font-display text-xs font-semibold whitespace-nowrap text-white shadow-md"
+        style={percentOf(project(home.at))}
+      >
+        {home.label}
+      </span>
+    </>
+  )}
+
+  {placedSpots.map((spot) => (
+    <button
+      type="button"
+      tabindex="-1"
+      aria-hidden="true"
+      data-spot={spot._id}
+      data-spot-select={spot._id}
+      data-region={regionName}
+      data-upcoming={spot.hasNextTrip ? '' : undefined}
+      class="spot-dot absolute size-3.5 -translate-1/2 cursor-pointer rounded-full border-2 border-white bg-ocean shadow-md"
+      style={percentOf(spot.point)}
+    />
+  ))}
+
+  {labels.map(({ spot, position }) => (
+    <button
+      type="button"
+      data-spot={spot._id}
+      data-spot-select={spot._id}
+      aria-controls={`spot-${spot._id}`}
+      aria-pressed={spot._id === selectedSpotId ? 'true' : 'false'}
+      class="spot-label absolute -translate-y-1/2 cursor-pointer rounded-full bg-white/95 px-2.5 py-0.5 font-display text-xs font-semibold whitespace-nowrap text-ink shadow-sm ring-1 ring-ink/10 transition hover:ring-ocean"
+      style={percentOf(position)}
+    >
+      {spot.name}
+    </button>
+  ))}
+</div>
+
+<style>
+  .spot-dot {
+    transition:
+      scale 0.3s var(--ease-swim),
+      box-shadow 0.3s ease;
+  }
+
+  .spot-dot[data-upcoming] {
+    background: var(--color-coral);
+  }
+
+  .spot-dot:is([data-selected], [data-highlighted]) {
+    scale: 1.6;
+    box-shadow: 0 0 0 5px rgb(255 255 255 / 0.65);
+  }
+
+  .spot-leader {
+    transition: stroke-opacity 0.3s ease;
+  }
+
+  .spot-leader:is([data-selected], [data-highlighted]) {
+    stroke-opacity: 1;
+    stroke-width: 2.5;
+  }
+
+  .spot-label[data-highlighted] {
+    box-shadow: 0 0 0 2px var(--color-coral);
+  }
+
+  .spot-label[data-selected] {
+    background: var(--color-ocean);
+    color: white;
+  }
+</style>

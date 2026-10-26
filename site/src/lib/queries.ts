@@ -28,6 +28,7 @@ export type TripSummary = {
   period: string | null
   status: TripStatus
   helloAssoUrl: string | null
+  spotId: string | null
   summary: string | null
   coverImage: SanityImage | null
 }
@@ -95,6 +96,22 @@ export type ClubPage = {
   formations: Formation[] | null
   codepCourses: string[] | null
   documents: ClubDocument[] | null
+}
+
+export type SpotTrip = Pick<
+  TripSummary,
+  'title' | 'slug' | 'startDate' | 'endDate' | 'period' | 'status'
+>
+
+export type Spot = {
+  _id: string
+  name: string
+  town: string | null
+  country: 'france' | 'spain' | null
+  location: { lat: number; lng: number }
+  description: string | null
+  diveCenter: { name: string | null; address: string | null; website: string | null } | null
+  trips: SpotTrip[]
 }
 
 export type GalleryPhoto = SanityImage & {
@@ -188,7 +205,7 @@ const richText = `[]{
 
 const tripFields = `
   _id, title, "slug": slug.current, startDate, endDate, period, status, helloAssoUrl, summary,
-  "coverImage": coverImage${image}
+  "spotId": spot._ref, "coverImage": coverImage${image}
 `
 
 const postFields = `
@@ -214,7 +231,13 @@ export const homeQuery = `{
 
 export const tripsPageQuery = `{
   ...*[_id == "tripsPage"][0]{ intro, ${bannerImage} },
-  "trips": *[_type == "trip" && defined(slug.current)] | order(startDate asc){ ${tripFields} }
+  "trips": *[_type == "trip" && defined(slug.current)] | order(startDate asc){ ${tripFields} },
+  "spots": *[_type == "spot" && defined(location)] | order(name asc){
+    _id, name, town, country, location, description, diveCenter,
+    "trips": *[_type == "trip" && references(^._id) && defined(slug.current)] | order(startDate asc){
+      title, "slug": slug.current, startDate, endDate, period, status
+    }
+  }
 }`
 
 export const tripsWithBodyQuery = `*[_type == "trip" && defined(slug.current)] | order(startDate asc){

@@ -20,9 +20,11 @@ export const tripDates = (trip: TripDates) =>
 export const shortTripDates = (trip: TripDates) =>
   trip.period ?? formatShortDateRange(trip.startDate, trip.endDate)
 
-const endOf = (trip: TripSummary) => trip.endDate ?? trip.startDate
+type TripPeriod = Pick<TripSummary, 'startDate' | 'endDate'>
 
-export const isUpcoming = (trip: TripSummary, today: string) => endOf(trip) >= today
+const endOf = (trip: TripPeriod) => trip.endDate ?? trip.startDate
+
+export const isUpcoming = (trip: TripPeriod, today: string) => endOf(trip) >= today
 
 export const displayStatus = (trip: TripSummary, today: string): DisplayStatus =>
   isUpcoming(trip, today) ? trip.status : 'past'

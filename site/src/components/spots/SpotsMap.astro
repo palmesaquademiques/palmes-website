@@ -1,0 +1,455 @@
+---
+import { yearOf } from '../../lib/dates'
+import type { Spot } from '../../lib/queries'
+import { isUpcoming, shortTripDates } from '../../lib/trips'
+import StatusBadge from '../ui/StatusBadge.astro'
+import { MEDITERRANEAN, RED_SEA } from './regions'
+import SpotRegion from './SpotRegion.astro'
+
+type Props = { spots: Spot[]; today: string }
+type GeoPoint = { lat: number; lng: number }
+type Extent = typeof MEDITERRANEAN.extent
+
+const { spots, today } = Astro.props
+
+const VIEWPORT_WIDTH = 780
+const INITIAL_VIEW_LONGITUDE = 1.3
+
+const mainLayer = {
+  name: 'mediterranean',
+  title: 'Méditerranée',
+  region: MEDITERRANEAN,
+  home: { at: { lat: 43.6045, lng: 1.444 }, label: 'Toulouse, le club' },
+  labelColumn: { at: { lat: 42.3, lng: 3.45 }, west: 2.9, east: 3.45 },
+  mountains: [
+    { lat: 43.08, lng: -0.95 },
+    { lat: 42.96, lng: -0.3 },
+    { lat: 42.86, lng: 0.2 },
+    { lat: 42.78, lng: 0.62 },
+    { lat: 42.72, lng: 1.05 },
+    { lat: 42.66, lng: 1.82 },
+    { lat: 42.58, lng: 2.25 },
+    { lat: 42.52, lng: 2.66 }
+  ],
+  texts: [
+    { text: 'FRANCE', at: { lat: 43.25, lng: 2.15 }, kind: 'country' },
+    { text: 'ESPAGNE', at: { lat: 41.98, lng: 0.4 }, kind: 'country' },
+    { text: 'Golfe du Lion', at: { lat: 43.05, lng: 3.55 }, kind: 'sea' },
+    { text: 'Mer Méditerranée', at: { lat: 42.35, lng: 5.2 }, kind: 'sea' },
+    { text: 'Golfe de Gascogne', at: { lat: 43.68, lng: -1.95 }, kind: 'sea' }
+  ]
+} as const
+
+const farLayers = [
+  {
+    name: 'red-sea',
+    title: 'Mer Rouge',
+    region: RED_SEA,
+    texts: [
+      { text: 'ÉGYPTE', at: { lat: 26.2, lng: 33.0 }, kind: 'country' },
+      { text: 'SOUDAN', at: { lat: 21.3, lng: 34.0 }, kind: 'country' },
+      { text: 'ARABIE SAOUDITE', at: { lat: 27.0, lng: 36.6 }, kind: 'country' },
+      { text: 'Mer Rouge', at: { lat: 24.6, lng: 35.6 }, kind: 'sea' }
+    ]
+  }
+] as const
+
+const layers = [mainLayer, ...farLayers]
+
+const isInside = (extent: Extent, { lat, lng }: GeoPoint) =>
+  lng >= extent.west && lng <= extent.east && lat >= extent.south && lat <= extent.north
+
+const yearList = new Intl.ListFormat('fr', { type: 'conjunction' })
+
+const placedSpots = spots
+  .map((spot) => {
+    const nextTrip = spot.trips.find((trip) => isUpcoming(trip, today)) ?? null
+    return {
+      ...spot,
+      regionName: layers.find((layer) => isInside(layer.region.extent, spot.location))?.name,
+      nextTrip,
+      hasNextTrip: Boolean(nextTrip),
+      pastYears: [
+        ...new Set(
+          spot.trips
+            .filter((trip) => !isUpcoming(trip, today))
+            .map((trip) => yearOf(trip.startDate))
+        )
+      ]
+    }
+  })
+  .filter((spot) => spot.regionName)
+
+const spotsOf = (regionName: string) => placedSpots.filter((spot) => spot.regionName === regionName)
+
+const mainSpots = spotsOf(mainLayer.name)
+const defaultSpot =
+  mainSpots
+    .filter((spot) => spot.nextTrip)
+    .toSorted((first, second) =>
+      first.nextTrip!.startDate.localeCompare(second.nextTrip!.startDate)
+    )[0] ??
+  mainSpots[0] ??
+  placedSpots[0]
+
+const orderedSpots = [
+  ...placedSpots
+    .filter((spot) => spot.nextTrip)
+    .toSorted((first, second) =>
+      first.nextTrip!.startDate.localeCompare(second.nextTrip!.startDate)
+    ),
+  ...placedSpots.filter((spot) => !spot.nextTrip)
+]
+
+const radians = (degrees: number) => (degrees * Math.PI) / 180
+const initialLeft =
+  (MEDITERRANEAN.projection.scale * radians(INITIAL_VIEW_LONGITUDE) +
+    MEDITERRANEAN.projection.translateX) /
+  MEDITERRANEAN.width
+
+const countryNames = { france: 'France', spain: 'Espagne', egypt: 'Égypte' }
+---
+
+{placedSpots.length > 0 && (
+  <div id="spots">
+    <p class="kicker text-ocean">Où on plonge</p>
+    <h2 class="mt-2 font-display text-2xl font-semibold tracking-tight">Nos spots</h2>
+
+    <div
+      data-spot-map
+      class="relative mt-5 overflow-hidden rounded-[1.75rem] bg-[#cdebf7] ring-1 shadow-[0_30px_60px_-35px] shadow-deep/50 ring-ink/10"
+    >
+      <div data-region-layer={mainLayer.name} data-active class="region-layer relative">
+        <div
+          role="group"
+          aria-label="Carte des spots, glisser pour se déplacer"
+          data-map-viewport
+          data-initial-left={initialLeft}
+          class="cursor-grab overflow-x-auto overscroll-x-contain select-none [scrollbar-width:none] data-dragging:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+          style={`aspect-ratio: ${VIEWPORT_WIDTH} / ${MEDITERRANEAN.height}`}
+        >
+          <SpotRegion
+            region={mainLayer.region}
+            regionName={mainLayer.name}
+            viewportWidth={VIEWPORT_WIDTH}
+            spots={mainSpots}
+            texts={[...mainLayer.texts]}
+            mountains={[...mainLayer.mountains]}
+            labelColumn={mainLayer.labelColumn}
+            home={mainLayer.home}
+            selectedSpotId={defaultSpot._id}
+          />
+        </div>
+        {farLayers
+          .filter((layer) => spotsOf(layer.name).length > 0)
+          .map((layer) => (
+            <button
+              type="button"
+              data-show-region={layer.name}
+              class="absolute top-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 font-display text-xs font-semibold text-ink shadow-md ring-1 ring-ink/10 transition hover:text-ocean"
+            >
+              {layer.title}
+              <span aria-hidden="true">↗</span>
+            </button>
+          ))}
+      </div>
+
+      {farLayers
+        .filter((layer) => spotsOf(layer.name).length > 0)
+        .map((layer) => (
+          <div
+            data-region-layer={layer.name}
+            class="region-layer absolute inset-0"
+            style={`aspect-ratio: ${layer.region.width} / ${layer.region.height}`}
+          >
+            <SpotRegion
+              region={layer.region}
+              regionName={layer.name}
+              viewportWidth={layer.region.width}
+              spots={spotsOf(layer.name)}
+              texts={[...layer.texts]}
+              selectedSpotId={defaultSpot._id}
+            />
+            <button
+              type="button"
+              data-show-region={mainLayer.name}
+              class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 font-display text-xs font-semibold text-ink shadow-md ring-1 ring-ink/10 transition hover:text-ocean"
+            >
+              <span aria-hidden="true">←</span>
+              {mainLayer.title}
+            </button>
+          </div>
+        ))}
+
+      <p class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-3 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-medium text-slate-700 shadow-sm ring-1 ring-ink/10">
+        <span class="inline-flex items-center gap-1.5">
+          <span class="size-2.5 rounded-full border-2 border-white bg-coral shadow" />
+          Sortie au programme
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+          <span class="size-2.5 rounded-full border-2 border-white bg-ocean shadow" />
+          Déjà visité
+        </span>
+      </p>
+    </div>
+
+    <div
+      data-spot-strip
+      class="relative -mx-5 mt-3 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-8 sm:scroll-px-8 sm:px-8 lg:mx-0 lg:block lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+    >
+      {orderedSpots.map((spot) => (
+        <article
+          id={`spot-${spot._id}`}
+          data-spot-card={spot._id}
+          data-selected={spot._id === defaultSpot._id ? '' : undefined}
+          class="flex w-[85%] max-w-sm shrink-0 snap-center flex-col rounded-[1.75rem] bg-white p-6 ring-1 ring-ink/5 transition-opacity duration-300 max-lg:[&:not([data-selected])]:opacity-55 lg:w-auto lg:max-w-none lg:[&:not([data-selected])]:hidden"
+        >
+          <p class="kicker text-ocean">
+            {[spot.town, spot.country && countryNames[spot.country]].filter(Boolean).join(', ')}
+          </p>
+          <h3 class="mt-2 font-display text-2xl font-semibold tracking-tight">{spot.name}</h3>
+          {spot.description && (
+            <p class="mt-2 text-slate-700 max-lg:line-clamp-3">{spot.description}</p>
+          )}
+
+          {spot.nextTrip && (
+            <a
+              href={`/les-sorties/${spot.nextTrip.slug}`}
+              class="group mt-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-foam px-4 py-3 transition hover:bg-[#d4eef9]"
+            >
+              <span>
+                <span class="block text-xs text-slate-600">Prochaine sortie</span>
+                <span class="font-display font-semibold group-hover:text-ocean">
+                  {shortTripDates(spot.nextTrip)}
+                </span>
+              </span>
+              <StatusBadge status={spot.nextTrip.status} />
+            </a>
+          )}
+          {spot.pastYears.length > 0 && (
+            <p class="mt-3 text-sm text-slate-500">
+              Déjà venus en {yearList.format(spot.pastYears)}
+            </p>
+          )}
+
+          {spot.diveCenter?.name && (
+            <div class="mt-auto pt-4">
+              <div class="border-t border-ink/10 pt-4">
+                <p class="kicker text-ocean">Le club sur place</p>
+                <p class="mt-1.5 font-medium text-ink">
+                  {spot.diveCenter.website ? (
+                    <a
+                      href={spot.diveCenter.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="underline decoration-lagoon/40 underline-offset-4 hover:text-ocean"
+                    >
+                      {spot.diveCenter.name}
+                    </a>
+                  ) : (
+                    spot.diveCenter.name
+                  )}
+                </p>
+                {spot.diveCenter.address && (
+                  <p class="mt-1 text-sm whitespace-pre-line text-slate-600">
+                    {spot.diveCenter.address}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .region-layer {
+    transition:
+      opacity 0.7s var(--ease-swim),
+      scale 0.7s var(--ease-swim),
+      filter 0.7s var(--ease-swim),
+      visibility 0s;
+  }
+
+  .region-layer:not([data-active]) {
+    opacity: 0;
+    filter: blur(6px);
+    visibility: hidden;
+    pointer-events: none;
+    scale: 1.2;
+    transition-delay: 0s, 0s, 0s, 0.7s;
+  }
+
+  .region-layer[data-region-layer='mediterranean']:not([data-active]) {
+    scale: 0.85;
+  }
+</style>
+
+<script>
+  const DRAG_THRESHOLD = 4
+  const EDGE_MARGIN = 32
+  const STRIP_SETTLE_MILLISECONDS = 120
+
+  const map = document.querySelector<HTMLElement>('[data-spot-map]')
+  const viewport = map?.querySelector<HTMLElement>('[data-map-viewport]')
+
+  if (map && viewport) {
+    const layers = [...map.querySelectorAll<HTMLElement>('[data-region-layer]')]
+    const spotElements = [...document.querySelectorAll<HTMLElement | SVGElement>('[data-spot]')]
+    const strip = document.querySelector<HTMLElement>('[data-spot-strip]')!
+    const cards = [...strip.querySelectorAll<HTMLElement>('[data-spot-card]')]
+    const tripItems = [...document.querySelectorAll<HTMLElement>('[data-trip-spot]')]
+    const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+    const scrollBehavior = () => (prefersReducedMotion.matches ? 'auto' : 'smooth')
+
+    const dotOf = (spotId: string) =>
+      map.querySelector<HTMLElement>(`.spot-dot[data-spot="${spotId}"]`)
+
+    const showRegion = (regionName: string) =>
+      layers.forEach((layer) =>
+        layer.toggleAttribute('data-active', layer.dataset.regionLayer === regionName)
+      )
+
+    const showRegionOf = (spotId: string) => {
+      const regionName = dotOf(spotId)?.dataset.region
+      if (regionName) showRegion(regionName)
+    }
+
+    const markSpot = (attribute: string, spotId: string | null) =>
+      spotElements.forEach((element) =>
+        element.toggleAttribute(attribute, element.dataset.spot === spotId)
+      )
+
+    const highlightTrips = (spotId: string | null) =>
+      tripItems.forEach((item) =>
+        item.toggleAttribute('data-highlighted', item.dataset.tripSpot === spotId)
+      )
+
+    const panTo = (spotId: string) => {
+      const dot = dotOf(spotId)
+      if (!dot || !viewport.contains(dot)) return
+      const dotBox = dot.getBoundingClientRect()
+      const viewBox = viewport.getBoundingClientRect()
+      const isVisible =
+        dotBox.left >= viewBox.left + EDGE_MARGIN && dotBox.right <= viewBox.right - EDGE_MARGIN
+      if (isVisible) return
+      viewport.scrollTo({
+        left: viewport.scrollLeft + dotBox.left - viewBox.left - viewBox.width / 2,
+        behavior: scrollBehavior()
+      })
+    }
+
+    const isStripScrollable = () => strip.scrollWidth > strip.clientWidth + 1
+
+    const cardOf = (spotId: string) => cards.find((card) => card.dataset.spotCard === spotId)
+
+    const scrollStripTo = (spotId: string, behavior: ScrollBehavior) => {
+      const card = cardOf(spotId)
+      if (!card || !isStripScrollable()) return
+      strip.scrollTo({
+        left: card.offsetLeft - (strip.clientWidth - card.offsetWidth) / 2,
+        behavior
+      })
+    }
+
+    const distanceFromStripCenter = (card: HTMLElement) =>
+      Math.abs(card.offsetLeft + card.offsetWidth / 2 - (strip.scrollLeft + strip.clientWidth / 2))
+
+    const centeredCard = () =>
+      cards.reduce((closest, card) =>
+        distanceFromStripCenter(card) < distanceFromStripCenter(closest) ? card : closest
+      )
+
+    const selectSpot = (spotId: string, stripScroll: ScrollBehavior | null = scrollBehavior()) => {
+      cards.forEach((card) =>
+        card.toggleAttribute('data-selected', card.dataset.spotCard === spotId)
+      )
+      markSpot('data-selected', spotId)
+      spotElements
+        .filter((element) => element.hasAttribute('aria-pressed'))
+        .forEach((element) =>
+          element.setAttribute('aria-pressed', String(element.dataset.spot === spotId))
+        )
+      showRegionOf(spotId)
+      panTo(spotId)
+      if (stripScroll) scrollStripTo(spotId, stripScroll)
+    }
+
+    let stripSettleTimer = 0
+    strip.addEventListener(
+      'scroll',
+      () => {
+        if (!isStripScrollable()) return
+        window.clearTimeout(stripSettleTimer)
+        stripSettleTimer = window.setTimeout(() => {
+          const card = centeredCard()
+          if (!card.hasAttribute('data-selected')) selectSpot(card.dataset.spotCard!, null)
+        }, STRIP_SETTLE_MILLISECONDS)
+      },
+      { passive: true }
+    )
+
+    let dragStart: { x: number; scrollLeft: number } | null = null
+    let hasDragged = false
+
+    viewport.addEventListener('pointerdown', (event) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return
+      dragStart = { x: event.clientX, scrollLeft: viewport.scrollLeft }
+      hasDragged = false
+    })
+    window.addEventListener('pointermove', (event) => {
+      if (!dragStart) return
+      const distance = event.clientX - dragStart.x
+      if (Math.abs(distance) > DRAG_THRESHOLD) {
+        hasDragged = true
+        viewport.setAttribute('data-dragging', '')
+      }
+      if (hasDragged) viewport.scrollLeft = dragStart.scrollLeft - distance
+    })
+    window.addEventListener('pointerup', () => {
+      dragStart = null
+      viewport.removeAttribute('data-dragging')
+    })
+    viewport.addEventListener(
+      'click',
+      (event) => {
+        if (!hasDragged) return
+        event.preventDefault()
+        event.stopPropagation()
+        hasDragged = false
+      },
+      { capture: true }
+    )
+
+    document.querySelectorAll<HTMLButtonElement>('[data-spot-select]').forEach((button) => {
+      button.addEventListener('click', () => {
+        selectSpot(button.dataset.spotSelect!)
+        if (isStripScrollable())
+          strip.scrollIntoView({ block: 'nearest', behavior: scrollBehavior() })
+      })
+      button.addEventListener('pointerenter', () => highlightTrips(button.dataset.spotSelect!))
+      button.addEventListener('pointerleave', () => highlightTrips(null))
+    })
+
+    map
+      .querySelectorAll<HTMLButtonElement>('[data-show-region]')
+      .forEach((button) =>
+        button.addEventListener('click', () => showRegion(button.dataset.showRegion!))
+      )
+
+    tripItems.forEach((item) => {
+      item.addEventListener('pointerenter', () => {
+        showRegionOf(item.dataset.tripSpot!)
+        markSpot('data-highlighted', item.dataset.tripSpot!)
+        panTo(item.dataset.tripSpot!)
+      })
+      item.addEventListener('pointerleave', () => markSpot('data-highlighted', null))
+    })
+
+    viewport.scrollLeft = Number(viewport.dataset.initialLeft) * viewport.scrollWidth
+    const initialCard = cards.find((card) => card.hasAttribute('data-selected'))
+    if (initialCard) selectSpot(initialCard.dataset.spotCard!, 'auto')
+  }
+</script>
