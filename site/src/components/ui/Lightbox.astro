@@ -66,19 +66,29 @@
 </dialog>
 
 <script>
+  const PHOTO_TRANSITION_NAME = 'lightbox-photo'
+
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]')!
   const image = dialog.querySelector<HTMLImageElement>('[data-lightbox-image]')!
   const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!
+  const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
 
   let group: HTMLAnchorElement[] = []
   let currentIndex = 0
 
-  const show = (index: number) => {
-    currentIndex = (index + group.length) % group.length
-    const link = group[currentIndex]
-    image.src = link.href
-    image.alt = link.querySelector('img')?.alt ?? ''
-    caption.textContent = link.dataset.caption ?? ''
+  const animate = async (update: () => Promise<void> | void) => {
+    if (!document.startViewTransition || prefersReducedMotion.matches) {
+      await update()
+      return
+    }
+    await document.startViewTransition(update).finished
+  }
+
+  const thumbnailOf = (link: HTMLAnchorElement) => link.querySelector('img')
+
+  const isOnScreen = (element: Element) => {
+    const { top, bottom } = element.getBoundingClientRect()
+    return bottom > 0 && top < window.innerHeight
   }
 
   const groupOf = (link: HTMLAnchorElement) =>
@@ -87,26 +97,62 @@
         candidate.dataset.lightbox === link.dataset.lightbox && !candidate.closest('[hidden]')
     )
 
+  const show = async (index: number) => {
+    currentIndex = (index + group.length) % group.length
+    const link = group[currentIndex]
+    image.src = link.href
+    image.alt = thumbnailOf(link)?.alt ?? ''
+    caption.textContent = link.dataset.caption ?? ''
+    await image.decode().catch(() => undefined)
+  }
+
+  const open = async (link: HTMLAnchorElement) => {
+    group = groupOf(link)
+    const thumbnail = thumbnailOf(link)
+    if (thumbnail) thumbnail.style.viewTransitionName = PHOTO_TRANSITION_NAME
+    await animate(async () => {
+      if (thumbnail) thumbnail.style.viewTransitionName = ''
+      image.style.viewTransitionName = PHOTO_TRANSITION_NAME
+      await show(group.indexOf(link))
+      dialog.showModal()
+    })
+  }
+
+  const step = async (offset: number) => {
+    document.documentElement.dataset.lightboxDirection = offset > 0 ? 'next' : 'previous'
+    await animate(() => show(currentIndex + offset))
+    delete document.documentElement.dataset.lightboxDirection
+  }
+
+  const close = async () => {
+    const thumbnail = thumbnailOf(group[currentIndex])
+    const landingThumbnail = thumbnail && isOnScreen(thumbnail) ? thumbnail : null
+    await animate(() => {
+      image.style.viewTransitionName = ''
+      if (landingThumbnail) landingThumbnail.style.viewTransitionName = PHOTO_TRANSITION_NAME
+      dialog.close()
+    })
+    if (landingThumbnail) landingThumbnail.style.viewTransitionName = ''
+  }
+
   document.addEventListener('click', (event) => {
     const link = (event.target as Element).closest<HTMLAnchorElement>('a[data-lightbox]')
     if (!link || event.metaKey || event.ctrlKey) return
     event.preventDefault()
-    group = groupOf(link)
-    show(group.indexOf(link))
-    dialog.showModal()
+    open(link)
   })
 
-  dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close())
-  dialog
-    .querySelector('[data-lightbox-previous]')!
-    .addEventListener('click', () => show(currentIndex - 1))
-  dialog
-    .querySelector('[data-lightbox-next]')!
-    .addEventListener('click', () => show(currentIndex + 1))
-  dialog.addEventListener('click', (event) => event.target === dialog && dialog.close())
+  dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => close())
+  dialog.querySelector('[data-lightbox-previous]')!.addEventListener('click', () => step(-1))
+  dialog.querySelector('[data-lightbox-next]')!.addEventListener('click', () => step(1))
+  dialog.addEventListener('click', (event) => event.target === dialog && close())
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault()
+    close()
+  })
   dialog.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') show(currentIndex - 1)
-    if (event.key === 'ArrowRight') show(currentIndex + 1)
+    if (event.key === 'ArrowLeft') step(-1)
+    if (event.key === 'ArrowRight') step(1)
   })
 
   let touchStartX = 0
@@ -115,6 +161,49 @@
   })
   dialog.addEventListener('touchend', (event) => {
     const distance = event.changedTouches[0].clientX - touchStartX
-    if (Math.abs(distance) > 50) show(currentIndex + (distance < 0 ? 1 : -1))
+    if (Math.abs(distance) > 50) step(distance < 0 ? 1 : -1)
   })
 </script>
+
+<style is:global>
+  ::view-transition-group(lightbox-photo) {
+    animation-duration: 0.5s;
+    animation-timing-function: var(--ease-swim);
+  }
+
+  ::view-transition-old(lightbox-photo),
+  ::view-transition-new(lightbox-photo) {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :root[data-lightbox-direction] {
+    --lightbox-slide: 1;
+  }
+
+  :root[data-lightbox-direction='previous'] {
+    --lightbox-slide: -1;
+  }
+
+  :root[data-lightbox-direction]::view-transition-old(lightbox-photo) {
+    animation: lightbox-slide-out 0.4s var(--ease-swim) both;
+  }
+
+  :root[data-lightbox-direction]::view-transition-new(lightbox-photo) {
+    animation: lightbox-slide-in 0.4s var(--ease-swim) both;
+  }
+
+  @keyframes lightbox-slide-out {
+    to {
+      opacity: 0;
+      translate: calc(var(--lightbox-slide) * -15%) 0;
+    }
+  }
+
+  @keyframes lightbox-slide-in {
+    from {
+      opacity: 0;
+      translate: calc(var(--lightbox-slide) * 15%) 0;
+    }
+  }
+</style>
