@@ -101,7 +101,23 @@ const galleryThemes = [
   </section>
 </BaseLayout>
 
+<style>
+  [data-gallery-photo] {
+    transition:
+      opacity 0.8s var(--ease-swim) var(--reveal-delay, 0s),
+      translate 0.8s var(--ease-swim) var(--reveal-delay, 0s);
+  }
+
+  [data-reveal-ready] [data-gallery-photo]:not([data-revealed]) {
+    opacity: 0;
+    translate: 0 2rem;
+  }
+</style>
+
 <script>
+  const REVEAL_STAGGER_MILLISECONDS = 80
+
+  const grid = document.querySelector<HTMLElement>('[data-gallery-grid]')!
   const filters = [...document.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]')]
   const photos = [...document.querySelectorAll<HTMLElement>('[data-gallery-photo]')]
   const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
@@ -131,4 +147,20 @@ const galleryThemes = [
   filters.forEach((filter) =>
     filter.addEventListener('click', () => filterWithTransition(filter.dataset.galleryFilter!))
   )
+
+  const revealObserver = new IntersectionObserver(
+    (entries) =>
+      entries
+        .filter((entry) => entry.isIntersecting)
+        .forEach((entry, entryIndex) => {
+          const photo = entry.target as HTMLElement
+          revealObserver.unobserve(photo)
+          photo.style.setProperty('--reveal-delay', `${entryIndex * REVEAL_STAGGER_MILLISECONDS}ms`)
+          photo.setAttribute('data-revealed', '')
+        }),
+    { rootMargin: '0px 0px -8% 0px' }
+  )
+
+  grid.setAttribute('data-reveal-ready', '')
+  photos.forEach((photo) => revealObserver.observe(photo))
 </script>
