@@ -163,8 +163,13 @@ const instructorGroups = [
 
   members.forEach((member) => {
     const toggle = member.querySelector<HTMLButtonElement>('[data-member-toggle]')!
-    toggle.addEventListener('click', (event) => {
-      if ((event as PointerEvent).pointerType === 'mouse') return
+    toggle.addEventListener('pointerdown', (event) => {
+      toggle.dataset.pressedWith = event.pointerType
+    })
+    toggle.addEventListener('click', () => {
+      const isMouseClick = toggle.dataset.pressedWith === 'mouse'
+      delete toggle.dataset.pressedWith
+      if (isMouseClick) return
       const isDiving = member.toggleAttribute('data-diving')
       toggle.setAttribute('aria-pressed', String(isDiving))
       if (isDiving) playEmblem(member)
