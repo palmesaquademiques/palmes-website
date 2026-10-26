@@ -1,8 +1,9 @@
 import type { APIRoute, GetStaticPaths } from 'astro'
-import { formatDate, formatDateRange } from '../../lib/dates'
+import { formatDate } from '../../lib/dates'
 import { type SanityImage, shareImagesQuery } from '../../lib/queries'
 import { sanityQuery } from '../../lib/sanity'
 import { renderShareImage } from '../../lib/shareImage'
+import { tripDates } from '../../lib/trips'
 
 type ShareImage = { title: string; subtitle: string; image: SanityImage | null }
 
@@ -15,6 +16,7 @@ type ShareImagesData = {
     slug: string
     startDate: string
     endDate: string | null
+    period: string | null
     coverImage: SanityImage | null
   }[]
   posts: {
@@ -99,7 +101,7 @@ export const getStaticPaths = (async () => {
     `les-sorties/${trip.slug}`,
     {
       title: trip.title,
-      subtitle: `Sortie plongée · ${capitalize(formatDateRange(trip.startDate, trip.endDate))}`,
+      subtitle: `Sortie plongée · ${capitalize(tripDates(trip))}`,
       image: trip.coverImage ?? heroImage
     }
   ])

@@ -8,12 +8,12 @@ import JsonLd from '../../components/seo/JsonLd.astro'
 import Icon from '../../components/ui/Icon.astro'
 import StatusBadge from '../../components/ui/StatusBadge.astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import { dayCount, formatDateRange, todayInParis } from '../../lib/dates'
+import { dayCount, todayInParis } from '../../lib/dates'
 import { type Trip, tripsWithBodyQuery } from '../../lib/queries'
 import { plainTextOf, truncate } from '../../lib/richText'
 import { imageUrl, sanityQuery } from '../../lib/sanity'
 import { event } from '../../lib/structuredData'
-import { displayStatus, isUpcoming, showsRegistrationForm } from '../../lib/trips'
+import { displayStatus, isUpcoming, showsRegistrationForm, tripDates } from '../../lib/trips'
 import { siteConfig } from '../../site.config'
 
 type Props = { trip: Trip; otherTrips: Trip[] }
@@ -36,7 +36,7 @@ const { trip, otherTrips } = Astro.props
 const today = todayInParis()
 const status = displayStatus(trip, today)
 const hasRegistrationForm = showsRegistrationForm(trip, today)
-const dateRange = formatDateRange(trip.startDate, trip.endDate)
+const dateRange = tripDates(trip)
 const days = dayCount(trip.startDate, trip.endDate)
 
 const description = truncate(
@@ -61,20 +61,22 @@ const statusMessages: Record<typeof status, string> = {
   image={`/og/les-sorties/${trip.slug}.png`}
   imageAlt={`Sortie plongée à ${trip.title}`}
 >
-  <JsonLd
-    slot="head"
-    data={event({
-      title: `Sortie plongée à ${trip.title}`,
-      description,
-      startDate: trip.startDate,
-      endDate: trip.endDate,
-      url: new URL(`/les-sorties/${trip.slug}`, Astro.site).href,
-      imageUrl: trip.coverImage ? imageUrl(trip.coverImage).width(1200).url() : undefined,
-      registrationUrl: trip.helloAssoUrl,
-      isFull: trip.status === 'full',
-      isCancelled: trip.status === 'cancelled'
-    })}
-  />
+  {!trip.period && (
+    <JsonLd
+      slot="head"
+      data={event({
+        title: `Sortie plongée à ${trip.title}`,
+        description,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+        url: new URL(`/les-sorties/${trip.slug}`, Astro.site).href,
+        imageUrl: trip.coverImage ? imageUrl(trip.coverImage).width(1200).url() : undefined,
+        registrationUrl: trip.helloAssoUrl,
+        isFull: trip.status === 'full',
+        isCancelled: trip.status === 'cancelled'
+      })}
+    />
+  )}
 
   <PageHero
     kicker={dateRange}

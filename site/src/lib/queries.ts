@@ -25,6 +25,7 @@ export type TripSummary = {
   slug: string
   startDate: string
   endDate: string | null
+  period: string | null
   status: TripStatus
   helloAssoUrl: string | null
   summary: string | null
@@ -174,7 +175,7 @@ const richText = `[]{
 }`
 
 const tripFields = `
-  _id, title, "slug": slug.current, startDate, endDate, status, helloAssoUrl, summary,
+  _id, title, "slug": slug.current, startDate, endDate, period, status, helloAssoUrl, summary,
   "coverImage": coverImage${image}
 `
 
@@ -253,7 +254,7 @@ export const shareImagesQuery = `{
   "clubImage": *[_id == "clubPage"][0].sections[defined(image)][0].image${image},
   "galleryImage": *[_id == "galleryPage"][0].photos[0]${image},
   "trips": *[_type == "trip" && defined(slug.current)] | order(startDate asc){
-    title, "slug": slug.current, startDate, endDate, "coverImage": coverImage${image}
+    title, "slug": slug.current, startDate, endDate, period, "coverImage": coverImage${image}
   },
   "posts": *[_type == "post" && defined(slug.current)] | order(publishedAt desc){
     title, "slug": slug.current, author, publishedAt, "coverImage": coverImage${image}

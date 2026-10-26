@@ -1,3 +1,4 @@
+import { formatDateRange, formatShortDateRange } from './dates'
 import type { TripStatus, TripSummary } from './queries'
 
 export type DisplayStatus = TripStatus | 'past'
@@ -10,6 +11,14 @@ export const statusLabels: Record<DisplayStatus, string> = {
   cancelled: 'Annulée',
   past: 'Sortie passée'
 }
+
+type TripDates = Pick<TripSummary, 'startDate' | 'endDate' | 'period'>
+
+export const tripDates = (trip: TripDates) =>
+  trip.period ?? formatDateRange(trip.startDate, trip.endDate)
+
+export const shortTripDates = (trip: TripDates) =>
+  trip.period ?? formatShortDateRange(trip.startDate, trip.endDate)
 
 const endOf = (trip: TripSummary) => trip.endDate ?? trip.startDate
 
