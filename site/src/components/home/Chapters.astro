@@ -14,7 +14,7 @@ const { chapters } = Astro.props
     {chapters.map((chapter, chapterIndex) => (
       <article
         data-chapter
-        class="mb-6 last:mb-0 lg:sticky lg:mb-[12vh]"
+        class="mb-6 last:mb-0 chapters-stacked:sticky chapters-stacked:mb-[12vh]"
         style={`top: calc(var(--spacing-header) + 1.5rem + ${chapterIndex * 1.25}rem)`}
       >
         <div

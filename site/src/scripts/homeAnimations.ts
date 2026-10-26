@@ -191,7 +191,11 @@ const pinTrips = () => {
 
 const motionQueries = gsap.matchMedia()
 
-motionQueries.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', stackChapters)
+// Same breakpoint as the chapters-stacked variant in global.css.
+motionQueries.add(
+  '(min-width: 1024px) and (min-height: 680px) and (prefers-reduced-motion: no-preference)',
+  stackChapters
+)
 
 // Same breakpoint as the trips-pinned variant in global.css. The pin adds scroll space,
 // so it must exist before the triggers placed below it.

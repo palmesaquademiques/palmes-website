@@ -2,6 +2,7 @@
 @plugin '@tailwindcss/typography';
 
 @custom-variant trips-pinned (@media (width >= 64rem) and (height >= 37.5rem) and (prefers-reduced-motion: no-preference));
+@custom-variant chapters-stacked (@media (width >= 64rem) and (height >= 42.5rem));
 
 @theme {
   --color-abyss: #020c16;
