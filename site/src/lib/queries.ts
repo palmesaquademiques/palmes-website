@@ -121,6 +121,7 @@ export type Emblem =
   | 'anger'
   | 'cameraFlash'
   | 'finKick'
+  | 'charmedOctopus'
 
 export type Member = {
   _id: string

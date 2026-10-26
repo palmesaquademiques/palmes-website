@@ -54,6 +54,25 @@ const finBubbles = [
   { position: 'top-[86%] left-[120%] size-[7%]', delay: 0.62 }
 ]
 
+const OCTOPUS_TENTACLES = [
+  'M-16 8Q-23 28-31 42q4 3 6-2',
+  'M-10 8Q-14 28-18 42q4 3 6-2',
+  'M-3 8Q-5 28-6 42q4 3 6-2',
+  'M3 8Q5 28 6 42q4 3 6-2',
+  'M10 8Q14 28 18 42q4 3 6-2',
+  'M16 8Q23 28 31 42q4 3 6-2'
+]
+
+const OCTOPUS_MUSTACHE =
+  'M0 11.5C-4 9-9 9.5-12 12-14 13.5-17 13-18 10-18.5 14.5-15 17.5-11 16.5-7 15.5-3 14.5 0 14 3 14.5 7 15.5 11 16.5 15 17.5 18.5 14.5 18 10 17 13 14 13.5 12 12 9 9.5 4 9 0 11.5Z'
+
+const HEART = 'M0 4.5-5-.5A2.8 2.8 0 0 1 0-3 2.8 2.8 0 0 1 5-.5Z'
+
+const octopusHearts = [
+  { position: 'top-[26%] -left-[2%] w-[11%]', delay: 1.1 },
+  { position: 'top-[30%] -left-[17%] w-[8%]', delay: 1.7 }
+]
+
 const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>> = {
   tentacleCoin: 'coin',
   tentacleQuill: 'quill',
@@ -701,6 +720,88 @@ const tentacleAccessory = tentacleAccessories[emblem]
       </span>
     </>
   )}
+  {emblem === 'charmedOctopus' && (
+    <>
+      <span class="emblem-octopus absolute top-[34%] -left-[26%] w-[38%]">
+        <svg
+          viewBox="-34 -36 68 84"
+          class="w-full overflow-visible drop-shadow-[0_3px_6px_rgb(0_0_0/0.35)]"
+        >
+          <defs>
+            <radialGradient
+              id={`octopus-mantle-${uid}`}
+              gradientUnits="userSpaceOnUse"
+              cx="0"
+              cy="-6"
+              r="29"
+              fx="-8"
+              fy="-18"
+            >
+              <stop offset="0" stop-color="#ffb39a" />
+              <stop offset="0.55" stop-color="#ff7a59" />
+              <stop offset="1" stop-color="#de4f31" />
+            </radialGradient>
+          </defs>
+          {OCTOPUS_TENTACLES.map((tentacle, tentacleIndex) => (
+            <g
+              class="octopus-tentacle"
+              fill="none"
+              stroke-linecap="round"
+              style={`animation-delay:-${tentacleIndex * 0.2}s`}
+            >
+              <path d={tentacle} stroke="white" stroke-width="9.5" />
+              <path d={tentacle} stroke="#e4583a" stroke-width="6.5" />
+            </g>
+          ))}
+          <ellipse
+            cx="0"
+            cy="-6"
+            rx="21"
+            ry="26"
+            fill={`url(#octopus-mantle-${uid})`}
+            stroke="white"
+            stroke-width="2"
+          />
+          <circle cx="-7" cy="-20" r="3" fill="rgb(200 60 35 / 0.45)" />
+          <circle cx="6" cy="-24" r="2.4" fill="rgb(200 60 35 / 0.45)" />
+          <circle cx="9" cy="-12" r="2" fill="rgb(200 60 35 / 0.45)" />
+          {[-8, 8].map((eyeX) => (
+            <g>
+              <circle cx={eyeX} cy="2" r="6.5" fill="white" />
+              <rect
+                class="octopus-pupil"
+                x={eyeX - 1.5}
+                y="0.5"
+                width="6"
+                height="3.2"
+                rx="1.6"
+                fill="#1b1030"
+              />
+              <path
+                class="octopus-heart-eye"
+                d={HEART}
+                transform={`translate(${eyeX} 2.4)`}
+                fill="#ff4d6d"
+              />
+            </g>
+          ))}
+          <g transform="translate(0 -1.5)">
+            <path class="octopus-mustache" d={OCTOPUS_MUSTACHE} fill="#3b2314" />
+          </g>
+        </svg>
+      </span>
+      {octopusHearts.map((heart) => (
+        <span
+          class:list={['emblem-octopus-heart absolute', heart.position]}
+          style={`animation-delay:${heart.delay}s`}
+        >
+          <svg viewBox="-6 -6 12 12" class="w-full overflow-visible">
+            <path d={HEART} fill="#ff4d6d" stroke="white" stroke-width="1.2" />
+          </svg>
+        </span>
+      ))}
+    </>
+  )}
 </span>
 
 <style>
@@ -1277,6 +1378,144 @@ const tentacleAccessory = tentacleAccessories[emblem]
     }
     to {
       opacity: 1;
+    }
+  }
+  .emblem-octopus,
+  .emblem-octopus-heart,
+  .octopus-heart-eye {
+    opacity: 0;
+  }
+
+  .octopus-tentacle,
+  .octopus-mustache,
+  .octopus-heart-eye {
+    transform-box: fill-box;
+  }
+
+  .octopus-tentacle {
+    transform-origin: 50% 0%;
+  }
+
+  .octopus-mustache,
+  .octopus-heart-eye {
+    transform-origin: center;
+  }
+
+  :global([data-emblem-play]) .emblem-octopus {
+    animation:
+      octopus-arrive 0.7s var(--ease-swim) both,
+      octopus-bob 2.4s ease-in-out 0.7s infinite;
+  }
+
+  :global([data-emblem-play]) .octopus-tentacle {
+    animation: octopus-sway 1.2s ease-in-out infinite alternate;
+  }
+
+  :global([data-emblem-play]) .octopus-mustache {
+    animation: mustache-twitch 2.4s ease-in-out 0.6s infinite;
+  }
+
+  :global([data-emblem-play]) .octopus-pupil {
+    animation: pupil-melt 0.3s ease-in 0.9s both;
+  }
+
+  :global([data-emblem-play]) .octopus-heart-eye {
+    animation:
+      heart-eye-pop 0.35s cubic-bezier(0.3, 1.8, 0.5, 1) 0.95s both,
+      heart-eye-beat 0.8s ease-in-out 1.3s infinite;
+  }
+
+  :global([data-emblem-play]) .emblem-octopus-heart {
+    animation: octopus-heart-float 2.4s ease-out infinite;
+  }
+
+  @keyframes octopus-arrive {
+    from {
+      opacity: 0;
+      transform: translate(-30%, 25%) rotate(-25deg) scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes octopus-bob {
+    50% {
+      translate: 0 -6%;
+      rotate: 4deg;
+    }
+  }
+
+  @keyframes octopus-sway {
+    from {
+      rotate: -7deg;
+    }
+    to {
+      rotate: 7deg;
+    }
+  }
+
+  @keyframes mustache-twitch {
+    0%,
+    30%,
+    100% {
+      rotate: 0deg;
+      scale: 1;
+    }
+    6% {
+      rotate: -9deg;
+      scale: 1.08 0.9;
+    }
+    12% {
+      rotate: 8deg;
+    }
+    18% {
+      rotate: -6deg;
+      scale: 1.08 0.9;
+    }
+    24% {
+      rotate: 4deg;
+    }
+  }
+
+  @keyframes pupil-melt {
+    to {
+      opacity: 0;
+      scale: 0.2;
+    }
+  }
+
+  @keyframes heart-eye-pop {
+    from {
+      opacity: 0;
+      scale: 0;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes heart-eye-beat {
+    50% {
+      scale: 1.25;
+    }
+  }
+
+  @keyframes octopus-heart-float {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) scale(0.3);
+    }
+    15% {
+      opacity: 1;
+      transform: translate(-10%, -30%) scale(1);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: translate(-60%, -260%) scale(1.1) rotate(-15deg);
     }
   }
 </style>

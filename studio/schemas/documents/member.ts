@@ -24,7 +24,8 @@ export const emblems = [
   { title: '🌊 Hippocampe', value: 'seahorse' },
   { title: '💢 Symbole de colère (BD)', value: 'anger' },
   { title: '📸 Flashs d’appareil photo', value: 'cameraFlash' },
-  { title: '🤿 Premier coup de palme (fondateur, 1986)', value: 'finKick' }
+  { title: '🤿 Premier coup de palme (fondateur, 1986)', value: 'finKick' },
+  { title: '🐙 Poulpe moustachu sous le charme', value: 'charmedOctopus' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'
