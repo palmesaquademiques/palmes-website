@@ -29,6 +29,14 @@ export const trip = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: 'spot',
+      title: 'Spot',
+      description:
+        'Le lieu de plongée, pour la carte des spots. S’il n’existe pas encore, le créer d’abord dans « Spots »',
+      type: 'reference',
+      to: [{ type: 'spot' }]
+    }),
+    defineField({
       name: 'slug',
       title: 'Adresse de la page',
       description: 'Cliquez sur « Generate » pour la créer à partir du titre',

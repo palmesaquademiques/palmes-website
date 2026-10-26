@@ -1,5 +1,6 @@
 import { member } from './documents/member'
 import { post } from './documents/post'
+import { spot } from './documents/spot'
 import { trip } from './documents/trip'
 import { embed } from './objects/embed'
 import { helloAsso } from './objects/helloAsso'
@@ -24,6 +25,7 @@ export const singletonTypes = [
 
 export const schemaTypes = [
   trip,
+  spot,
   post,
   member,
   ...singletonTypes,

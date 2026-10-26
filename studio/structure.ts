@@ -14,6 +14,14 @@ export const structure: StructureResolver = (S) =>
             .defaultOrdering([{ field: 'startDate', direction: 'desc' }])
         ),
       S.listItem()
+        .title('Spots')
+        .schemaType('spot')
+        .child(
+          S.documentTypeList('spot')
+            .title('Spots')
+            .defaultOrdering([{ field: 'name', direction: 'asc' }])
+        ),
+      S.listItem()
         .title('Blog')
         .schemaType('post')
         .child(
