@@ -73,6 +73,13 @@ const octopusHearts = [
   { position: 'top-[30%] -left-[17%] w-[8%]', delay: 1.7 }
 ]
 
+const HEADBAND = 'M9 22Q50 36 91 22'
+
+const HEADBAND_TAILS = [
+  { path: 'M91 22c8-3 14 1 20-1s10-6 16-3', delay: 0 },
+  { path: 'M91 23c6 4 10 10 16 11s9 3 12 7', delay: -0.15 }
+]
+
 const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>> = {
   tentacleCoin: 'coin',
   tentacleQuill: 'quill',
@@ -802,6 +809,57 @@ const tentacleAccessory = tentacleAccessories[emblem]
       ))}
     </>
   )}
+  {emblem === 'rambo' && (
+    <span class="emblem-headband absolute inset-0">
+      <svg viewBox="0 0 100 100" class="size-full overflow-visible">
+        <g
+          transform="rotate(-8 50 50)"
+          fill="none"
+          stroke-linecap="round"
+          class="drop-shadow-[0_2px_3px_rgb(0_0_0/0.35)]"
+        >
+          {HEADBAND_TAILS.map((tail) => (
+            <g class="headband-tail" style={`animation-delay:0.45s,${0.75 + tail.delay}s`}>
+              <path d={tail.path} stroke="white" stroke-width="10" />
+              <path d={tail.path} stroke="#c92a2a" stroke-width="6.5" />
+            </g>
+          ))}
+          <path
+            class="headband-band"
+            d={HEADBAND}
+            pathLength="1"
+            stroke="white"
+            stroke-width="14"
+          />
+          <path
+            class="headband-band"
+            d={HEADBAND}
+            pathLength="1"
+            stroke="#d93030"
+            stroke-width="10"
+          />
+          <path
+            class="headband-stitch"
+            d={HEADBAND}
+            pathLength="1"
+            stroke="#9e1c1c"
+            stroke-width="1.2"
+            stroke-dasharray="0.02 0.02"
+          />
+          <ellipse
+            class="headband-knot"
+            cx="91"
+            cy="22"
+            rx="5"
+            ry="6.5"
+            fill="#c92a2a"
+            stroke="white"
+            stroke-width="2"
+          />
+        </g>
+      </svg>
+    </span>
+  )}
 </span>
 
 <style>
@@ -1516,6 +1574,98 @@ const tentacleAccessory = tentacleAccessories[emblem]
     100% {
       opacity: 0;
       transform: translate(-60%, -260%) scale(1.1) rotate(-15deg);
+    }
+  }
+  .emblem-headband,
+  .headband-stitch,
+  .headband-knot,
+  .headband-tail {
+    opacity: 0;
+  }
+
+  .headband-band {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .headband-knot,
+  .headband-tail {
+    transform-box: fill-box;
+  }
+
+  .headband-knot {
+    transform-origin: center;
+  }
+
+  .headband-tail {
+    transform-origin: 0% 30%;
+  }
+
+  :global([data-emblem-play]) .emblem-headband {
+    opacity: 1;
+  }
+
+  :global([data-emblem-play]) .headband-band {
+    animation: headband-tie 0.5s ease-out both;
+  }
+
+  :global([data-emblem-play]) .headband-stitch {
+    animation: headband-stitch 0.2s ease-out 0.45s both;
+  }
+
+  :global([data-emblem-play]) .headband-knot {
+    animation: headband-knot 0.35s cubic-bezier(0.3, 1.8, 0.5, 1) 0.4s both;
+  }
+
+  :global([data-emblem-play]) .headband-tail {
+    animation:
+      headband-unfurl 0.35s ease-out both,
+      headband-flutter 0.3s ease-in-out infinite alternate;
+  }
+
+  @keyframes headband-tie {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes headband-stitch {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes headband-knot {
+    from {
+      opacity: 0;
+      scale: 0;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes headband-unfurl {
+    from {
+      opacity: 0;
+      scale: 0 1;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes headband-flutter {
+    from {
+      rotate: -7deg;
+    }
+    to {
+      rotate: 9deg;
     }
   }
 </style>

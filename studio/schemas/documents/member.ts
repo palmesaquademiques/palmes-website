@@ -25,7 +25,8 @@ export const emblems = [
   { title: '💢 Symbole de colère (BD)', value: 'anger' },
   { title: '📸 Flashs d’appareil photo', value: 'cameraFlash' },
   { title: '🤿 Premier coup de palme (fondateur, 1986)', value: 'finKick' },
-  { title: '🐙 Poulpe moustachu sous le charme', value: 'charmedOctopus' }
+  { title: '🐙 Poulpe moustachu sous le charme', value: 'charmedOctopus' },
+  { title: '💪 Bandeau de Rambo', value: 'rambo' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'
