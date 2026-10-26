@@ -99,7 +99,12 @@
     },
     {
       "source": "/salon-plongee-2026",
-      "destination": "/blog/salon-de-la-plongee-2026",
+      "destination": "/blog/salon-de-la-plongee-2027",
+      "permanent": true
+    },
+    {
+      "source": "/blog/salon-de-la-plongee-2026",
+      "destination": "/blog/salon-de-la-plongee-2027",
       "permanent": true
     },
     {
