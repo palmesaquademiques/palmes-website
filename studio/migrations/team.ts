@@ -152,6 +152,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     nickname: 'GG',
     team: 'none',
     secretTitle: 'A donné le premier coup de palme du club',
+    emblem: 'finKick',
     instructorLevel: 'E2',
     order: 22
   },

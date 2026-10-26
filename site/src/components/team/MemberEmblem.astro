@@ -48,6 +48,12 @@ const cameraFlashes = [
   { position: 'bottom-[12%] -left-[16%] w-[28%]', delay: 1.15 }
 ]
 
+const finBubbles = [
+  { position: 'top-[92%] left-[108%] size-[12%]', delay: 0.4 },
+  { position: 'top-[100%] left-[116%] size-[8%]', delay: 0.5 },
+  { position: 'top-[86%] left-[120%] size-[7%]', delay: 0.62 }
+]
+
 const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>> = {
   tentacleCoin: 'coin',
   tentacleQuill: 'quill',
@@ -565,6 +571,136 @@ const tentacleAccessory = tentacleAccessories[emblem]
         </svg>
       </span>
     ))}
+  {emblem === 'finKick' && (
+    <>
+      <span
+        class="emblem-fin-ripple absolute inset-0 rounded-full border-[3px] border-white"
+        style="animation-delay:0.4s"
+      />
+      <span
+        class="emblem-fin-ripple absolute inset-0 rounded-full border-2 border-lagoon"
+        style="animation-delay:0.55s"
+      />
+      <span class="emblem-fin absolute top-[53%] left-[81%] w-[28%]">
+        <svg
+          viewBox="0 0 40 80"
+          class="w-full overflow-visible drop-shadow-[0_3px_5px_rgb(0_0_0/0.3)]"
+        >
+          <defs>
+            <linearGradient id={`fin-blade-${uid}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--color-ocean)" />
+              <stop offset="1" stop-color="var(--color-lagoon)" />
+            </linearGradient>
+          </defs>
+          <g stroke-linejoin="round">
+            <path
+              d="M12.5 27C10.5 44 5 58 3.5 71L20 66L36.5 71C35 58 29.5 44 27.5 27Z"
+              fill="white"
+              stroke="white"
+              stroke-width="4"
+            />
+            <path
+              d="M12.5 14C12.5 4 27.5 4 27.5 14L28 31C24 34.5 16 34.5 12 31Z"
+              fill="white"
+              stroke="white"
+              stroke-width="4"
+            />
+            <path
+              d="M12.5 27C10.5 44 5 58 3.5 71L20 66L36.5 71C35 58 29.5 44 27.5 27Z"
+              fill={`url(#fin-blade-${uid})`}
+            />
+            <path
+              d="M12.5 27C10.5 44 5 58 3.5 71M27.5 27C29.5 44 35 58 36.5 71"
+              fill="none"
+              stroke="var(--color-abyss)"
+              stroke-width="2.4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M17 35L14 64M23 35L26 64"
+              stroke="white"
+              stroke-opacity="0.7"
+              stroke-width="1.2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M12.5 14C12.5 4 27.5 4 27.5 14L28 31C24 34.5 16 34.5 12 31Z"
+              fill="var(--color-abyss)"
+            />
+            <ellipse
+              cx="20"
+              cy="13"
+              rx="4.6"
+              ry="6"
+              fill="var(--color-lagoon)"
+              fill-opacity="0.45"
+            />
+            <ellipse cx="20" cy="13.6" rx="3.4" ry="4.8" fill="var(--color-abyss)" />
+          </g>
+        </svg>
+      </span>
+      {finBubbles.map((bubble) => (
+        <span
+          class:list={[
+            'emblem-fin-bubble absolute rounded-full border-2 border-white bg-white/45 ring-1 ring-ocean/50',
+            bubble.position
+          ]}
+          style={`animation-delay:${bubble.delay}s`}
+        />
+      ))}
+      <span class="emblem-founding absolute -top-[6%] -left-[12%] w-[36%] -rotate-12">
+        <svg viewBox="0 0 48 48" class="w-full drop-shadow-[0_3px_6px_rgb(0_0_0/0.3)]">
+          <defs>
+            <linearGradient id={`founding-gold-${uid}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fff0bd" />
+              <stop offset="0.5" stop-color="#e8c46a" />
+              <stop offset="1" stop-color="#b9862c" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="24"
+            cy="24"
+            r="22"
+            fill={`url(#founding-gold-${uid})`}
+            stroke="white"
+            stroke-width="2.5"
+          />
+          <circle
+            cx="24"
+            cy="24"
+            r="17.5"
+            fill="none"
+            stroke="#7a5612"
+            stroke-width="0.9"
+            stroke-dasharray="1.6 1.6"
+          />
+          <text
+            x="24"
+            y="19.5"
+            text-anchor="middle"
+            font-size="5.5"
+            font-weight="700"
+            letter-spacing="0.8"
+            fill="#7a5612"
+            class="font-display"
+          >
+            DEPUIS
+          </text>
+          <text
+            x="24"
+            y="31.5"
+            text-anchor="middle"
+            font-size="13"
+            font-weight="800"
+            fill="#0a1826"
+            class="font-display"
+          >
+            1986
+          </text>
+        </svg>
+      </span>
+    </>
+  )}
 </span>
 
 <style>
@@ -1035,6 +1171,112 @@ const tentacleAccessory = tentacleAccessories[emblem]
     100% {
       opacity: 0;
       transform: translate(-4px, -22px);
+    }
+  }
+  .emblem-fin,
+  .emblem-fin-ripple,
+  .emblem-fin-bubble,
+  .emblem-founding {
+    opacity: 0;
+  }
+
+  .emblem-fin {
+    transform-origin: 50% 20%;
+    rotate: -65deg;
+  }
+
+  :global([data-emblem-play]) .emblem-fin {
+    animation:
+      fin-arrive 0.4s cubic-bezier(0.3, 1.5, 0.5, 1) both,
+      fin-kick 2.4s 0.4s infinite;
+  }
+
+  :global([data-emblem-play]) .emblem-fin-ripple {
+    animation: fin-ripple 2.4s ease-out infinite;
+  }
+
+  :global([data-emblem-play]) .emblem-fin-bubble {
+    animation: fin-bubble 2.4s ease-out infinite;
+  }
+
+  :global([data-emblem-play]) .emblem-founding {
+    animation: founding-stamp 0.5s cubic-bezier(0.5, 1.6, 0.6, 1) 1.05s both;
+  }
+
+  @keyframes fin-arrive {
+    from {
+      opacity: 0;
+      scale: 0;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes fin-kick {
+    0% {
+      rotate: -65deg;
+      animation-timing-function: ease-in-out;
+    }
+    20% {
+      rotate: -105deg;
+      animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+    }
+    29% {
+      rotate: -25deg;
+      animation-timing-function: ease-out;
+    }
+    38% {
+      rotate: -42deg;
+      animation-timing-function: ease-in-out;
+    }
+    100% {
+      rotate: -65deg;
+    }
+  }
+
+  @keyframes fin-ripple {
+    0%,
+    27% {
+      opacity: 0;
+      scale: 1;
+    }
+    30% {
+      opacity: 0.9;
+      scale: 1.02;
+    }
+    70%,
+    100% {
+      opacity: 0;
+      scale: 1.4;
+    }
+  }
+
+  @keyframes fin-bubble {
+    0%,
+    27% {
+      opacity: 0;
+      transform: translate(0, 0) scale(0.4);
+    }
+    33% {
+      opacity: 1;
+      transform: translate(0, -40%) scale(1);
+    }
+    80%,
+    100% {
+      opacity: 0;
+      transform: translate(-60%, -380%) scale(1.15);
+    }
+  }
+
+  @keyframes founding-stamp {
+    from {
+      opacity: 0;
+      transform: scale(2.2) rotate(-30deg);
+    }
+    to {
+      opacity: 1;
     }
   }
 </style>

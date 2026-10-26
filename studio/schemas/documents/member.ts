@@ -23,7 +23,8 @@ export const emblems = [
   { title: '🧭 Rose des vents', value: 'compass' },
   { title: '🌊 Hippocampe', value: 'seahorse' },
   { title: '💢 Symbole de colère (BD)', value: 'anger' },
-  { title: '📸 Flashs d’appareil photo', value: 'cameraFlash' }
+  { title: '📸 Flashs d’appareil photo', value: 'cameraFlash' },
+  { title: '🤿 Premier coup de palme (fondateur, 1986)', value: 'finKick' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'
