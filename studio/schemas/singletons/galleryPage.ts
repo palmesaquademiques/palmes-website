@@ -46,6 +46,13 @@ export const galleryPage = defineType({
               }
             }),
             defineField({
+              name: 'featured',
+              title: 'Mettre en avant',
+              description: 'Affichée en grand dans la galerie. Deux ou trois photos suffisent',
+              type: 'boolean',
+              initialValue: false
+            }),
+            defineField({
               name: 'photographer',
               title: 'Photographe',
               description: 'Prénom et nom, affichés en crédit « Photo : … »',

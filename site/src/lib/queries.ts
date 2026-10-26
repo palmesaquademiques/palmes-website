@@ -100,6 +100,7 @@ export type ClubPage = {
 export type GalleryPhoto = SanityImage & {
   photographer: string | null
   theme: 'macro' | 'divers' | 'blue' | null
+  featured: boolean | null
 }
 
 export type GalleryPage = {

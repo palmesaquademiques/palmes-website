@@ -2,13 +2,35 @@
 import PageHero from '../components/layout/PageHero.astro'
 import SanityImage from '../components/ui/SanityImage.astro'
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { type GalleryPage, galleryPageQuery } from '../lib/queries'
+import { type GalleryPage, type GalleryPhoto, galleryPageQuery } from '../lib/queries'
 import { imageUrl, sanityQuery } from '../lib/sanity'
+
+const tileShapes = {
+  regular: { span: '', aspectRatio: 4 / 3, sizes: '(min-width: 1024px) 22rem, 50vw' },
+  tall: { span: 'row-span-2', aspectRatio: 2 / 3, sizes: '(min-width: 1024px) 22rem, 50vw' },
+  featured: {
+    span: 'col-span-2 row-span-2',
+    aspectRatio: 4 / 3,
+    sizes: '(min-width: 1024px) 44rem, 100vw'
+  },
+  featuredTall: {
+    span: 'col-span-2 row-span-3',
+    aspectRatio: 7 / 8,
+    sizes: '(min-width: 1024px) 44rem, 100vw'
+  }
+}
+
+const shapeOf = (photo: GalleryPhoto) => {
+  const isPortrait = photo.asset.metadata.dimensions.aspectRatio < 0.9
+  if (photo.featured) return tileShapes[isPortrait ? 'featuredTall' : 'featured']
+  return tileShapes[isPortrait ? 'tall' : 'regular']
+}
 
 const { intro, bannerImage, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
 const galleryPhotos = (photos ?? []).map((photo) => ({
   ...photo,
-  credit: photo.photographer ? `Photo\u00a0: ${photo.photographer}` : null
+  shape: shapeOf(photo),
+  credit: photo.photographer ? `Photo : ${photo.photographer}` : null
 }))
 const galleryThemes = [
   { value: 'macro', label: 'Macro' },
@@ -45,31 +67,37 @@ const galleryThemes = [
         ))}
       </div>
     )}
-    <ul class="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">
-      {galleryPhotos.map((photo) => (
-        <li data-gallery-photo data-theme={photo.theme} class="break-inside-avoid">
-          <a
-            href={imageUrl(photo).width(2200).url()}
-            data-lightbox="galerie"
-            data-caption={[photo.alt, photo.credit].filter(Boolean).join(' · ')}
-            class="group relative block overflow-hidden rounded-2xl bg-deep"
-          >
-            <SanityImage
-              image={photo}
-              widths={[400, 640, 960, 1280]}
-              sizes="(min-width: 1024px) 26rem, (min-width: 640px) 50vw, 100vw"
-              class="w-full transition duration-[1.2s] ease-swim group-hover:scale-105"
-            />
-            {(photo.alt || photo.credit) && (
-              <span class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-abyss/90 to-transparent px-4 pt-10 pb-4 text-sm text-white transition duration-500 ease-swim group-hover:translate-y-0">
-                {photo.alt && <span class="block">{photo.alt}</span>}
-                {photo.credit && <span class="block text-xs text-white/70">{photo.credit}</span>}
-              </span>
-            )}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class="@container">
+      <ul
+        data-gallery-grid
+        class="grid auto-rows-[calc((100cqw_-_0.75rem)/2*0.75)] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[calc((100cqw_-_1rem)/2*0.75)] sm:gap-4 lg:auto-rows-[calc((100cqw_-_2rem)/3*0.75)] lg:grid-cols-3"
+      >
+        {galleryPhotos.map((photo) => (
+          <li data-gallery-photo data-theme={photo.theme} class={photo.shape.span}>
+            <a
+              href={imageUrl(photo).width(2200).url()}
+              data-lightbox="galerie"
+              data-caption={[photo.alt, photo.credit].filter(Boolean).join(' · ')}
+              class="group relative block size-full overflow-hidden rounded-2xl bg-deep"
+            >
+              <SanityImage
+                image={photo}
+                aspectRatio={photo.shape.aspectRatio}
+                widths={[400, 640, 960, 1280, 1600]}
+                sizes={photo.shape.sizes}
+                class="size-full object-cover transition duration-[1.2s] ease-swim group-hover:scale-105"
+              />
+              {(photo.alt || photo.credit) && (
+                <span class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-abyss/90 to-transparent px-4 pt-10 pb-4 text-sm text-white transition duration-500 ease-swim group-hover:translate-y-0">
+                  {photo.alt && <span class="block">{photo.alt}</span>}
+                  {photo.credit && <span class="block text-xs text-white/70">{photo.credit}</span>}
+                </span>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </section>
 </BaseLayout>
 
