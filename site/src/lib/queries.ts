@@ -91,7 +91,16 @@ export type ClubPage = {
   intro: string | null
   anniversaryImage: SanityImage | null
   history: RichText | null
-  sections: { _key: string; title: string; image: SanityImage | null; body: RichText | null }[]
+  sections: {
+    _key: string
+    moment: string | null
+    title: string
+    image: SanityImage | null
+    summary: string | null
+    linkLabel: string | null
+    linkUrl: string | null
+  }[]
+  equipment: RichText | null
   formationsIntro: RichText | null
   formations: Formation[] | null
   codepCourses: string[] | null
@@ -257,7 +266,8 @@ export const clubPageQuery = `{
     ${bannerImage}, intro,
     "anniversaryImage": select(defined(anniversaryImage.asset) => anniversaryImage${image}),
     "history": history${richText},
-    "sections": coalesce(sections[]{ _key, title, "image": image${image}, "body": body${richText} }, []),
+    "sections": coalesce(sections[]{ _key, moment, title, "image": image${image}, summary, linkLabel, linkUrl }, []),
+    "equipment": equipment${richText},
     "formationsIntro": formationsIntro${richText},
     "formations": formations[]{ _key, code, name, summary, prerequisites, "details": details${richText} },
     codepCourses,
