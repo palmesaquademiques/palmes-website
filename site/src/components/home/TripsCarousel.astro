@@ -12,7 +12,7 @@ const hasUpcomingTrips = upcomingTrips.length > 0
 <section
   id="les-sorties"
   data-trips
-  class="relative overflow-hidden py-24 text-white lg:flex lg:h-svh lg:flex-col lg:justify-center lg:py-0"
+  class="relative overflow-hidden py-24 text-white trips-pinned:flex trips-pinned:h-svh trips-pinned:flex-col trips-pinned:justify-center trips-pinned:pt-(--spacing-header) trips-pinned:pb-0"
 >
   <div class="container-page flex flex-wrap items-end justify-between gap-6">
     <div>
@@ -34,14 +34,14 @@ const hasUpcomingTrips = upcomingTrips.length > 0
 
   <div
     data-trips-viewport
-    class="mt-12 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] lg:mt-14 lg:snap-none lg:overflow-visible"
+    class="mt-12 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] lg:mt-14 lg:pb-4 lg:[scrollbar-color:var(--color-lagoon)_transparent] lg:[scrollbar-width:thin] trips-pinned:snap-none trips-pinned:overflow-visible trips-pinned:pb-0"
   >
     <ol
       data-trips-track
       class="flex w-max gap-5 px-5 sm:px-8 lg:pr-16 lg:pl-[max(2rem,calc((100vw-80rem)/2+2rem))]"
     >
       {upcomingTrips.map((trip) => (
-        <li class="w-[78vw] max-w-[380px] snap-center lg:w-[380px]">
+        <li class="w-[78vw] max-w-[380px] snap-center lg:w-[min(380px,max(15rem,calc((100svh-18rem)*0.75)))]">
           <TripCard trip={trip} today={today} />
         </li>
       ))}
@@ -57,7 +57,7 @@ const hasUpcomingTrips = upcomingTrips.length > 0
       {recentTrips.map((trip) => (
         <li
           class:list={[
-            'w-[78vw] max-w-[380px] snap-center lg:w-[380px]',
+            'w-[78vw] max-w-[380px] snap-center lg:w-[min(380px,max(15rem,calc((100svh-18rem)*0.75)))]',
             hasUpcomingTrips &&
               'opacity-80 saturate-[0.65] transition hover:opacity-100 hover:saturate-100'
           ]}
@@ -65,7 +65,7 @@ const hasUpcomingTrips = upcomingTrips.length > 0
           <TripCard trip={trip} today={today} />
         </li>
       ))}
-      <li class="w-[78vw] max-w-[380px] snap-center lg:w-[380px]">
+      <li class="w-[78vw] max-w-[380px] snap-center lg:w-[min(380px,max(15rem,calc((100svh-18rem)*0.75)))]">
         <a
           href="/les-sorties"
           class="group flex aspect-[3/4] flex-col justify-between rounded-[1.75rem] border border-dashed border-white/25 p-8 transition hover:border-lagoon hover:bg-lagoon/5"

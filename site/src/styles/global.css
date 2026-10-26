@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+@custom-variant trips-pinned (@media (width >= 64rem) and (height >= 37.5rem) and (prefers-reduced-motion: no-preference));
+
 @theme {
   --color-abyss: #020c16;
   --color-deep: #04213a;

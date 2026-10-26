@@ -172,7 +172,7 @@ const pinTrips = () => {
   const track = section?.querySelector<HTMLElement>('[data-trips-track]')
   if (!section || !track) return
 
-  const distance = () => track.scrollWidth - window.innerWidth
+  const distance = () => track.scrollWidth - document.documentElement.clientWidth
   if (distance() <= 0) return
 
   gsap.to(track, {
@@ -191,11 +191,14 @@ const pinTrips = () => {
 
 const motionQueries = gsap.matchMedia()
 
-// The trips pin adds scroll space, so it must exist before the triggers placed below it.
-motionQueries.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-  stackChapters()
-  pinTrips()
-})
+motionQueries.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', stackChapters)
+
+// Same breakpoint as the trips-pinned variant in global.css. The pin adds scroll space,
+// so it must exist before the triggers placed below it.
+motionQueries.add(
+  '(min-width: 1024px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)',
+  pinTrips
+)
 
 motionQueries.add('(prefers-reduced-motion: no-preference)', () => {
   parallaxHero()
