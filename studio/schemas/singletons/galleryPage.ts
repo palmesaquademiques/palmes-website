@@ -16,7 +16,29 @@ export const galleryPage = defineType({
       description: 'Glissez-déposez plusieurs photos d’un coup, puis réordonnez-les à la souris',
       type: 'array',
       options: { layout: 'grid' },
-      of: [defineArrayMember({ type: 'imageWithAlt' })]
+      of: [
+        defineArrayMember({
+          name: 'galleryPhoto',
+          title: 'Photo',
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Description',
+              description:
+                'Affichée sur la photo et lue par les lecteurs d’écran, par exemple « Mérou à Cala Montjoi »',
+              type: 'string'
+            }),
+            defineField({
+              name: 'photographer',
+              title: 'Photographe',
+              description: 'Prénom et nom, affichés en crédit « Photo : … »',
+              type: 'string'
+            })
+          ]
+        })
+      ]
     })
   ],
   preview: { prepare: () => ({ title: 'Page Galerie' }) }

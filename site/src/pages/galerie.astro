@@ -6,6 +6,10 @@ import { type GalleryPage, galleryPageQuery } from '../lib/queries'
 import { imageUrl, sanityQuery } from '../lib/sanity'
 
 const { intro, bannerImage, photos } = await sanityQuery<GalleryPage>(galleryPageQuery)
+const galleryPhotos = (photos ?? []).map((photo) => ({
+  ...photo,
+  credit: photo.photographer ? `Photo\u00a0: ${photo.photographer}` : null
+}))
 ---
 
 <BaseLayout
@@ -23,12 +27,12 @@ const { intro, bannerImage, photos } = await sanityQuery<GalleryPage>(galleryPag
 
   <section class="container-page py-16">
     <ul class="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">
-      {(photos ?? []).map((photo) => (
+      {galleryPhotos.map((photo) => (
         <li class="break-inside-avoid">
           <a
             href={imageUrl(photo).width(2200).url()}
             data-lightbox="galerie"
-            data-caption={photo.alt ?? ''}
+            data-caption={[photo.alt, photo.credit].filter(Boolean).join(' · ')}
             class="group relative block overflow-hidden rounded-2xl bg-deep"
           >
             <SanityImage
@@ -37,9 +41,10 @@ const { intro, bannerImage, photos } = await sanityQuery<GalleryPage>(galleryPag
               sizes="(min-width: 1024px) 26rem, (min-width: 640px) 50vw, 100vw"
               class="w-full transition duration-[1.2s] ease-swim group-hover:scale-105"
             />
-            {photo.alt && (
+            {(photo.alt || photo.credit) && (
               <span class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-abyss/90 to-transparent px-4 pt-10 pb-4 text-sm text-white transition duration-500 ease-swim group-hover:translate-y-0">
-                {photo.alt}
+                {photo.alt && <span class="block">{photo.alt}</span>}
+                {photo.credit && <span class="block text-xs text-white/70">{photo.credit}</span>}
               </span>
             )}
           </a>

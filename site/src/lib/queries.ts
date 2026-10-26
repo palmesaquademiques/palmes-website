@@ -97,10 +97,12 @@ export type ClubPage = {
   documents: ClubDocument[] | null
 }
 
+export type GalleryPhoto = SanityImage & { photographer: string | null }
+
 export type GalleryPage = {
   intro: string | null
   bannerImage: SanityImage | null
-  photos: SanityImage[] | null
+  photos: GalleryPhoto[] | null
 }
 
 export type InstructorLevel = 'E1' | 'E2' | 'N4' | 'MF1' | 'MF2'
