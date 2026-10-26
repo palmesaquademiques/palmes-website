@@ -159,6 +159,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     name: 'Jean-Claude Meunier',
     nickname: 'JC',
     team: 'none',
+    emblem: 'anger',
     secretTitle: 'Schtroumpf grognon',
     instructorLevel: 'E2',
     order: 23

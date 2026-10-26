@@ -35,6 +35,13 @@ const SEAHORSE_OUTLINE =
 
 const SEAHORSE_TAIL = 'M37 60c1 10-1 19-7 25-5 5-12 3-12-3 0-5 5-7 8-4 2 2 0 5-2 4'
 
+const ANGER_MARK = 'M19 9Q30 24 41 9M51 19Q36 30 51 41M41 51Q30 36 19 51M9 41Q24 30 9 19'
+
+const angerMarks = [
+  { position: '-top-[6%] -right-[10%] w-[30%]', delay: 0 },
+  { position: 'top-[14%] -left-[8%] w-[18%]', delay: 0.35 }
+]
+
 const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>> = {
   tentacleCoin: 'coin',
   tentacleQuill: 'quill',
@@ -458,6 +465,24 @@ const tentacleAccessory = tentacleAccessories[emblem]
       </svg>
     </span>
   )}
+
+  {emblem === 'anger' &&
+    angerMarks.map((mark) => (
+      <span
+        class:list={['emblem-anger absolute', mark.position]}
+        style={`animation-delay:${mark.delay}s,${mark.delay + 0.45}s`}
+      >
+        <svg
+          viewBox="0 0 60 60"
+          class="w-full overflow-visible drop-shadow-[0_2px_4px_rgb(0_0_0/0.25)]"
+        >
+          <g fill="none" stroke-linecap="round">
+            <path d={ANGER_MARK} stroke="white" stroke-width="9" />
+            <path d={ANGER_MARK} stroke="#e5342b" stroke-width="5" />
+          </g>
+        </svg>
+      </span>
+    ))}
 </span>
 
 <style>
@@ -815,6 +840,39 @@ const tentacleAccessory = tentacleAccessories[emblem]
   @keyframes seahorse-tail-sway {
     50% {
       transform: rotate(6deg);
+    }
+  }
+
+  .emblem-anger {
+    opacity: 0;
+  }
+
+  :global([data-emblem-play]) .emblem-anger {
+    animation:
+      anger-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) both,
+      anger-throb 0.7s ease-in-out 0.45s infinite;
+  }
+
+  @keyframes anger-pop {
+    from {
+      opacity: 0;
+      transform: scale(0) rotate(-25deg);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  @keyframes anger-throb {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.18);
     }
   }
 
