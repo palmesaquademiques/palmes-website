@@ -119,6 +119,7 @@ export type Emblem =
   | 'compass'
   | 'seahorse'
   | 'anger'
+  | 'cameraFlash'
 
 export type Member = {
   _id: string

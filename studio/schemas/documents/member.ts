@@ -22,7 +22,8 @@ export const emblems = [
   { title: '🥂 Coupes de champagne', value: 'champagne' },
   { title: '🧭 Rose des vents', value: 'compass' },
   { title: '🌊 Hippocampe', value: 'seahorse' },
-  { title: '💢 Symbole de colère (BD)', value: 'anger' }
+  { title: '💢 Symbole de colère (BD)', value: 'anger' },
+  { title: '📸 Flashs d’appareil photo', value: 'cameraFlash' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'

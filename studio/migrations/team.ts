@@ -141,6 +141,7 @@ export const TEAM_2025_2026: TeamMember[] = [
     slug: 'arnaud-lenoir',
     name: 'Arnaud Lenoir',
     team: 'none',
+    emblem: 'cameraFlash',
     secretTitle: 'Paparazzo des nudibranches',
     instructorLevel: 'E1',
     order: 21

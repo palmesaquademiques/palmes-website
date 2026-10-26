@@ -42,6 +42,12 @@ const angerMarks = [
   { position: 'top-[14%] -left-[8%] w-[18%]', delay: 0.35 }
 ]
 
+const cameraFlashes = [
+  { position: '-top-[8%] left-[92%] w-[44%]', delay: 0.5 },
+  { position: '-top-[2%] -left-[20%] w-[34%]', delay: 0.85 },
+  { position: 'bottom-[12%] -left-[16%] w-[28%]', delay: 1.15 }
+]
+
 const tentacleAccessories: Partial<Record<Emblem, 'coin' | 'quill' | 'inkwell'>> = {
   tentacleCoin: 'coin',
   tentacleQuill: 'quill',
@@ -466,6 +472,82 @@ const tentacleAccessory = tentacleAccessories[emblem]
     </span>
   )}
 
+  {emblem === 'cameraFlash' && (
+    <>
+      <span class="emblem-flash-glare absolute inset-[3px] rounded-full bg-white" />
+      <span class="emblem-camera absolute top-[4%] -right-[22%] w-[36%]">
+        <svg
+          viewBox="0 0 64 48"
+          class="w-full overflow-visible drop-shadow-[0_3px_6px_rgb(0_0_0/0.35)]"
+        >
+          <rect
+            x="18"
+            y="3"
+            width="17"
+            height="9"
+            rx="2.5"
+            fill="#1c2733"
+            stroke="white"
+            stroke-width="2"
+          />
+          <rect
+            x="5"
+            y="5"
+            width="9"
+            height="6"
+            rx="1.5"
+            fill="#e5342b"
+            stroke="white"
+            stroke-width="1.5"
+          />
+          <rect
+            x="2"
+            y="9"
+            width="60"
+            height="35"
+            rx="7"
+            fill="#1c2733"
+            stroke="white"
+            stroke-width="2.5"
+          />
+          <rect x="45" y="14" width="11" height="7" rx="1.5" fill="#fff6cc" />
+          <circle cx="30" cy="27" r="12" fill="#0a1826" stroke="#8fa3b3" stroke-width="3" />
+          <circle cx="30" cy="27" r="6" fill="#2ba7de" opacity="0.7" />
+          <circle cx="26.5" cy="23.5" r="2.2" fill="white" opacity="0.85" />
+        </svg>
+      </span>
+      {cameraFlashes.map((flash, flashIndex) => (
+        <span
+          class:list={['emblem-flash absolute', flash.position]}
+          style={`animation-delay:${flash.delay}s`}
+        >
+          <svg
+            viewBox="0 0 40 40"
+            class="w-full overflow-visible drop-shadow-[0_0_5px_rgb(232_196_106/0.95)]"
+          >
+            <defs>
+              <radialGradient id={`flash-glow-${uid}-${flashIndex}`} cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0" stop-color="#fffbe6" stop-opacity="0.95" />
+                <stop offset="0.45" stop-color="#fff3b0" stop-opacity="0.45" />
+                <stop offset="1" stop-color="#fff3b0" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="20" cy="20" r="20" fill={`url(#flash-glow-${uid}-${flashIndex})`} />
+            <path
+              d="M20 1 22.6 17.4 39 20 22.6 22.6 20 39 17.4 22.6 1 20 17.4 17.4Z"
+              fill="white"
+            />
+            <path
+              d="M20 9 21.2 18.8 31 20 21.2 21.2 20 31 18.8 21.2 9 20 18.8 18.8Z"
+              fill="white"
+              transform="rotate(45 20 20)"
+            />
+          </svg>
+        </span>
+      ))}
+    </>
+  )}
+
   {emblem === 'anger' &&
     angerMarks.map((mark) => (
       <span
@@ -840,6 +922,72 @@ const tentacleAccessory = tentacleAccessories[emblem]
   @keyframes seahorse-tail-sway {
     50% {
       transform: rotate(6deg);
+    }
+  }
+
+  .emblem-camera,
+  .emblem-flash,
+  .emblem-flash-glare {
+    opacity: 0;
+  }
+
+  :global([data-emblem-play]) .emblem-camera {
+    animation: camera-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+  }
+
+  :global([data-emblem-play]) .emblem-flash {
+    animation: flash-burst 2.4s ease-out infinite;
+  }
+
+  :global([data-emblem-play]) .emblem-flash-glare {
+    animation: flash-glare 2.4s ease-out 0.5s infinite;
+  }
+
+  @keyframes camera-pop {
+    from {
+      opacity: 0;
+      transform: scale(0) rotate(-30deg);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) rotate(12deg);
+    }
+  }
+
+  @keyframes flash-burst {
+    0% {
+      opacity: 0;
+      transform: scale(0) rotate(0deg);
+    }
+    4% {
+      opacity: 1;
+      transform: scale(1.15) rotate(20deg);
+    }
+    14%,
+    100% {
+      opacity: 0;
+      transform: scale(0.6) rotate(45deg);
+    }
+  }
+
+  @keyframes flash-glare {
+    0%,
+    9%,
+    14.5%,
+    23%,
+    27%,
+    35%,
+    100% {
+      opacity: 0;
+    }
+    2% {
+      opacity: 0.7;
+    }
+    16.5% {
+      opacity: 0.45;
+    }
+    29% {
+      opacity: 0.35;
     }
   }
 
