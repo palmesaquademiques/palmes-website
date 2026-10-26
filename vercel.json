@@ -114,12 +114,12 @@
     },
     {
       "source": "/lescala",
-      "destination": "/les-sorties/lescala",
+      "destination": "/les-sorties",
       "permanent": true
     },
     {
       "source": "/lavandou",
-      "destination": "/les-sorties/lavandou",
+      "destination": "/les-sorties",
       "permanent": true
     },
     {
@@ -129,7 +129,7 @@
     },
     {
       "source": "/port-vendres",
-      "destination": "/les-sorties/port-vendres",
+      "destination": "/les-sorties",
       "permanent": true
     },
     {
