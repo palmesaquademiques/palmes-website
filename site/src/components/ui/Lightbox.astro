@@ -83,7 +83,8 @@
 
   const groupOf = (link: HTMLAnchorElement) =>
     [...document.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]')].filter(
-      (candidate) => candidate.dataset.lightbox === link.dataset.lightbox
+      (candidate) =>
+        candidate.dataset.lightbox === link.dataset.lightbox && !candidate.closest('[hidden]')
     )
 
   document.addEventListener('click', (event) => {

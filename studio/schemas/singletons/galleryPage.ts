@@ -31,6 +31,21 @@ export const galleryPage = defineType({
               type: 'string'
             }),
             defineField({
+              name: 'theme',
+              title: 'Thème',
+              description: 'Sert aux filtres de la galerie',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Macro', value: 'macro' },
+                  { title: 'Plongeurs', value: 'divers' },
+                  { title: 'Grand bleu', value: 'blue' }
+                ],
+                layout: 'radio',
+                direction: 'horizontal'
+              }
+            }),
+            defineField({
               name: 'photographer',
               title: 'Photographe',
               description: 'Prénom et nom, affichés en crédit « Photo : … »',

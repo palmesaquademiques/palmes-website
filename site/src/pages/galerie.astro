@@ -10,6 +10,11 @@ const galleryPhotos = (photos ?? []).map((photo) => ({
   ...photo,
   credit: photo.photographer ? `Photo\u00a0: ${photo.photographer}` : null
 }))
+const galleryThemes = [
+  { value: 'macro', label: 'Macro' },
+  { value: 'divers', label: 'Plongeurs' },
+  { value: 'blue', label: 'Grand bleu' }
+].filter((theme) => galleryPhotos.some((photo) => photo.theme === theme.value))
 ---
 
 <BaseLayout
@@ -26,9 +31,23 @@ const galleryPhotos = (photos ?? []).map((photo) => ({
   />
 
   <section class="container-page py-16">
+    {galleryThemes.length > 0 && (
+      <div role="group" aria-label="Filtrer les photos" class="mb-8 flex flex-wrap gap-2">
+        {[{ value: 'all', label: 'Toutes' }, ...galleryThemes].map((theme) => (
+          <button
+            type="button"
+            data-gallery-filter={theme.value}
+            aria-pressed={theme.value === 'all' ? 'true' : 'false'}
+            class="rounded-full border border-ink/15 bg-white/60 px-4 py-2 text-sm font-medium text-ink/80 transition hover:border-ocean hover:text-ocean aria-pressed:border-ocean aria-pressed:bg-ocean aria-pressed:text-white"
+          >
+            {theme.label}
+          </button>
+        ))}
+      </div>
+    )}
     <ul class="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">
       {galleryPhotos.map((photo) => (
-        <li class="break-inside-avoid">
+        <li data-gallery-photo data-theme={photo.theme} class="break-inside-avoid">
           <a
             href={imageUrl(photo).width(2200).url()}
             data-lightbox="galerie"
@@ -53,3 +72,35 @@ const galleryPhotos = (photos ?? []).map((photo) => ({
     </ul>
   </section>
 </BaseLayout>
+
+<script>
+  const filters = [...document.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]')]
+  const photos = [...document.querySelectorAll<HTMLElement>('[data-gallery-photo]')]
+  const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+
+  const applyFilter = (theme: string) => {
+    filters.forEach((filter) =>
+      filter.setAttribute('aria-pressed', String(filter.dataset.galleryFilter === theme))
+    )
+    photos.forEach((photo) => {
+      photo.hidden = theme !== 'all' && photo.dataset.theme !== theme
+    })
+  }
+
+  const filterWithTransition = (theme: string) => {
+    if (!document.startViewTransition || prefersReducedMotion.matches) {
+      applyFilter(theme)
+      return
+    }
+    photos.forEach((photo, photoIndex) => {
+      photo.style.viewTransitionName = `gallery-photo-${photoIndex}`
+    })
+    document
+      .startViewTransition(() => applyFilter(theme))
+      .finished.finally(() => photos.forEach((photo) => (photo.style.viewTransitionName = '')))
+  }
+
+  filters.forEach((filter) =>
+    filter.addEventListener('click', () => filterWithTransition(filter.dataset.galleryFilter!))
+  )
+</script>

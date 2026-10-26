@@ -97,7 +97,10 @@ export type ClubPage = {
   documents: ClubDocument[] | null
 }
 
-export type GalleryPhoto = SanityImage & { photographer: string | null }
+export type GalleryPhoto = SanityImage & {
+  photographer: string | null
+  theme: 'macro' | 'divers' | 'blue' | null
+}
 
 export type GalleryPage = {
   intro: string | null
