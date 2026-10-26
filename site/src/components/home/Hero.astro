@@ -14,7 +14,7 @@ const lastWordIndex = words.length - 1
 
 <section
   data-hero
-  class="relative isolate flex h-svh min-h-[620px] items-end overflow-hidden bg-abyss text-white"
+  class="relative isolate flex min-h-[max(100svh,620px)] items-end overflow-hidden bg-abyss pt-[calc(var(--spacing-header)+2rem)] text-white"
 >
   <div data-hero-media class="absolute inset-0 -z-10">
     <SanityImage
@@ -43,7 +43,7 @@ const lastWordIndex = words.length - 1
       Club de plongée · Toulouse · depuis 1986
     </p>
 
-    <h1 class="mt-6 max-w-5xl text-[clamp(3.2rem,9.5vw,9rem)] leading-[0.88] font-bold tracking-[-0.035em]">
+    <h1 class="mt-6 max-w-5xl text-[clamp(3.2rem,min(9.5vw,16svh),9rem)] leading-[0.88] font-bold tracking-[-0.035em]">
       <span class="sr-only">{heroTitle}</span>
       {words.map((word, wordIndex) => (
         <span
