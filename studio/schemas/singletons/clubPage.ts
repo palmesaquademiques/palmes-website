@@ -40,7 +40,7 @@ export const clubPage = defineType({
     defineField({
       name: 'sections',
       title: 'Activités',
-      description: 'Une section par activité : la plongée, la piscine, les baptêmes, le matériel…',
+      description: 'Une carte par activité : la piscine, les sorties, les baptêmes, les soirées…',
       type: 'array',
       group: 'activities',
       of: [
@@ -49,17 +49,51 @@ export const clubPage = defineType({
           type: 'object',
           fields: [
             defineField({
+              name: 'moment',
+              title: 'Quand',
+              description:
+                'Affiché au-dessus du titre, par exemple « Le mardi soir » ou « En juin »',
+              type: 'string'
+            }),
+            defineField({
               name: 'title',
               title: 'Titre',
               type: 'string',
               validation: (rule) => rule.required()
             }),
             defineField({ name: 'image', title: 'Photo', type: 'imageWithAlt' }),
-            defineField({ name: 'body', title: 'Texte', type: 'richText' })
+            defineField({
+              name: 'summary',
+              title: 'Texte',
+              description: 'Deux ou trois phrases',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.max(260)
+            }),
+            defineField({
+              name: 'linkLabel',
+              title: 'Texte du lien',
+              description: 'Par exemple « Voir les sorties »',
+              type: 'string'
+            }),
+            defineField({
+              name: 'linkUrl',
+              title: 'Adresse du lien',
+              description: 'Une page du site, par exemple « /les-sorties »',
+              type: 'string'
+            })
           ],
-          preview: { select: { title: 'title', media: 'image' } }
+          preview: { select: { title: 'title', subtitle: 'moment', media: 'image' } }
         })
       ]
+    }),
+    defineField({
+      name: 'equipment',
+      title: 'Le club vous équipe',
+      description:
+        'Affiché sous les activités : le matériel prêté par le club et ce qu’il faut avoir soi-même',
+      type: 'richText',
+      group: 'activities'
     }),
     defineField({
       name: 'formationsIntro',
