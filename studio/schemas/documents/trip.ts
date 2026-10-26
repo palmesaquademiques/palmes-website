@@ -52,6 +52,13 @@ export const trip = defineType({
       validation: (rule) => rule.min(rule.valueOfField('startDate'))
     }),
     defineField({
+      name: 'period',
+      title: 'Période, si la date n’est pas encore fixée',
+      description:
+        'Par exemple « Juillet ou août 2027 ». Elle remplace les dates sur le site, la date de début sert alors seulement à classer la sortie. À vider une fois la date connue',
+      type: 'string'
+    }),
+    defineField({
       name: 'status',
       title: 'Statut',
       description:
