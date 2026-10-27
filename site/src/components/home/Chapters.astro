@@ -19,7 +19,7 @@ const { chapters } = Astro.props
       >
         <div
           data-chapter-card
-          class="relative grid min-h-[min(72svh,46rem)] origin-top overflow-hidden rounded-[2rem] bg-gradient-to-br from-deep to-abyss shadow-[0_-30px_60px_-30px_rgb(0_0_0/0.8)] ring-1 ring-white/10 lg:grid-cols-2"
+          class="relative grid origin-top overflow-hidden rounded-[2rem] bg-gradient-to-br from-deep to-abyss shadow-[0_-30px_60px_-30px_rgb(0_0_0/0.8)] ring-1 ring-white/10 lg:grid-cols-2"
         >
           <div
             class:list={[
@@ -30,7 +30,7 @@ const { chapters } = Astro.props
             {chapter.image ? (
               <SanityImage
                 image={chapter.image}
-                sizes="(min-width: 1024px) 56rem, 100vw"
+                sizes="(min-width: 1024px) 44rem, 100vw"
                 class="absolute inset-0 size-full object-cover"
                 data-chapter-image
               />
