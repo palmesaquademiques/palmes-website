@@ -102,7 +102,7 @@ const tentacleAccessory = tentacleAccessories[emblem]
 ---
 
 <span
-  aria-hidden={emblem === 'crown' ? undefined : 'true'}
+  aria-hidden={emblem === 'crown' || emblem === 'charmedOctopus' ? undefined : 'true'}
   class="emblem pointer-events-none absolute inset-0"
 >
   {emblem === 'crown' && (
@@ -741,7 +741,12 @@ const tentacleAccessory = tentacleAccessories[emblem]
   )}
   {emblem === 'charmedOctopus' && (
     <>
-      <span class="emblem-octopus absolute top-[34%] -left-[26%] w-[38%]">
+      <a
+        href="/jeu"
+        aria-label="Jouer au jeu du poulpe"
+        title="Jouer au jeu du poulpe"
+        class="emblem-octopus absolute top-[34%] -left-[26%] w-[38%]"
+      >
         <svg
           viewBox="-34 -36 68 84"
           class="w-full overflow-visible drop-shadow-[0_3px_6px_rgb(0_0_0/0.35)]"
@@ -808,7 +813,7 @@ const tentacleAccessory = tentacleAccessories[emblem]
             <path class="octopus-mustache" d={OCTOPUS_MUSTACHE} fill="#3b2314" />
           </g>
         </svg>
-      </span>
+      </a>
       {octopusHearts.map((heart) => (
         <span
           class:list={['emblem-octopus-heart absolute', heart.position]}
@@ -1793,7 +1798,13 @@ const tentacleAccessory = tentacleAccessories[emblem]
     transform-origin: center;
   }
 
+  .emblem-octopus:focus-visible {
+    opacity: 1;
+  }
+
   :global([data-emblem-play]) .emblem-octopus {
+    pointer-events: auto;
+    cursor: pointer;
     animation:
       octopus-arrive 0.7s var(--ease-swim) both,
       octopus-bob 2.4s ease-in-out 0.7s infinite;
