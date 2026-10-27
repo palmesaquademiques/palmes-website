@@ -28,7 +28,9 @@ export const emblems = [
   { title: '🐙 Poulpe moustachu sous le charme', value: 'charmedOctopus' },
   { title: '💪 Bandeau de Rambo', value: 'rambo' },
   { title: '🤠 Plus rapide que son ombre (Lucky Luke)', value: 'fasterThanShadow' },
-  { title: '🧘 Manomètre qui redescend (décompression)', value: 'pressureGauge' }
+  { title: '🧘 Manomètre qui redescend (décompression)', value: 'pressureGauge' },
+  { title: '📖 Livre et canard (leçon n° 1)', value: 'duckBook' },
+  { title: '🏋️ Palme musclée (¡Olé !)', value: 'strongFin' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'

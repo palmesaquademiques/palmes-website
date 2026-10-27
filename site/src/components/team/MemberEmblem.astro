@@ -945,6 +945,217 @@ const tentacleAccessory = tentacleAccessories[emblem]
       </span>
     </span>
   )}
+  {emblem === 'duckBook' && (
+    <span class="emblem-book absolute -bottom-[6%] -left-[36%] w-[64%]">
+      <svg
+        viewBox="0 0 80 64"
+        class="w-full overflow-visible drop-shadow-[0_3px_5px_rgb(0_0_0/0.3)]"
+      >
+        <rect
+          x="40"
+          y="20"
+          width="34"
+          height="38"
+          rx="3"
+          fill="#0772b9"
+          stroke="white"
+          stroke-width="2"
+        />
+        <rect
+          x="40"
+          y="18"
+          width="31"
+          height="36"
+          rx="1.5"
+          fill="white"
+          stroke="#cfd8de"
+          stroke-width="0.8"
+        />
+        <path
+          d="M44 28H67M44 34H67M44 40H62"
+          stroke="#2ba7de"
+          stroke-opacity="0.5"
+          stroke-width="1.2"
+        />
+        <g class="book-left-page">
+          <rect
+            x="6"
+            y="20"
+            width="34"
+            height="38"
+            rx="3"
+            fill="#0772b9"
+            stroke="white"
+            stroke-width="2"
+          />
+          <rect
+            x="9"
+            y="18"
+            width="31"
+            height="36"
+            rx="1.5"
+            fill="white"
+            stroke="#cfd8de"
+            stroke-width="0.8"
+          />
+          <text
+            x="24.5"
+            y="30"
+            text-anchor="middle"
+            font-size="5"
+            font-weight="700"
+            fill="#0a1826"
+            class="font-display"
+          >
+            Leçon n° 1
+          </text>
+          <text
+            x="24.5"
+            y="39"
+            text-anchor="middle"
+            font-size="5.5"
+            font-style="italic"
+            fill="#0772b9"
+            class="font-display"
+          >
+            le canard
+          </text>
+          <path d="M15 43H34" stroke="#2ba7de" stroke-width="0.8" />
+        </g>
+        <path d="M40 18V54" stroke="#cfd8de" stroke-width="1" />
+        <rect
+          class="book-flip"
+          x="40"
+          y="18"
+          width="31"
+          height="36"
+          rx="1.5"
+          fill="#f7f4ee"
+          stroke="#cfd8de"
+          stroke-width="0.8"
+        />
+        <g class="book-cover">
+          <rect
+            x="40"
+            y="16"
+            width="33"
+            height="40"
+            rx="2"
+            fill="#0772b9"
+            stroke="white"
+            stroke-width="2"
+          />
+          <path
+            d="M46 36q4-4 8 0t8 0"
+            fill="none"
+            stroke="white"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </g>
+        <g class="book-duck" transform="translate(56 10) scale(1.35)">
+          <path
+            d="M-9 4-12 0-8 1Z"
+            fill="#ffd23f"
+            stroke="#e0a800"
+            stroke-width="0.8"
+            stroke-linejoin="round"
+          />
+          <ellipse cx="0" cy="6" rx="9" ry="6" fill="#ffd23f" stroke="#e0a800" stroke-width="0.8" />
+          <path
+            d="M-3 5q4-3 7 1"
+            fill="none"
+            stroke="#e0a800"
+            stroke-width="0.8"
+            stroke-linecap="round"
+          />
+          <circle cx="4" cy="-3" r="4.5" fill="#ffd23f" stroke="#e0a800" stroke-width="0.8" />
+          <path d="M8-3.5 13-2.5 8-1Z" fill="#ff8c1a" />
+          <circle cx="5" cy="-4" r="0.9" fill="#0a1826" />
+        </g>
+      </svg>
+    </span>
+  )}
+
+  {emblem === 'strongFin' && (
+    <span class="emblem-strong-fin absolute top-[42%] left-[84%] w-[48%]">
+      <svg
+        viewBox="0 -52 92 92"
+        class="w-full overflow-visible drop-shadow-[0_3px_5px_rgb(0_0_0/0.3)]"
+      >
+        <defs>
+          <linearGradient id={`strong-fin-${uid}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-ocean)" />
+            <stop offset="1" stop-color="var(--color-lagoon)" />
+          </linearGradient>
+        </defs>
+        <g class="fin-curl">
+          <g transform="rotate(-90 20 16)" stroke-linejoin="round">
+            <path
+              d="M12.5 27C10.5 44 5 58 3.5 71L20 66L36.5 71C35 58 29.5 44 27.5 27Z"
+              fill="white"
+              stroke="white"
+              stroke-width="4"
+            />
+            <path
+              d="M12.5 14C12.5 4 27.5 4 27.5 14L28 31C24 34.5 16 34.5 12 31Z"
+              fill="white"
+              stroke="white"
+              stroke-width="4"
+            />
+            <path
+              d="M12.5 27C10.5 44 5 58 3.5 71L20 66L36.5 71C35 58 29.5 44 27.5 27Z"
+              fill={`url(#strong-fin-${uid})`}
+            />
+            <path
+              d="M12.5 27C10.5 44 5 58 3.5 71M27.5 27C29.5 44 35 58 36.5 71"
+              fill="none"
+              stroke="var(--color-abyss)"
+              stroke-width="2.4"
+              stroke-linecap="round"
+            />
+            <path
+              d="M12.5 14C12.5 4 27.5 4 27.5 14L28 31C24 34.5 16 34.5 12 31Z"
+              fill="var(--color-abyss)"
+            />
+          </g>
+          <rect
+            x="72.5"
+            y="-3"
+            width="5"
+            height="38"
+            rx="2"
+            fill="#5b6770"
+            stroke="white"
+            stroke-width="1.5"
+          />
+          <rect
+            x="68"
+            y="-8"
+            width="14"
+            height="8"
+            rx="2"
+            fill="#1c2733"
+            stroke="white"
+            stroke-width="1.5"
+          />
+          <rect
+            x="68"
+            y="32"
+            width="14"
+            height="8"
+            rx="2"
+            fill="#1c2733"
+            stroke="white"
+            stroke-width="1.5"
+          />
+        </g>
+      </svg>
+      <span class="strong-fin-ole absolute -top-[75%] left-[18%] rounded-2xl bg-white px-2.5 py-1 font-display text-xs font-bold whitespace-nowrap text-coral shadow-md ring-1 ring-ink/10">
+        ¡Olé&nbsp;!
+      </span>
+    </span>
+  )}
 </span>
 
 <style>
@@ -1943,6 +2154,125 @@ const tentacleAccessory = tentacleAccessories[emblem]
     to {
       opacity: 1;
       scale: 1;
+    }
+  }
+  .emblem-book,
+  .book-flip,
+  .book-duck,
+  .emblem-strong-fin,
+  .strong-fin-ole {
+    opacity: 0;
+  }
+
+  .book-cover,
+  .book-left-page,
+  .book-flip {
+    transform-box: view-box;
+    transform-origin: 40px 36px;
+  }
+
+  .book-left-page {
+    scale: 0 1;
+  }
+
+  .book-duck {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+
+  .fin-curl {
+    transform-box: view-box;
+    transform-origin: 20px 16px;
+  }
+
+  :global([data-emblem-play]) .emblem-book {
+    animation: gauge-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+  }
+
+  :global([data-emblem-play]) .book-cover {
+    animation: book-close-cover 0.3s ease-in 0.4s both;
+  }
+
+  :global([data-emblem-play]) .book-left-page {
+    animation: book-open-page 0.3s ease-out 0.7s both;
+  }
+
+  :global([data-emblem-play]) .book-flip {
+    animation: book-flip 0.45s ease-in-out 1.05s 2;
+  }
+
+  :global([data-emblem-play]) .book-duck {
+    animation:
+      duck-pop 0.5s cubic-bezier(0.3, 1.8, 0.5, 1) 2s both,
+      duck-bob 1.4s ease-in-out 2.5s infinite;
+  }
+
+  :global([data-emblem-play]) .emblem-strong-fin {
+    animation: gauge-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+  }
+
+  :global([data-emblem-play]) .fin-curl {
+    animation: fin-curl 2.4s ease-in-out 0.4s infinite;
+  }
+
+  :global([data-emblem-play]) .strong-fin-ole {
+    animation: gauge-zen 0.4s cubic-bezier(0.3, 1.8, 0.5, 1) 1.55s both;
+  }
+
+  @keyframes book-close-cover {
+    to {
+      scale: 0 1;
+    }
+  }
+
+  @keyframes book-open-page {
+    to {
+      scale: 1 1;
+    }
+  }
+
+  @keyframes book-flip {
+    from {
+      opacity: 1;
+      scale: 1 1;
+    }
+    to {
+      opacity: 1;
+      scale: -1 1;
+    }
+  }
+
+  @keyframes duck-pop {
+    from {
+      opacity: 0;
+      translate: 0 10px;
+      scale: 0.3;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  @keyframes duck-bob {
+    50% {
+      rotate: -8deg;
+    }
+  }
+
+  @keyframes fin-curl {
+    0%,
+    62%,
+    100% {
+      rotate: 0deg;
+    }
+    15%,
+    45% {
+      rotate: -70deg;
+    }
+    30% {
+      rotate: 0deg;
     }
   }
 </style>
