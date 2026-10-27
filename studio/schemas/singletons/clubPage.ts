@@ -120,6 +120,14 @@ export const clubPage = defineType({
               validation: (rule) => rule.required().max(5)
             }),
             defineField({
+              name: 'intermediate',
+              title: 'Étape intermédiaire',
+              description:
+                'Une étape entre deux niveaux, comme le PE40 : sa pastille est plus petite sur le parcours',
+              type: 'boolean',
+              initialValue: false
+            }),
+            defineField({
               name: 'name',
               title: 'Nom',
               description: 'Par exemple « Niveau 1 »',
