@@ -104,7 +104,8 @@ export type ClubPage = {
   equipment: RichText | null
   formationsIntro: RichText | null
   formations: Formation[] | null
-  codepCourses: string[] | null
+  codepDomains: { _key: string; title: string; courses: string | null; url: string }[] | null
+  codepAgenda: { label: string | null; url: string | null } | null
   documents: ClubDocument[] | null
 }
 
@@ -274,7 +275,8 @@ export const clubPageQuery = `{
     "equipment": equipment${richText},
     "formationsIntro": formationsIntro${richText},
     "formations": formations[]{ _key, code, intermediate, name, summary, prerequisites, "details": details${richText} },
-    codepCourses,
+    codepDomains,
+    codepAgenda,
     "documents": documents[defined(file.asset)]{ _key, kind, title, "url": file.asset->url, "size": file.asset->size }
   },
   "members": *[_type == "member" && defined(landPhoto.asset)] | order(order asc){

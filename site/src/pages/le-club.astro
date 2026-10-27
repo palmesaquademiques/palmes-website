@@ -15,7 +15,8 @@ const { page, members } = await sanityQuery<{ page: ClubPage; members: Member[] 
 const sections = page.sections
 const formations = page.formations ?? []
 const autonomyIndex = formations.findIndex((formation) => formation.code === 'N2')
-const codepCourses = page.codepCourses ?? []
+const codepDomains = page.codepDomains ?? []
+const codepAgenda = page.codepAgenda?.url ? page.codepAgenda : null
 const documents = page.documents ?? []
 const documentGroups = [
   { title: 'Statuts et règlement', kind: 'rules' },
@@ -268,8 +269,8 @@ const pageLinks = [
           ))}
         </ul>
 
-        {codepCourses.length > 0 && (
-          <div class="mt-6 grid gap-6 rounded-[1.75rem] bg-gradient-to-br from-foam to-[#c3e9f8] p-8 sm:p-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+        {codepDomains.length > 0 && (
+          <div class="mt-6 grid gap-8 rounded-[1.75rem] bg-gradient-to-br from-foam to-[#c3e9f8] p-8 sm:p-10 lg:grid-cols-[1fr_1.7fr]">
             <div>
               <p class="kicker text-ocean">Avec le Codep 31</p>
               <h3 class="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -279,14 +280,40 @@ const pageLinks = [
                 Membres du club, vous avez aussi accès aux formations du Codep 31, le comité
                 départemental de la FFESSM.
               </p>
+              {codepAgenda && (
+                <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+                  <a
+                    href={codepAgenda.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="button-primary"
+                  >
+                    {codepAgenda.label ?? 'Agenda des formations'}
+                    <Icon name="external" class="size-4" />
+                  </a>
+                </div>
+              )}
             </div>
-            <ul class="flex flex-wrap gap-2">
-              {codepCourses.map((course) => (
-                <li class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-ink/10">
-                  {course}
+            <ul class="grid gap-3 self-center sm:grid-cols-3">
+              {codepDomains.map((domain) => (
+                <li>
+                  <a
+                    href={domain.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex h-full flex-col rounded-2xl bg-white p-5 ring-1 ring-ink/5 transition hover:ring-lagoon/60"
+                  >
+                    <span class="font-display text-lg leading-tight font-semibold text-ink group-hover:text-ocean">
+                      {domain.title}
+                    </span>
+                    <span class="mt-2 text-sm text-slate-600">{domain.courses}</span>
+                    <span class="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-ocean">
+                      Voir les formations
+                      <Icon name="external" class="size-3.5" />
+                    </span>
+                  </a>
                 </li>
               ))}
-              <li class="px-2 py-2 text-sm text-slate-600">et bien d’autres</li>
             </ul>
           </div>
         )}
