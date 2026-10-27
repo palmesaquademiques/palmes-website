@@ -156,6 +156,7 @@ export type Emblem =
   | 'charmedOctopus'
   | 'rambo'
   | 'fasterThanShadow'
+  | 'pressureGauge'
 
 export type Member = {
   _id: string
