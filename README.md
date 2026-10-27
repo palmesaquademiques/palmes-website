@@ -82,7 +82,7 @@ Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, 
 3. Dans Sanity (**API › Webhooks**), créer un webhook vers cette adresse, méthode `POST`, déclenché à la création, la modification et la suppression, avec le filtre :
 
    ```groq
-   _type in ["trip", "post", "member", "homePage", "tripsPage", "clubPage", "galleryPage", "contactPage", "membershipPage"]
+   _type in ["trip", "spot", "post", "member", "homePage", "tripsPage", "clubPage", "galleryPage", "contactPage", "membershipPage"]
    ```
 
 4. Dans le dépôt GitHub, ajouter le secret `VERCEL_DEPLOY_HOOK` avec cette même adresse : il sert à la reconstruction de chaque nuit.
