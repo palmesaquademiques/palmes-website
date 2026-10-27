@@ -14,6 +14,7 @@ const FOUNDING_YEAR = 1986
 const { page, members } = await sanityQuery<{ page: ClubPage; members: Member[] }>(clubPageQuery)
 const sections = page.sections
 const formations = page.formations ?? []
+const autonomyIndex = formations.findIndex((formation) => formation.code === 'N2')
 const codepCourses = page.codepCourses ?? []
 const documents = page.documents ?? []
 const documentGroups = [
@@ -185,12 +186,68 @@ const pageLinks = [
           <RichText value={page.formationsIntro} class="prose-palmes mt-8" />
         </div>
 
-        <ul class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {autonomyIndex > 0 && (
+          <div
+            aria-hidden="true"
+            class:list={[
+              'mt-14 hidden gap-6',
+              formations.length === 4 ? 'xl:grid xl:grid-cols-4' : 'lg:grid lg:grid-cols-3'
+            ]}
+          >
+            {[
+              { label: 'Plongée encadrée', span: autonomyIndex, line: 'bg-lagoon/50' },
+              {
+                label: 'En autonomie',
+                span: formations.length - autonomyIndex,
+                line: 'bg-ocean/60'
+              }
+            ].map((zone) => (
+              <p
+                class="flex items-center gap-3 text-xs font-semibold tracking-wide whitespace-nowrap text-ocean uppercase"
+                style={`grid-column: span ${zone.span} / span ${zone.span}`}
+              >
+                <span class:list={['h-0.5 flex-1 rounded-full', zone.line]} />
+                {zone.label}
+                <span class:list={['h-0.5 flex-1 rounded-full', zone.line]} />
+              </p>
+            ))}
+          </div>
+        )}
+        <ul
+          class:list={[
+            'relative mt-14 grid gap-6 md:grid-cols-2',
+            formations.length === 4 ? 'xl:mt-4 xl:grid-cols-4' : 'lg:mt-4 lg:grid-cols-3'
+          ]}
+        >
+          <li
+            aria-hidden="true"
+            class:list={[
+              'pointer-events-none absolute inset-x-0 top-16 hidden',
+              formations.length === 4 ? 'xl:block' : 'lg:block'
+            ]}
+          >
+            <span class="absolute right-9 left-16 border-t-2 border-dashed border-lagoon/60" />
+            <svg viewBox="0 0 10 12" class="absolute right-7 size-3 -translate-y-1/2 text-lagoon">
+              <path d="M0 0 10 6 0 12Z" fill="currentColor" />
+            </svg>
+            <span class="absolute right-8 bottom-2 text-xs font-semibold whitespace-nowrap text-ocean">
+              Vers l’encadrement
+            </span>
+          </li>
           {formations.map((formation) => (
             <li class="row-span-4 grid grid-rows-subgrid gap-y-0 rounded-[1.75rem] bg-white p-8 ring-1 ring-ink/5">
               <div>
-                <span class="flex size-16 items-center justify-center rounded-full bg-gradient-to-br from-lagoon to-ocean font-display text-xl font-bold text-white shadow-[0_12px_30px_-12px] shadow-ocean/70">
-                  {formation.code}
+                <span class="relative z-10 flex size-16 items-center justify-center">
+                  <span
+                    class:list={[
+                      'flex items-center justify-center rounded-full font-display font-bold',
+                      formation.intermediate
+                        ? 'size-12 bg-white text-sm text-ocean ring-2 ring-lagoon'
+                        : 'size-16 bg-gradient-to-br from-lagoon to-ocean text-xl text-white shadow-[0_12px_30px_-12px] shadow-ocean/70'
+                    ]}
+                  >
+                    {formation.code}
+                  </span>
                 </span>
                 <h3 class="mt-6 text-2xl font-semibold tracking-tight">{formation.name}</h3>
               </div>

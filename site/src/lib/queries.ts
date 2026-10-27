@@ -80,6 +80,7 @@ export type ClubDocument = {
 export type Formation = {
   _key: string
   code: string
+  intermediate: boolean | null
   name: string
   summary: string | null
   prerequisites: string | null
@@ -272,7 +273,7 @@ export const clubPageQuery = `{
     "sections": coalesce(sections[]{ _key, moment, title, "image": image${image}, summary, linkLabel, linkUrl }, []),
     "equipment": equipment${richText},
     "formationsIntro": formationsIntro${richText},
-    "formations": formations[]{ _key, code, name, summary, prerequisites, "details": details${richText} },
+    "formations": formations[]{ _key, code, intermediate, name, summary, prerequisites, "details": details${richText} },
     codepCourses,
     "documents": documents[defined(file.asset)]{ _key, kind, title, "url": file.asset->url, "size": file.asset->size }
   },
