@@ -30,7 +30,7 @@ export const emblems = [
   { title: '🤠 Plus rapide que son ombre (Lucky Luke)', value: 'fasterThanShadow' },
   { title: '🧘 Manomètre qui redescend (décompression)', value: 'pressureGauge' },
   { title: '📖 Livre et canard (leçon n° 1)', value: 'duckBook' },
-  { title: '🏋️ Palme musclée (¡Olé !)', value: 'strongFin' }
+  { title: '🏋️ Palme qui soulève et grandit', value: 'strongFin' }
 ]
 
 const isInstructorOnly = (document?: Record<string, unknown>) => document?.team === 'none'
