@@ -148,14 +148,57 @@ export const clubPage = defineType({
       ]
     }),
     defineField({
-      name: 'codepCourses',
-      title: 'Formations du Codep 31',
+      name: 'codepDomains',
+      title: 'Domaines du Codep 31',
       description:
-        'Formations du comité départemental ouvertes aux membres du club. Taper le nom puis Entrée',
+        'Formations du comité départemental ouvertes aux membres du club, une carte par domaine',
       type: 'array',
       group: 'formations',
-      of: [defineArrayMember({ type: 'string' })],
-      options: { layout: 'tags' }
+      of: [
+        defineArrayMember({
+          name: 'codepDomain',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Domaine',
+              description: 'Par exemple « Plongée sous-marine »',
+              type: 'string',
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: 'courses',
+              title: 'Formations',
+              description: 'En quelques mots, par exemple « RIFAP, Initiateur, Niveau 4, MF1… »',
+              type: 'string'
+            }),
+            defineField({
+              name: 'url',
+              title: 'Lien',
+              description: 'La page du domaine sur le site du comité',
+              type: 'url',
+              validation: (rule) => rule.required()
+            })
+          ],
+          preview: { select: { title: 'title', subtitle: 'courses' } }
+        })
+      ]
+    }),
+    defineField({
+      name: 'codepAgenda',
+      title: 'Agenda des formations du Codep',
+      description: 'Le bouton de l’encadré Codep. À mettre à jour chaque saison',
+      type: 'object',
+      group: 'formations',
+      fields: [
+        defineField({
+          name: 'label',
+          title: 'Texte du bouton',
+          description: 'Par exemple « Agenda des formations 2026-2027 »',
+          type: 'string'
+        }),
+        defineField({ name: 'url', title: 'Lien', type: 'url' })
+      ]
     }),
     defineField({
       name: 'documents',
