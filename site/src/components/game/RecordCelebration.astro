@@ -1,0 +1,62 @@
+---
+import Octopus from '../ui/Octopus.astro'
+---
+
+<div data-game-new-record hidden class="flex items-center gap-4">
+  <span class="celebration-octopus block w-16 shrink-0 sm:w-20">
+    <Octopus uid="record" isInLove />
+  </span>
+  <p class="celebration-bubble relative rounded-2xl bg-white px-4 py-2 text-left text-ink shadow-lg before:absolute before:top-1/2 before:-left-1.5 before:size-3 before:-translate-y-1/2 before:rotate-45 before:bg-white">
+    <span class="relative block font-display text-xs font-semibold tracking-[0.15em] text-coral uppercase">
+      Nouveau record !
+    </span>
+    <span data-game-new-record-message class="relative block font-display text-lg font-bold"></span>
+  </p>
+</div>
+
+<style>
+  .celebration-bubble {
+    transform-origin: left center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .celebration-octopus {
+      animation:
+        octopus-pop 0.6s cubic-bezier(0.3, 1.8, 0.5, 1) both,
+        octopus-bob 2.4s ease-in-out 0.6s infinite;
+    }
+
+    .celebration-bubble {
+      animation: bubble-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) 0.9s both;
+    }
+  }
+
+  @keyframes octopus-pop {
+    from {
+      opacity: 0;
+      transform: translateY(40%) rotate(-30deg) scale(0.3);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes octopus-bob {
+    50% {
+      translate: 0 -8%;
+      rotate: 5deg;
+    }
+  }
+
+  @keyframes bubble-pop {
+    from {
+      opacity: 0;
+      scale: 0.4;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>

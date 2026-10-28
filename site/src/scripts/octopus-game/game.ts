@@ -22,6 +22,12 @@ const CRASH_MESSAGES: Record<CrashCause, string[]> = {
   seabed: ['Le poulpe a touché le fond !', 'Pensez à gonfler la stab !']
 }
 
+const RECORD_MESSAGES = [
+  'Michel, c’est toi ?!!',
+  'Mon cœur fait des bulles… Michel ?!',
+  'Ce coup de palme… Michel, c’est toi ?!'
+]
+
 const PSEUDONYM_IDEAS: Record<DiverLevel, string[]> = {
   Baptême: ['Petit Poulpe Mouillé', 'Bulle Timide', 'Tentacule Débutant'],
   'Niveau 1': ['Page de la Piscine', 'Écuyer des Bulles', 'Poulpe des Bassins'],
@@ -199,6 +205,7 @@ const showResults = () => {
   element('record').textContent = String(record)
   element('level').textContent = diverLevelFor(world.score)
   element('new-record').hidden = !isNewRecord
+  element('new-record-message').textContent = pickOne(RECORD_MESSAGES)
   submitForm.hidden = true
   submitStatus.hidden = true
   if (world.score === 0) {
