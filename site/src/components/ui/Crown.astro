@@ -1,0 +1,40 @@
+---
+type Props = { uid: string; class?: string }
+
+const { uid, class: className } = Astro.props
+
+const gradientId = `crown-gold-${uid}`
+---
+
+<svg viewBox="0 0 64 46" aria-hidden="true" class={className}>
+  <defs>
+    <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff0bd"></stop>
+      <stop offset="0.5" stop-color="#e8c46a"></stop>
+      <stop offset="1" stop-color="#a87a1f"></stop>
+    </linearGradient>
+  </defs>
+  <path
+    d="M7 37 3 11l15 12L32 5l14 18 15-12-4 26Z"
+    fill={`url(#${gradientId})`}
+    stroke="#7a5612"
+    stroke-width="1.5"
+    stroke-linejoin="round"
+  ></path>
+  <rect
+    x="6"
+    y="35"
+    width="52"
+    height="8"
+    rx="2"
+    fill={`url(#${gradientId})`}
+    stroke="#7a5612"
+    stroke-width="1.5"
+  ></rect>
+  <circle cx="32" cy="27" r="4" fill="#ff5a7a"></circle>
+  <circle cx="18" cy="30" r="2.8" fill="#2ba7de"></circle>
+  <circle cx="46" cy="30" r="2.8" fill="#2ba7de"></circle>
+  <circle cx="3" cy="11" r="2.6" fill="#fff0bd"></circle>
+  <circle cx="32" cy="5" r="3" fill="#fff0bd"></circle>
+  <circle cx="61" cy="11" r="2.6" fill="#fff0bd"></circle>
+</svg>

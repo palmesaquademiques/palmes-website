@@ -1,5 +1,6 @@
 ---
 import type { Emblem } from '../../lib/queries'
+import Crown from '../ui/Crown.astro'
 
 type Props = { emblem: Emblem; uid: string }
 
@@ -113,38 +114,7 @@ const tentacleAccessory = tentacleAccessories[emblem]
         aria-label="Lire le décret royal"
         class="emblem-crown absolute -top-[24%] left-1/2 w-[44%] -translate-x-1/2 cursor-pointer"
       >
-        <svg viewBox="0 0 64 46" class="w-full drop-shadow-[0_4px_10px_rgb(232_196_106/0.5)]">
-          <defs>
-            <linearGradient id={`crown-gold-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#fff0bd" />
-              <stop offset="0.5" stop-color="#e8c46a" />
-              <stop offset="1" stop-color="#a87a1f" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M7 37 3 11l15 12L32 5l14 18 15-12-4 26Z"
-            fill={`url(#crown-gold-${uid})`}
-            stroke="#7a5612"
-            stroke-width="1.5"
-            stroke-linejoin="round"
-          />
-          <rect
-            x="6"
-            y="35"
-            width="52"
-            height="8"
-            rx="2"
-            fill={`url(#crown-gold-${uid})`}
-            stroke="#7a5612"
-            stroke-width="1.5"
-          />
-          <circle cx="32" cy="27" r="4" fill="#ff5a7a" />
-          <circle cx="18" cy="30" r="2.8" fill="#2ba7de" />
-          <circle cx="46" cy="30" r="2.8" fill="#2ba7de" />
-          <circle cx="3" cy="11" r="2.6" fill="#fff0bd" />
-          <circle cx="32" cy="5" r="3" fill="#fff0bd" />
-          <circle cx="61" cy="11" r="2.6" fill="#fff0bd" />
-        </svg>
+        <Crown uid={uid} class="w-full drop-shadow-[0_4px_10px_rgb(232_196_106/0.5)]" />
         <span class="emblem-sparkle absolute -top-1 right-0 text-sm text-white">✦</span>
       </button>
       <span
