@@ -3,6 +3,7 @@ import { type LeaderboardEntry, fetchLeaderboard, rankOf, submitScore } from './
 import { MAXIMUM_FRAME_MILLISECONDS, type Run, randomSeed, seededRandom } from './run'
 import {
   type CrashCause,
+  type DiverLevel,
   type Phase,
   WORLD_HEIGHT,
   type World,
@@ -21,6 +22,15 @@ const CRASH_MESSAGES: Record<CrashCause, string[]> = {
   seabed: ['Le poulpe a touché le fond !', 'Pensez à gonfler la stab !']
 }
 
+const PSEUDONYM_IDEAS: Record<DiverLevel, string[]> = {
+  Baptême: ['Petit Poulpe Mouillé', 'Bulle Timide', 'Tentacule Débutant'],
+  'Niveau 1': ['Page de la Piscine', 'Écuyer des Bulles', 'Poulpe des Bassins'],
+  'Niveau 2': ['Chevalier de l’Encre', 'Baron des Rochers', 'Vicomte du Corail'],
+  'Niveau 3': ['Comte des Abysses', 'Duc des Tentacules', 'Marquis du Récif'],
+  'Niveau 4': ['Prince des Courants', 'Grand Duc des Algues', 'Archiduc de l’Encre'],
+  Moniteur: ['Majesté Céphalopode', 'Empereur des Poulpes', 'Poulpe Impérial']
+}
+
 const container = document.querySelector<HTMLElement>('[data-game]')!
 const canvas = container.querySelector<HTMLCanvasElement>('[data-game-canvas]')!
 const context = canvas.getContext('2d')!
@@ -33,6 +43,8 @@ const overScreen = element('over')
 const submitForm = element<HTMLFormElement>('submit')
 const pseudonymInput = element<HTMLInputElement>('pseudonym')
 const submitStatus = element('submit-status')
+const submitMessage = element('submit-message')
+const changePseudonymButton = element<HTMLButtonElement>('change-pseudonym')
 
 const leaderboard = document.querySelector<HTMLElement>('[data-leaderboard]')!
 const leaderboardList = leaderboard.querySelector<HTMLOListElement>('[data-leaderboard-list]')!
@@ -89,6 +101,7 @@ let displayedPhase: Phase = 'ready'
 let crashedAt = 0
 let record = readRecord()
 let pseudonym = readPseudonym()
+let savedRun: Run | null = null
 let scale = 1
 let previousTimestamp = performance.now()
 
@@ -117,7 +130,8 @@ const showLeaderboard = (entries: LeaderboardEntry[]) => {
 }
 
 const showSubmitStatus = (message: string) => {
-  submitStatus.textContent = message
+  submitMessage.textContent = message
+  changePseudonymButton.hidden = true
   submitStatus.hidden = false
 }
 
@@ -128,20 +142,44 @@ const submitStatusFor = (entries: LeaderboardEntry[]) => {
     : `Enregistré au nom de ${pseudonym}, pas encore dans le top 10.`
 }
 
-const submitCurrentScore = async (event: SubmitEvent) => {
+const showPseudonymForm = (value: string) => {
+  pseudonymInput.value = value
+  pseudonymInput.placeholder = pickOne(PSEUDONYM_IDEAS[diverLevelFor(world.score)])
+  submitForm.hidden = false
+}
+
+const saveScore = async () => {
+  const submittedRun = run
+  showSubmitStatus('Enregistrement…')
+  try {
+    const entries = await submitScore(pseudonym, world.score, submittedRun)
+    savedRun = submittedRun
+    showLeaderboard(entries)
+    showSubmitStatus(submitStatusFor(entries))
+    changePseudonymButton.hidden = false
+  } catch (error) {
+    showSubmitStatus((error as Error).message)
+    showPseudonymForm(pseudonym)
+  }
+}
+
+const choosePseudonym = (event: SubmitEvent) => {
   event.preventDefault()
   pseudonym = pseudonymInput.value.trim()
   savePseudonym(pseudonym)
   submitForm.hidden = true
-  showSubmitStatus('Enregistrement…')
-  try {
-    const entries = await submitScore(pseudonym, world.score, run)
-    showLeaderboard(entries)
-    showSubmitStatus(submitStatusFor(entries))
-  } catch (error) {
-    submitForm.hidden = false
-    showSubmitStatus((error as Error).message)
+  if (savedRun === run) {
+    showSubmitStatus(`C’est noté : vos prochains scores iront au nom de ${pseudonym}.`)
+  } else {
+    saveScore()
   }
+}
+
+const changePseudonym = () => {
+  submitStatus.hidden = true
+  showPseudonymForm(pseudonym)
+  pseudonymInput.focus()
+  pseudonymInput.select()
 }
 
 const showScreenFor = (phase: Phase) => {
@@ -161,11 +199,14 @@ const showResults = () => {
   element('record').textContent = String(record)
   element('level').textContent = diverLevelFor(world.score)
   element('new-record').hidden = !isNewRecord
-  submitForm.hidden = world.score === 0
-  pseudonymInput.value = pseudonym
+  submitForm.hidden = true
   submitStatus.hidden = true
   if (world.score === 0) {
     showSubmitStatus('Passez au moins un rocher pour entrer au tableau d’honneur.')
+  } else if (pseudonym) {
+    saveScore()
+  } else {
+    showPseudonymForm('')
   }
   showRecord()
 }
@@ -226,7 +267,8 @@ container.addEventListener('pointerdown', (event) => {
 
 element('play').addEventListener('click', act)
 element('replay').addEventListener('click', act)
-submitForm.addEventListener('submit', submitCurrentScore)
+submitForm.addEventListener('submit', choosePseudonym)
+changePseudonymButton.addEventListener('click', changePseudonym)
 
 window.addEventListener('keydown', (event) => {
   if (event.code !== 'Space' && event.code !== 'ArrowUp') return

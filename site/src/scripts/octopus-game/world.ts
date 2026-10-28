@@ -59,7 +59,9 @@ const DIVER_LEVELS = [
   { minimumScore: 10, label: 'Niveau 2' },
   { minimumScore: 5, label: 'Niveau 1' },
   { minimumScore: 0, label: 'Baptême' }
-]
+] as const
+
+export type DiverLevel = (typeof DIVER_LEVELS)[number]['label']
 
 export const diverLevelFor = (score: number) =>
   DIVER_LEVELS.find((level) => score >= level.minimumScore)!.label
