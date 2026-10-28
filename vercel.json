@@ -3,6 +3,7 @@
   "framework": "astro",
   "buildCommand": "pnpm build",
   "outputDirectory": "site/dist",
+  "devCommand": "pnpm --filter site dev --port $PORT",
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [

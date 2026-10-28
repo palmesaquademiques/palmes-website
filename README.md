@@ -112,6 +112,16 @@ pnpm test      # vérification des types du site, du schéma et des types du stu
 
 Node ≥ 22.23 et pnpm.
 
+`pnpm dev` ne sert pas l’API : le jeu fonctionne, sans classement. Pour l’avoir aussi en local :
+
+```bash
+pnpm dlx vercel link       # une seule fois, relie le dossier au projet Vercel
+pnpm dlx vercel env pull   # copie les clés Upstash dans .env.local
+pnpm dlx vercel dev        # site et API sur http://localhost:3000
+```
+
+Les scores enregistrés en local ont leur propre tableau, à part de celui du site en ligne.
+
 | Dossier                              | Contenu                                                                       |
 | ------------------------------------ | ----------------------------------------------------------------------------- |
 | `studio/schemas`                     | Les types de contenu (sorties, articles, pages) et leurs libellés en français |
