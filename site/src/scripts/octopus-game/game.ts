@@ -1,4 +1,5 @@
 import { drawWorld } from './draw'
+import { type LeaderboardEntry, fetchLeaderboard, rankOf, submitScore } from './leaderboard'
 import {
   type CrashCause,
   type Phase,
@@ -11,6 +12,7 @@ import {
 } from './world'
 
 const RECORD_KEY = 'poulpalmes-record'
+const PSEUDONYM_KEY = 'poulpalmes-pseudonym'
 const RESTART_DELAY_SECONDS = 0.7
 
 const CRASH_MESSAGES: Record<CrashCause, string[]> = {
@@ -27,6 +29,13 @@ const element = <Element extends HTMLElement>(name: string) =>
 const scoreDisplay = element('score')
 const startScreen = element('start')
 const overScreen = element('over')
+const submitForm = element<HTMLFormElement>('submit')
+const pseudonymInput = element<HTMLInputElement>('pseudonym')
+const submitStatus = element('submit-status')
+
+const leaderboard = document.querySelector<HTMLElement>('[data-leaderboard]')!
+const leaderboardList = leaderboard.querySelector<HTMLOListElement>('[data-leaderboard-list]')!
+const leaderboardEntry = document.querySelector<HTMLTemplateElement>('[data-leaderboard-entry]')!
 
 const readRecord = () => {
   try {
@@ -44,17 +53,80 @@ const saveRecord = (score: number) => {
   }
 }
 
+const readPseudonym = () => {
+  try {
+    return localStorage.getItem(PSEUDONYM_KEY) ?? ''
+  } catch {
+    return ''
+  }
+}
+
+const savePseudonym = (pseudonym: string) => {
+  try {
+    localStorage.setItem(PSEUDONYM_KEY, pseudonym)
+  } catch {
+    return
+  }
+}
+
 const pickOne = (messages: string[]) => messages[Math.floor(Math.random() * messages.length)]
+
+const ordinal = (rank: number) => (rank === 1 ? '1er' : `${rank}e`)
 
 let world: World = createWorld(1)
 let displayedPhase: Phase = 'ready'
 let crashedAt = 0
 let record = readRecord()
+let pseudonym = readPseudonym()
 let scale = 1
 let previousTimestamp = performance.now()
 
 const showRecord = () => {
   element('record-start').textContent = record > 0 ? `Record sur cet appareil : ${record}` : ''
+}
+
+const leaderboardEntryElement = (entry: LeaderboardEntry, position: number) => {
+  const entryElement = leaderboardEntry.content.firstElementChild!.cloneNode(true) as HTMLElement
+  entryElement.querySelector('[data-rank]')!.textContent = String(position + 1)
+  entryElement.querySelector('[data-pseudonym]')!.textContent = entry.pseudonym
+  entryElement.querySelector('[data-score]')!.textContent = String(entry.score)
+  entryElement.toggleAttribute('data-current-player', entry.pseudonym === pseudonym)
+  return entryElement
+}
+
+const showLeaderboard = (entries: LeaderboardEntry[]) => {
+  const [bestEntry] = entries
+  leaderboardList.replaceChildren(...entries.map(leaderboardEntryElement))
+  leaderboard.hidden = !bestEntry
+  element('leaderboard-link').hidden = !bestEntry
+}
+
+const showSubmitStatus = (message: string) => {
+  submitStatus.textContent = message
+  submitStatus.hidden = false
+}
+
+const submitStatusFor = (entries: LeaderboardEntry[]) => {
+  const rank = rankOf(pseudonym, entries)
+  return rank > 0
+    ? `Enregistré au nom de ${pseudonym} : ${ordinal(rank)} du tableau d’honneur !`
+    : `Enregistré au nom de ${pseudonym}, pas encore dans le top 10.`
+}
+
+const submitCurrentScore = async (event: SubmitEvent) => {
+  event.preventDefault()
+  pseudonym = pseudonymInput.value.trim()
+  savePseudonym(pseudonym)
+  submitForm.hidden = true
+  showSubmitStatus('Enregistrement…')
+  try {
+    const entries = await submitScore(pseudonym, world.score)
+    showLeaderboard(entries)
+    showSubmitStatus(submitStatusFor(entries))
+  } catch (error) {
+    submitForm.hidden = false
+    showSubmitStatus((error as Error).message)
+  }
 }
 
 const showScreenFor = (phase: Phase) => {
@@ -74,6 +146,12 @@ const showResults = () => {
   element('record').textContent = String(record)
   element('level').textContent = diverLevelFor(world.score)
   element('new-record').hidden = !isNewRecord
+  submitForm.hidden = world.score === 0
+  pseudonymInput.value = pseudonym
+  submitStatus.hidden = true
+  if (world.score === 0) {
+    showSubmitStatus('Passez au moins un rocher pour entrer au tableau d’honneur.')
+  }
   showRecord()
 }
 
@@ -115,16 +193,18 @@ const frame = (timestamp: number) => {
 }
 
 container.addEventListener('pointerdown', (event) => {
-  if ((event.target as Element).closest('button, a')) return
+  if ((event.target as Element).closest('button, a, form')) return
   event.preventDefault()
   act()
 })
 
 element('play').addEventListener('click', act)
 element('replay').addEventListener('click', act)
+submitForm.addEventListener('submit', submitCurrentScore)
 
 window.addEventListener('keydown', (event) => {
   if (event.code !== 'Space' && event.code !== 'ArrowUp') return
+  if (event.target instanceof HTMLInputElement) return
   event.preventDefault()
   if (!event.repeat) act()
 })
@@ -134,3 +214,6 @@ resizeCanvas()
 showRecord()
 showScreenFor('ready')
 requestAnimationFrame(frame)
+fetchLeaderboard()
+  .then(showLeaderboard)
+  .catch(() => {})

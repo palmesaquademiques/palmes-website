@@ -4,10 +4,11 @@ Site du club de plongée sous-marine **Les Palmes Aquadémiques** (Toulouse).
 
 - `site/` : le site public, en [Astro](https://astro.build), généré en pages statiques et hébergé sur Vercel
 - `studio/` : l’interface d’édition [Sanity](https://www.sanity.io), hébergée gratuitement par Sanity
+- `api/` : l’API du classement du jeu du poulpe, une fonction Vercel déployée avec le site
 
 Le contenu (sorties, articles, pages, photos) vit dans Sanity. À chaque publication, Sanity prévient Vercel, qui reconstruit le site en une à deux minutes. Le site est aussi reconstruit chaque nuit pour que les sorties terminées passent d’elles-mêmes dans « Nos sorties passées ».
 
-Coût : 0 €. Le plan gratuit de Sanity couvre 20 éditeurs, 10 000 documents et 100 Go de photos, et le site reste sur le plan gratuit de Vercel.
+Coût : 0 €. Le plan gratuit de Sanity couvre 20 éditeurs, 10 000 documents et 100 Go de photos, et le site reste sur le plan gratuit de Vercel. Le classement du jeu tient dans le plan gratuit d’[Upstash](https://upstash.com) : 500 000 commandes par mois, quand une visite du jeu en coûte une et un score enregistré deux.
 
 ## Guide pour les éditeurs
 
@@ -87,7 +88,13 @@ Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, 
 
 4. Dans le dépôt GitHub, ajouter le secret `VERCEL_DEPLOY_HOOK` avec cette même adresse : il sert à la reconstruction de chaque nuit.
 
-### 5. Inviter les éditeurs
+### 5. Brancher le classement du jeu
+
+Dans le projet Vercel, **Storage › Create Database › Upstash for Redis**, plan gratuit, région Francfort, puis la connecter au projet pour tous les environnements. Vercel ajoute lui-même les variables `KV_REST_API_URL` et `KV_REST_API_TOKEN` lues par `api/scores.ts`. Chaque environnement garde son propre tableau dans cette base : ses clés commencent par `poulpalmes:production`, `poulpalmes:preview` ou `poulpalmes:development`.
+
+Pour retirer un score douteux, ouvrir la base dans la console Upstash, onglet **CLI**, et taper `ZREM poulpalmes:production:leaderboard "Le pseudo"`.
+
+### 6. Inviter les éditeurs
 
 Dans [sanity.io/manage](https://www.sanity.io/manage) › **Members** › **Invite**. Sur le plan gratuit, les éditeurs ont le rôle « Administrator ».
 
@@ -111,3 +118,5 @@ Node ≥ 22.23 et pnpm.
 | `site/src/components/home`           | Les sections de l’accueil                                                     |
 | `site/src/scripts/homeAnimations.ts` | La chorégraphie du défilement de l’accueil (GSAP)                             |
 | `site/src/pages/og`                  | Les images de partage générées pour chaque page                               |
+| `site/src/scripts/octopus-game`      | Le jeu du poulpe et l’envoi des scores au classement                          |
+| `api/scores.ts`                      | L’API du classement : lire le top 10, enregistrer un score                    |
