@@ -110,7 +110,7 @@ pnpm build     # build de production du site
 pnpm test      # vérification des types du site, du schéma et des types du studio
 ```
 
-Node ≥ 22.23 et pnpm.
+Node 24 (LTS) et pnpm.
 
 `pnpm dev` ne sert pas l’API : le jeu fonctionne, sans classement. Pour l’avoir aussi en local :
 
