@@ -8,7 +8,7 @@ Site du club de plongée sous-marine **Les Palmes Aquadémiques** (Toulouse).
 
 Le contenu (sorties, articles, pages, photos) vit dans Sanity. À chaque publication, Sanity prévient Vercel, qui reconstruit le site en une à deux minutes. Le site est aussi reconstruit chaque nuit pour que les sorties terminées passent d’elles-mêmes dans « Nos sorties passées ».
 
-Coût : 0 €. Le plan gratuit de Sanity couvre 20 éditeurs, 10 000 documents et 100 Go de photos, et le site reste sur le plan gratuit de Vercel. Le classement du jeu tient dans le plan gratuit d’[Upstash](https://upstash.com) : 500 000 commandes par mois, quand une visite du jeu en coûte une et un score enregistré deux.
+Coût : 0 €. Le plan gratuit de Sanity couvre 20 éditeurs, 10 000 documents et 100 Go de photos, et le site reste sur le plan gratuit de Vercel. Le classement du jeu tient dans le plan gratuit d’[Upstash](https://upstash.com) : 500 000 commandes par mois, quand une visite du jeu en coûte une et un score enregistré trois.
 
 ## Guide pour les éditeurs
 
@@ -92,6 +92,8 @@ Le studio est alors disponible sur `https://palmes-aquademiques.sanity.studio`, 
 
 Dans le projet Vercel, **Storage › Create Database › Upstash for Redis**, plan gratuit, région Francfort, puis la connecter au projet pour tous les environnements. Vercel ajoute lui-même les variables `KV_REST_API_URL` et `KV_REST_API_TOKEN` lues par `api/scores.ts`. Chaque environnement garde son propre tableau dans cette base : ses clés commencent par `poulpalmes:production`, `poulpalmes:preview` ou `poulpalmes:development`.
 
+Chaque score est vérifié : le jeu envoie la graine de la partie, la durée de chaque image et les moments où le poulpe nage, et `api/scores.ts` rejoue la partie avec le même moteur (`site/src/scripts/octopus-game/world.ts`). Un score retouché, une physique modifiée ou une partie envoyée deux fois sont refusés. Un robot qui joue vraiment, ou un navigateur dont on ralentit l’horloge, passent encore.
+
 Pour retirer un score douteux, ouvrir la base dans la console Upstash, onglet **CLI**, et taper `ZREM poulpalmes:production:leaderboard "Le pseudo"`.
 
 ### 6. Inviter les éditeurs
@@ -119,4 +121,4 @@ Node ≥ 22.23 et pnpm.
 | `site/src/scripts/homeAnimations.ts` | La chorégraphie du défilement de l’accueil (GSAP)                             |
 | `site/src/pages/og`                  | Les images de partage générées pour chaque page                               |
 | `site/src/scripts/octopus-game`      | Le jeu du poulpe et l’envoi des scores au classement                          |
-| `api/scores.ts`                      | L’API du classement : lire le top 10, enregistrer un score                    |
+| `api/scores.ts`                      | L’API du classement : lire le top 10, rejouer et enregistrer une partie       |

@@ -1,5 +1,6 @@
 import { drawWorld } from './draw'
 import { type LeaderboardEntry, fetchLeaderboard, rankOf, submitScore } from './leaderboard'
+import { MAXIMUM_FRAME_MILLISECONDS, type Run, randomSeed, seededRandom } from './run'
 import {
   type CrashCause,
   type Phase,
@@ -73,7 +74,17 @@ const pickOne = (messages: string[]) => messages[Math.floor(Math.random() * mess
 
 const ordinal = (rank: number) => (rank === 1 ? '1er' : `${rank}e`)
 
+const runStartingFrom = (startingWorld: World): Run => ({
+  seed: randomSeed(),
+  width: startingWorld.width,
+  startY: startingWorld.octopus.y,
+  frameMilliseconds: [],
+  jetSteps: []
+})
+
 let world: World = createWorld(1)
+let run = runStartingFrom(world)
+let random = seededRandom(run.seed)
 let displayedPhase: Phase = 'ready'
 let crashedAt = 0
 let record = readRecord()
@@ -120,7 +131,7 @@ const submitCurrentScore = async (event: SubmitEvent) => {
   submitForm.hidden = true
   showSubmitStatus('Enregistrement…')
   try {
-    const entries = await submitScore(pseudonym, world.score)
+    const entries = await submitScore(pseudonym, world.score, run)
     showLeaderboard(entries)
     showSubmitStatus(submitStatusFor(entries))
   } catch (error) {
@@ -169,13 +180,24 @@ const act = () => {
     if (world.time - crashedAt < RESTART_DELAY_SECONDS) return
     world = createWorld(world.width)
   }
-  world = jet(world, Math.random)
+  if (world.phase === 'playing' && run.jetSteps.at(-1) === run.frameMilliseconds.length) return
+  if (world.phase === 'ready') {
+    run = runStartingFrom(world)
+    random = seededRandom(run.seed)
+  } else {
+    run.jetSteps.push(run.frameMilliseconds.length)
+  }
+  world = jet(world, random)
 }
 
 const frame = (timestamp: number) => {
-  const deltaSeconds = Math.min((timestamp - previousTimestamp) / 1000, 1 / 30)
+  const frameMilliseconds = Math.min(
+    Math.round(timestamp) - Math.round(previousTimestamp),
+    MAXIMUM_FRAME_MILLISECONDS
+  )
   previousTimestamp = timestamp
-  world = step(world, deltaSeconds, Math.random)
+  if (world.phase === 'playing') run.frameMilliseconds.push(frameMilliseconds)
+  world = step(world, frameMilliseconds / 1000, random)
 
   if (world.phase !== displayedPhase) {
     if (world.phase === 'over') {
