@@ -1,0 +1,116 @@
+---
+import Octopus from '../ui/Octopus.astro'
+---
+
+<aside
+  data-play-invitation
+  hidden
+  aria-label="Invitation au jeu du poulpe"
+  class="fixed right-4 bottom-3 z-40 flex items-end sm:right-12 sm:bottom-5"
+>
+  <div class="invitation-bubble relative mb-24 max-w-56 rounded-2xl rounded-br-sm bg-white px-4 py-3 text-sm text-ink shadow-xl sm:mb-32 sm:max-w-64">
+    <button
+      type="button"
+      data-play-invitation-close
+      aria-label="Fermer l’invitation"
+      class="absolute -top-2.5 -right-2.5 flex size-7 items-center justify-center rounded-full bg-ink text-base leading-none text-white shadow-md transition-colors hover:bg-deep"
+    >
+      ×
+    </button>
+    <p data-play-invitation-message></p>
+    <a
+      href="/jeu"
+      class="mt-2 inline-block font-semibold text-ocean underline decoration-lagoon/40 underline-offset-4 hover:decoration-lagoon"
+    >
+      Plonger avec le poulpe
+    </a>
+  </div>
+  <a href="/jeu" tabindex="-1" aria-hidden="true" class="invitation-octopus block w-24 sm:w-28">
+    <Octopus uid="invitation" />
+  </a>
+</aside>
+
+<style>
+  .invitation-bubble {
+    transform-origin: bottom right;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .invitation-octopus {
+      animation:
+        octopus-peek 0.9s var(--ease-swim) both,
+        octopus-bob 2.6s ease-in-out 0.9s infinite;
+    }
+
+    .invitation-bubble {
+      animation: bubble-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) 0.7s both;
+    }
+  }
+
+  @keyframes octopus-peek {
+    from {
+      transform: translateY(130%) rotate(12deg);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes octopus-bob {
+    50% {
+      translate: 0 -6%;
+      rotate: -4deg;
+    }
+  }
+
+  @keyframes bubble-pop {
+    from {
+      opacity: 0;
+      scale: 0.4;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>
+
+<script>
+  const INVITATION_DELAY_MILLISECONDS = 30_000
+  const DISMISSED_KEY = 'poulpalmes-invitation-dismissed'
+
+  const MESSAGES = [
+    'Psst… 30 secondes d’apnée sur cette page ? Viens plutôt jouer avec moi !',
+    'Viens jouer avec moi ! Bon, le plus fort c’est Michel… mais tu peux toujours essayer.',
+    'Je m’ennuie tout seul au fond de l’eau, Michel ne répond plus 💔 Viens jouer avec moi !'
+  ]
+
+  const invitation = document.querySelector<HTMLElement>('[data-play-invitation]')!
+
+  const isDismissed = () => {
+    try {
+      return sessionStorage.getItem(DISMISSED_KEY) === 'true'
+    } catch {
+      return false
+    }
+  }
+
+  const dismiss = () => {
+    invitation.hidden = true
+    try {
+      sessionStorage.setItem(DISMISSED_KEY, 'true')
+    } catch {
+      return
+    }
+  }
+
+  const invite = () => {
+    invitation.querySelector('[data-play-invitation-message]')!.textContent =
+      MESSAGES[Math.floor(Math.random() * MESSAGES.length)]
+    invitation.hidden = false
+  }
+
+  invitation.querySelector('[data-play-invitation-close]')!.addEventListener('click', dismiss)
+  invitation.querySelectorAll('a').forEach((link) => link.addEventListener('click', dismiss))
+  if (!isDismissed()) setTimeout(invite, INVITATION_DELAY_MILLISECONDS)
+</script>

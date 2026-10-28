@@ -3,14 +3,19 @@ import '@fontsource-variable/bricolage-grotesque/wdth.css'
 import '@fontsource-variable/inter'
 import '../styles/global.css'
 
+import PlayInvitation from '../components/game/PlayInvitation.astro'
 import Footer from '../components/layout/Footer.astro'
 import Header from '../components/layout/Header.astro'
 import Lightbox from '../components/ui/Lightbox.astro'
 import Seo, { type SeoProps } from '../components/seo/Seo.astro'
 
-type Props = SeoProps & { bodyClass?: string; headerTone?: 'dark' | 'light' }
+type Props = SeoProps & {
+  bodyClass?: string
+  headerTone?: 'dark' | 'light'
+  hasPlayInvitation?: boolean
+}
 
-const { bodyClass, headerTone, ...seo } = Astro.props
+const { bodyClass, headerTone, hasPlayInvitation = true, ...seo } = Astro.props
 ---
 
 <!doctype html>
@@ -43,5 +48,6 @@ const { bodyClass, headerTone, ...seo } = Astro.props
 
     <Footer />
     <Lightbox />
+    {hasPlayInvitation && <PlayInvitation />}
   </body>
 </html>
