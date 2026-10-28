@@ -93,7 +93,8 @@ let scale = 1
 let previousTimestamp = performance.now()
 
 const showRecord = () => {
-  element('record-start').textContent = record > 0 ? `Record sur cet appareil : ${record}` : ''
+  element('personal-record').hidden = record === 0
+  element('personal-record-score').textContent = String(record)
 }
 
 const leaderboardEntryElement = (entry: LeaderboardEntry, position: number) => {
@@ -110,6 +111,9 @@ const showLeaderboard = (entries: LeaderboardEntry[]) => {
   leaderboardList.replaceChildren(...entries.map(leaderboardEntryElement))
   leaderboard.hidden = !bestEntry
   element('leaderboard-link').hidden = !bestEntry
+  element('club-record').hidden = !bestEntry
+  element('club-record-score').textContent = String(bestEntry?.score ?? '')
+  element('club-record-holder').textContent = bestEntry?.pseudonym ?? ''
 }
 
 const showSubmitStatus = (message: string) => {

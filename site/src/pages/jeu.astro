@@ -43,7 +43,43 @@ import BaseLayout from '../layouts/BaseLayout.astro'
           Plonger
         </button>
         <p class="text-sm text-white/60">Espace, clic ou toucher pour donner un coup de jet</p>
-        <p data-game-record-start class="text-sm text-white/60"></p>
+        <div class="mt-auto mb-6 flex justify-center gap-3 whitespace-nowrap sm:gap-4">
+          <p
+            data-game-personal-record
+            hidden
+            class="flex flex-col items-center justify-center rounded-2xl bg-abyss/70 px-4 py-2.5 ring-1 ring-white/15 backdrop-blur-sm sm:px-5"
+          >
+            <span class="font-display text-[0.65rem] font-semibold tracking-[0.15em] text-white/60 uppercase sm:text-xs">
+              Votre record
+            </span>
+            <span
+              data-game-personal-record-score
+              class="font-display text-3xl font-bold text-lagoon"
+            ></span>
+            <span class="text-xs text-white/50">sur cet appareil</span>
+          </p>
+          <a
+            href="#classement"
+            data-game-club-record
+            hidden
+            class="relative flex flex-col items-center justify-center rounded-2xl bg-abyss/70 px-4 py-2.5 ring-1 ring-gold/40 backdrop-blur-sm transition duration-300 ease-swim hover:bg-deep/80 hover:ring-gold/70 sm:px-5"
+          >
+            <Crown
+              uid="club-record"
+              class="absolute -top-4 -left-3 w-9 -rotate-8 drop-shadow-[0_4px_10px_rgb(232_196_106/0.5)]"
+            />
+            <span class="font-display text-[0.65rem] font-semibold tracking-[0.15em] text-gold uppercase sm:text-xs">
+              Record du club
+            </span>
+            <span
+              data-game-club-record-score
+              class="font-display text-3xl font-bold text-gold"
+            ></span>
+            <span class="max-w-28 truncate text-xs text-white/70 sm:max-w-36">
+              par <span data-game-club-record-holder class="font-semibold text-white"></span>
+            </span>
+          </a>
+        </div>
       </div>
 
       <div
@@ -109,9 +145,6 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </div>
       </div>
     </div>
-    <p class="mx-auto mt-4 max-w-6xl text-center text-sm text-white/50">
-      Votre record est gardé sur cet appareil.
-    </p>
 
     <section
       id="classement"
