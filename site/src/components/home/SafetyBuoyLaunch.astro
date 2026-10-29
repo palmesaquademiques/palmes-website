@@ -1,11 +1,17 @@
-<div data-buoy-scene aria-hidden="true" class="relative h-[180svh]">
+<div data-buoy-scene class="relative h-[180svh]">
   <div data-buoy-stage class="sticky top-0 h-svh overflow-hidden">
-    <p class="kicker absolute inset-x-0 top-28 text-[0.65rem] text-white/50">
+    <p aria-hidden="true" class="kicker absolute inset-x-0 top-28 text-[0.65rem] text-white/50">
       Remontée · 10 m/min maximum
     </p>
 
-    <div data-buoy class="absolute top-[18%] left-1/2 h-52 w-14 -translate-x-1/2 origin-bottom">
+    <button
+      type="button"
+      data-buoy
+      aria-label="Voir la vidéo du lancement du parachute de palier"
+      class="absolute top-[18%] left-1/2 h-52 w-14 -translate-x-1/2 origin-bottom cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-white"
+    >
       <svg
+        aria-hidden="true"
         viewBox="0 0 48 176"
         class="size-full animate-bob drop-shadow-[0_0_24px_rgb(255_106_44/0.45)]"
       >
@@ -48,15 +54,19 @@
         </text>
         <path d="M19 169l5 7 5-7Z" fill="#a52f0a"></path>
       </svg>
-    </div>
+    </button>
 
     <span
+      aria-hidden="true"
       data-buoy-line
       class="absolute bottom-[4.25rem] left-1/2 w-px origin-bottom bg-gradient-to-t from-white/70 to-white/40"
       style="top: calc(18% + 13rem)"
     ></span>
 
-    <div class="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-3">
+    <div
+      aria-hidden="true"
+      class="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-3"
+    >
       <svg viewBox="0 0 28 28" class="size-7 text-white/80">
         <circle cx="14" cy="14" r="11" fill="none" stroke="currentColor" stroke-width="2"></circle>
         <circle cx="14" cy="14" r="4" fill="currentColor"></circle>
@@ -64,6 +74,7 @@
       </svg>
     </div>
     <p
+      aria-hidden="true"
       data-buoy-caption
       class="absolute bottom-10 left-[calc(50%+2.25rem)] max-w-40 text-left text-xs leading-snug text-white/60"
     >
@@ -71,3 +82,50 @@
     </p>
   </div>
 </div>
+
+<dialog
+  data-buoy-video-dialog
+  aria-label="Vidéo du lancement du parachute de palier"
+  class="m-0 h-dvh max-h-none w-dvw max-w-none items-center justify-center bg-transparent p-4 text-white backdrop:bg-abyss/95 backdrop:backdrop-blur-md open:flex sm:p-12"
+>
+  <video
+    data-buoy-video
+    src="/videos/parachute-de-palier.mp4"
+    controls
+    playsinline
+    preload="none"
+    class="max-h-[85dvh] max-w-full rounded-lg shadow-2xl"
+  ></video>
+
+  <button
+    type="button"
+    data-buoy-video-close
+    class="absolute top-4 right-4 flex size-12 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
+  >
+    <span class="sr-only">Fermer</span>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      class="size-6"
+    >
+      <path d="M6 6l12 12M18 6L6 18"></path>
+    </svg>
+  </button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-buoy-video-dialog]')!
+  const video = dialog.querySelector<HTMLVideoElement>('[data-buoy-video]')!
+
+  document.querySelector('[data-buoy]')!.addEventListener('click', () => {
+    dialog.showModal()
+    video.play()
+  })
+
+  dialog.querySelector('[data-buoy-video-close]')!.addEventListener('click', () => dialog.close())
+  dialog.addEventListener('click', (event) => event.target === dialog && dialog.close())
+  dialog.addEventListener('close', () => video.pause())
+</script>
